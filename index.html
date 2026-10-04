@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مقصودیوم | دستیار تحلیل بنیادی بورس تهران</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<style>
+:root{--bg:#0a1020;--bg2:#0d1730;--card:#121d38;--line:#223254;--text:#e9eefb;--mut:#8fa3c8;--brand:#1fd3a2;--blue:#3b82f6;--red:#ff7a7a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.9;font-size:15px}
+a{color:inherit;text-decoration:none}
+header{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:12px 22px;background:var(--bg2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
+.logo{font-weight:800;font-size:19px;color:var(--brand)}
+header nav{display:flex;gap:6px;flex-wrap:wrap}
+header nav a{padding:5px 14px;border-radius:9px;color:var(--mut);font-size:14px}
+header nav a:hover{background:var(--card);color:var(--text)}
+.demo{background:rgba(246,194,101,.1);border-bottom:1px dashed #f6c265;color:#f6c265;text-align:center;padding:6px;font-size:12.5px}
+main{max-width:1100px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:26px}h2{font-size:18px;margin:26px 0 12px}
+.sub{color:var(--mut);font-size:13px}
+.hero{text-align:center;padding:36px 10px 10px}
+.sbox{position:relative;max-width:560px;margin:18px auto}
+.sbox input{width:100%;padding:13px 18px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;outline:none}
+.sbox input:focus{border-color:var(--brand)}
+#res{position:absolute;inset-inline:0;top:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-top:4px;text-align:right;overflow:hidden}
+#res a,#res i{display:block;padding:8px 16px}#res a:hover{background:var(--bg2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.stat b{display:block;font-size:19px}.stat span{color:var(--mut);font-size:12px}
+.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border:0}
+.up{color:var(--brand)}.dn{color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-size:12px}
+tr.me{background:rgba(31,211,162,.08)}
+.tw{overflow-x:auto}
+.btn{background:var(--brand);color:#04121f;border:0;border-radius:10px;padding:8px 16px;font:inherit;font-weight:700;cursor:pointer}
+.btn.g{background:none;border:1px solid var(--line);color:var(--mut)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ch{width:100%;height:auto;margin-top:8px}.ch text{fill:var(--mut);font-size:10px}
+.note{background:var(--bg2);border-radius:12px;padding:12px 16px;font-size:14px}
+footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var(--mut);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <a href="#/" class="logo">مقصودیوم</a>
+  <nav>
+    <a href="#/">خانه</a><a href="#/groups">گروه‌های صنعت</a>
+    <a href="#/watch">دیده‌بان من</a><a href="#/analyses">تحلیل‌ها</a>
+  </nav>
+</header>
+<div class="demo" id="demo"></div>
+<main id="app"></main>
+<footer>© ۱۴۰۵ مقصودیوم • محتوای سایت جنبه اطلاع‌رسانی دارد و توصیه خرید یا فروش محسوب نمی‌شود.</footer>
+
+<script src="data.js"></script>
+<script>
+const $=s=>document.querySelector(s), S=window.SYMBOLS, L=window.LABELS;
+const FA='۰۱۲۳۴۵۶۷۸۹', fa=x=>String(x).replace(/\d/g,d=>FA[d]);
+const nf=x=>fa(Math.round(x).toLocaleString('en-US'));
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const med=a=>{a=[...a].sort((x,y)=>x-y);return a[Math.floor(a.length/2)]};
+const pc=x=>`<span class="${x>=0?'up':'dn'}">${x>=0?'+':'−'}${fa(Math.abs(Math.round(x)))}٪</span>`;
+const norm=t=>t.replace(/ي/g,'ی').replace(/ك/g,'ک');
+const href=s=>'#/s/'+encodeURIComponent(s);
+
+S.forEach(x=>{const a=x.sales;
+  x.mom=(a[23]/a[22]-1)*100; x.yoy=(a[23]/a[11]-1)*100;
+  x.cum=(sum(a.slice(18))/sum(a.slice(12,18))-1)*100;});
+
+if(window.DEMO)$('#demo').textContent='⚠️ نسخه نمایشی: همه اعداد این سایت فرضی است و داده واقعی بازار نیست.';
+else $('#demo').remove();
+
+let W=JSON.parse(localStorage.w||'[]');
+function tw(s){const i=W.indexOf(s);
+  if(i>=0)W.splice(i,1);else{if(W.length>=10)return alert('حداکثر ۱۰ نماد در دیده‌بان');W.push(s)}
+  localStorage.w=JSON.stringify(W);route()}
+
+function bars(v,l,h=170){const w=640,m=Math.max(...v)*1.1,bw=w/v.length;
+  return `<svg viewBox="0 0 ${w} ${h+26}" class="ch">`+v.map((x,i)=>{const bh=x/m*h;
+    return `<rect x="${i*bw+3}" y="${h-bh}" width="${bw-6}" height="${bh}" rx="3" fill="${i==v.length-1?'#1fd3a2':'#3b82f6'}"><title>${l[i]}: ${nf(x)}</title></rect>`
+    +(i%3==0?`<text x="${i*bw+bw/2}" y="${h+16}" text-anchor="middle">${l[i].split(' ')[0]}</text>`:'')}).join('')+'</svg>'}
+
+function sr(q){q=norm(q.trim());
+  $('#res').innerHTML=q?(S.filter(x=>norm(x.s+x.n).includes(q)).slice(0,8)
+    .map(x=>`<a href="${href(x.s)}"><b>${x.s}</b> · ${x.n}</a>`).join('')||'<i>نمادی پیدا نشد</i>'):''}
+
+function top(title,key,dir){
+  const l=[...S].sort((a,b)=>dir*(b[key]-a[key])).slice(0,5);
+  return `<div class="card"><b>${title}</b>`+l.map((x,i)=>
+    `<a class="row" href="${href(x.s)}"><span>${fa(i+1)}. <b>${x.s}</b> <small class="sub">${x.n}</small></span>${pc(x[key])}</a>`).join('')+'</div>'}
+
+function home(){return `
+<div class="hero"><h1>مقصودیوم</h1>
+<p class="sub">تحلیل بنیادی هر سهم، ساده و سریع — فروش ماهانه، سودآوری و نسبت‌های مهم</p>
+<div class="sbox"><input placeholder="جستجوی نماد یا نام شرکت…" oninput="sr(this.value)"><div id="res"></div></div></div>
+<h2>برترین نمادها بر اساس گزارش شهریور ۱۴۰۵ · ${fa(S.length)} نماد</h2>
+<div class="grid3">${top('بیشترین رشد فروش نسبت به ماه قبل','mom',1)}${top('بیشترین افت فروش نسبت به ماه قبل','mom',-1)}${top('بیشترین رشد فروش ۶ ماهه','cum',1)}</div>
+<h2>تازه‌ترین تحلیل‌ها</h2>${anaList()}`}
+
+function anaList(){return `<div class="grid3">`+ANALYSES.map(a=>`<div class="card"><b>${a.t}</b><div class="sub">${a.a} · ${a.d}</div></div>`).join('')+'</div>'}
+
+function symbol(sym){
+  const x=S.find(v=>v.s===sym); if(!x)return '<div class="card">نماد پیدا نشد.</div>';
+  const peers=S.filter(v=>v.g===x.g).sort((a,b)=>b.mc-a.mc), mp=med(peers.map(v=>v.pe));
+  const notes=[];
+  notes.push(x.mom>=0?`فروش ماه آخر ${fa(Math.round(x.mom))}٪ نسبت به ماه قبل رشد داشته است.`:`فروش ماه آخر ${fa(Math.round(-x.mom))}٪ نسبت به ماه قبل افت کرده است.`);
+  notes.push(x.yoy>=0?`نسبت به مدت مشابه سال قبل ${fa(Math.round(x.yoy))}٪ رشد دارد.`:`نسبت به مدت مشابه سال قبل ${fa(Math.round(-x.yoy))}٪ کاهش دارد.`);
+  if(peers.length>1)notes.push(x.pe<mp?`P/E (${fa(x.pe)}) از میانه گروه (${fa(mp)}) پایین‌تر است؛ ارزان‌تر از هم‌گروهی‌ها معامله می‌شود.`:`P/E (${fa(x.pe)}) از میانه گروه (${fa(mp)}) بالاتر است؛ گران‌تر از هم‌گروهی‌ها معامله می‌شود.`);
+  return `
+<div class="head"><div><h1>${x.s}</h1><div class="sub">${x.n} · ${x.g} · سال مالی ${fa(x.fy)}</div></div>
+<button class="btn ${W.includes(x.s)?'g':''}" onclick="tw('${x.s}')">${W.includes(x.s)?'حذف از دیده‌بان':'⭐ افزودن به دیده‌بان'}</button></div>
+<div class="stats">
+ <div class="card stat"><b>${fa(x.mc)} همت</b><span>ارزش بازار</span></div>
+ <div class="card stat"><b>${fa(x.pe)}</b><span>P/E</span></div>
+ <div class="card stat"><b>${nf(x.eps)}</b><span>EPS (ریال)</span></div>
+ <div class="card stat"><b>${fa(x.payout)}٪</b><span>درصد تقسیم سود</span></div></div>
+<div class="card note"><b>خلاصه تحلیل خودکار</b><br>${notes.join(' ')}<div class="sub">برآورد ماشینی بر پایه اعداد بالاست، نه توصیه سرمایه‌گذاری.</div></div>
+<h2>فروش ماهانه (میلیارد تومان)</h2><div class="card">${bars(x.sales,L)}</div>
+<h2>سود خالص فصلی (میلیارد تومان)</h2><div class="card">${bars(x.profit,['۱','۲','۳','۴','۵','۶','۷','۸'].map(n=>'فصل '+n))}</div>
+<h2>نسبت‌های مهم</h2>
+<div class="card"><div class="row"><span>P/B</span><b>${fa(x.pbv)}</b></div>
+<div class="row"><span>بازده حقوق صاحبان سهام (ROE)</span><b>${fa(x.roe)}٪</b></div>
+<div class="row"><span>نسبت بدهی به دارایی</span><b>${fa(x.debt)}٪</b></div>
+<div class="row"><span>سود نقدی هر سهم (DPS)</span><b>${nf(x.dps)} ریال</b></div></div>
+<h2>مقایسه با هم‌گروهی‌ها (${x.g})</h2>${peerTable(peers,x.s)}`}
+
+function peerTable(l,me){return `<div class="card tw"><table><tr><th>نماد</th><th>ارزش بازار (همت)</th><th>P/E</th><th>رشد ماهانه</th><th>رشد سالانه</th><th>ROE</th></tr>`+
+  l.map(v=>`<tr class="${v.s===me?'me':''}"><td><a href="${href(v.s)}"><b>${v.s}</b></a></td><td>${fa(v.mc)}</td><td>${fa(v.pe)}</td><td>${pc(v.mom)}</td><td>${pc(v.yoy)}</td><td>${fa(v.roe)}٪</td></tr>`).join('')+'</table></div>'}
+
+function groups(){const g=[...new Set(S.map(x=>x.g))];
+  return `<h1>گروه‌های صنعت</h1><div class="grid3" style="margin-top:16px">`+g.map(n=>{const l=S.filter(x=>x.g===n);
+    return `<a class="card" href="#/g/${encodeURIComponent(n)}"><b>${n}</b><div class="sub">${fa(l.length)} نماد · P/E میانه ${fa(med(l.map(v=>v.pe)))}</div></a>`}).join('')+'</div>'}
+
+function group(n){const l=S.filter(x=>x.g===n).sort((a,b)=>b.mc-a.mc);
+  return `<h1>${n}</h1><div class="sub">مقایسه نمادهای گروه</div><div style="margin-top:14px">${peerTable(l,'')}</div>`}
+
+function watch(){const l=S.filter(x=>W.includes(x.s));
+  return `<h1>دیده‌بان من <span class="sub">${fa(l.length)}/۱۰ نماد</span></h1>`+
+   (l.length?`<div style="margin-top:14px">${peerTable(l,'')}</div>`:'<div class="card" style="margin-top:14px">هنوز نمادی اضافه نکرده‌اید. در صفحه هر نماد روی «افزودن به دیده‌بان» بزنید.</div>')}
+
+function route(){const h=decodeURIComponent(location.hash||'#/'), p=h.split('/');
+  let v;
+  if(p[1]==='s')v=symbol(p[2]); else if(p[1]==='groups')v=groups();
+  else if(p[1]==='g')v=group(p[2]); else if(p[1]==='watch')v=watch();
+  else if(p[1]==='analyses')v='<h1>تحلیل‌ها</h1><div style="margin-top:14px">'+anaList()+'</div>';
+  else v=home();
+  $('#app').innerHTML=v; scrollTo(0,0)}
+addEventListener('hashchange',route); route();
+</script>
+</body>
+</html>
