@@ -4,11 +4,15 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>مقصودیوم پرو | تحلیل بنیادی و سیگنال‌دهی بورس تهران</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+<script>
+window.onerror=function(m,s,l){var d=document.getElementById('errbar');if(!d)return false;d.style.display='block';d.textContent='⚠️ خطای فنی: '+m+' — خط '+l+' | کد را کامل از ابتدا تا انتها کپی کنید';return false};
+</script>
 <style>
 :root{--bg:#0a1020;--bg2:#0d1730;--card:#121d38;--line:#223254;--text:#e9eefb;--mut:#8fa3c8;--brand:#1fd3a2;--blue:#3b82f6;--red:#ff7a7a;--amber:#f6c265}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.9;font-size:15px}
 a{color:inherit;text-decoration:none}
+#errbar{display:none;background:#7f1d1d;color:#fecaca;padding:8px 18px;font-size:13px;border-bottom:1px solid #b91c1c}
 header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
 .logo{font-weight:800;font-size:18px;color:var(--brand)}
 header nav{display:flex;gap:2px;flex-wrap:wrap}
@@ -36,7 +40,7 @@ h1{font-size:25px}h2{font-size:17px;margin:26px 0 12px}
 .qc{text-align:center;font-size:15px;padding:18px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
 .stat b{display:block;font-size:18px}.stat span{color:var(--mut);font-size:12px}
-.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);align-items:center}
 .row:last-child{border:0}
 .up{color:var(--brand)}.dn{color:var(--red)}
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -85,6 +89,7 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
 </style>
 </head>
 <body>
+<div id="errbar"></div>
 <header>
   <a href="#/" class="logo">مقصودیوم پرو</a>
   <nav>
@@ -101,7 +106,7 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
 </div>
 <div class="demo">⚠️ داده‌های بنیادی نمایشی است؛ قیمت‌ها در صورت اتصال موفق از tsetmc واقعی می‌شوند.</div>
 <main id="app"></main>
-<footer>© ۱۴۰۵ مقصودیوم پرو • سیگنال‌ها احتمالاتی و تحلیلی‌اند نه قطعی؛ توصیه خرید/فروش محسوب نمی‌شوند.</footer>
+<footer>© ۱۴۰۵ مقصودیوم پرو · نسخه ۳٫۱ • سیگنال‌ها احتمالاتی و تحلیلی‌اند نه قطعی؛ توصیه خرید/فروش محسوب نمی‌شوند.</footer>
 <script>
 /* ================= داده‌ها ================= */
 const MN=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
@@ -241,7 +246,7 @@ function gauge(sc){
 /* ---------- سیگنال‌ها ---------- */
 function calcSig(x){
   const gap=Math.round((x.peG-x.pe)/x.peG*100);
-  const L={s:x.s,a:x.fr.L,d:x.score>=7?'خرید':x.score>=5.5?'نگهداری':'فروش',c:Math.round(Math.min(92,45+x.score*5)),w:[
+  const Lg={s:x.s,a:x.fr.L,d:x.score>=7?'خرید':x.score>=5.5?'نگهداری':'فروش',c:Math.round(Math.min(92,45+x.score*5)),w:[
     `امتیاز بنیادی ${fmtS(x.score)} از ۱۰`,
     gap>0?`ارزش‌گذاری ${fa(gap)}٪ پایین‌تر از میانه گروه`:`ارزش‌گذاری ${fa(-gap)}٪ بالاتر از میانه گروه`,
     x.yoy>=0?`رشد فروش سالانه ${fa(Math.round(x.yoy))}٪`:`افت فروش سالانه ${fa(Math.round(-x.yoy))}٪`,
@@ -256,7 +261,7 @@ function calcSig(x){
     `رشد فروش ماه اخیر ${fa(Math.round(x.mom))}٪`,
     `خالص خرید حقیقی: ${x.flow>=0?'+':'−'}${nfa(Math.abs(x.flow))} میلیارد تومان`,
     `فشار ${x.flow>=0?'خرید':'فروش'} حقیقی در روزهای اخیر`]};
-  return {L,M,K};
+  return {L:Lg,M,K};
 }
 function sigCard(r){return `<div class="card"><div class="head"><a href="${href(r.s)}"><b>${r.s}</b></a><span class="badge ${r.d==='خرید'?'b':r.d==='فروش'?'s':'n'}">${r.d}</span></div>
 <div class="sub">قدرت سیگنال: ${fa(r.c)}٪${r.a?` · تازگی: ${r.a}${r.a==='امروز'?' 🆕':''}`:''}</div>
@@ -288,7 +293,7 @@ function homePage(){
   <div class="sbox"><input placeholder="جستجوی نماد یا نام شرکت…" oninput="sr(this.value)"><div id="res"></div></div></div>
   <div class="stats">
   <div class="card stat"><b id="mki">${nfa(MKT.idx)}</b><span id="mkc">شاخص کل ${pc(MKT.chg)}</span></div>
-  <div class="card stat"><b>${fa(MKT.tr.toFixed(1))} همت</b><span>ارزش معاملات (نمایشی)</span></div>
+  <div class="card stat"><b>${fmtS(MKT.tr.toFixed(1))} همت</b><span>ارزش معاملات (نمایشی)</span></div>
   <div class="card stat"><b class="${MKT.flow>=0?'up':'dn'}">${MKT.flow>=0?'+':'−'}${nfa(Math.abs(MKT.flow))} میلیارد</b><span>ورودی خالص حقیقی (نمایشی)</span></div>
   <div class="card stat"><b class="up">${fa(buys.length)}/${fa(S.length)}</b><span>نماد با سیگنال خرید میان‌مدت</span></div></div>
   <h2>امتیازهای برتر بنیادی</h2>
@@ -316,13 +321,13 @@ function bestFactor(x){let bk='',bv=-1;FBK.forEach(([k])=>{if(x.F[k]>bv){bv=x.F[
 function basketPage(){
   const sel=[],gs={};
   [...S].sort((a,b)=>b.score-a.score).forEach(x=>{if(sel.length<5&&!gs[x.g]){gs[x.g]=1;sel.push(x)}});
-  const W=[25,22,20,18,15];
-  const items=sel.map((x,i)=>({t:x.s+' · '+fa(W[i])+'٪',v:x.mc*W[i]}));
+  const WT=[25,22,20,18,15];
+  const items=sel.map((x,i)=>({t:x.s+' · '+fa(WT[i])+'٪',v:x.mc*WT[i]}));
   return `<h1>سبد پیشنهادی رشدی</h1><div class="sub">انتخاب خودکار ۵ نماد برتر از گروه‌های مختلف — تنوع‌بخشی برای کاهش ریسک.</div>
   <div class="grid2" style="margin-top:14px">
   <div class="card"><b>ترکیب سبد (وزن‌ها)</b>${donut(items,150)}</div>
   <div class="card tw"><b>اعضای سبد</b><table><tr><th>نماد</th><th>وزن</th><th>نمره</th><th>حد ضرر</th><th>نقطه قوت</th></tr>`+
-  sel.map((x,i)=>`<tr><td><a href="${href(x.s)}"><b>${x.s}</b></a><div class="sub">${x.n}</div></td><td>${fa(W[i])}٪</td><td>${scb(x.score)}</td><td class="dn">−۱۰٪</td><td class="sub">${bestFactor(x)}</td></tr>`).join('')+
+  sel.map((x,i)=>`<tr><td><a href="${href(x.s)}"><b>${x.s}</b></a><div class="sub">${x.n}</div></td><td>${fa(WT[i])}٪</td><td>${scb(x.score)}</td><td class="dn">−۱۰٪</td><td class="sub">${bestFactor(x)}</td></tr>`).join('')+
   `</table><div class="sub" style="margin-top:8px">خروجی الگوریتمی از داده نمایشی؛ توصیه سرمایه‌گذاری نیست.</div></div></div>`}
 
 function portsPage(){
@@ -379,7 +384,7 @@ function autoNotes(x,peers){const mp=med(peers.map(v=>v.pe));const n=[];
   n.push(x.score>=7?`نمره بنیادی ${fmtS(x.score)} — وضعیت قوی.`:x.score>=5?`نمره بنیادی ${fmtS(x.score)} — متوسط.`:`نمره بنیادی ${fmtS(x.score)} — ضعیف.`);
   n.push(x.mom>=0?`فروش ماه آخر ${fa(Math.round(x.mom))}٪ رشد داشته.`:`فروش ماه آخر ${fa(Math.round(-x.mom))}٪ افت داشته.`);
   n.push(x.pe<mp?`P/E (${fa(x.pe)}) پایین‌تر از میانه گروه (${fa(mp)}) است.`:`P/E (${fa(x.pe)}) بالاتر از میانه گروه (${fa(mp)}) است.`);
-  n.push(`کیفیت سود: جریان نقد عملیاتی ${fmtS(x.ocfN)} برابر سود خالص است${x.ocfN<0.8?' — هشدار: فاصله سود حسابداری از نقدی‌شدن آن '.''}.`);
+  n.push(`کیفیت سود: جریان نقد عملیاتی ${fmtS(x.ocfN)} برابر سود خالص است${x.ocfN<0.8?' — هشدار: سود بیشتر از نقد واقعی است':''}.`);
   if(x.aud==='مشروط')n.push('نظر حسابرس مشروط است؛ نیازمند دقت بیشتر.');
   return n.join(' ')+'<div class="sub" style="margin-top:6px">برآورد ماشینی — توصیه سرمایه‌گذاری نیست.</div>'}
 
@@ -487,7 +492,7 @@ let UPD=new Date();
 function drawUpd(){const t=n=>(n<10?'0'+n:n);$('#upd').textContent='آخرین به‌روزرسانی: '+fa(t(UPD.getHours())+':'+t(UPD.getMinutes())+':'+t(UPD.getSeconds()))+(MODE==='live'?' (زنده)':' (شبیه‌سازی)')}
 function badge(){const m=$('#mode');
   if(MODE==='live'){m.textContent='🟢 متصل به TSETMC — قیمت '+fa(Object.keys(LIVEP).length)+' نماد واقعی است';m.classList.add('ok')}
-  else{m.textContent='🟡 حالت نمایشی — قیمت واقعی در دسترس نیست (سرور خارج از ایران یا فایل api/market.js هنوز ساخته نشده)';m.classList.remove('ok')}}
+  else{m.textContent='🟡 حالت نمایشی — قیمت واقعی در دسترس نیست';m.classList.remove('ok')}}
 async function pull(){try{const r=await fetch('api/market',{cache:'no-store'});const j=await r.json();
   if(j&&j.ok&&j.prices&&Object.keys(j.prices).length){MODE='live';LIVEP=j.prices}else MODE='demo'}
   catch(e){MODE='demo'}}
@@ -520,7 +525,7 @@ function route(keep){const h=decodeURIComponent(location.hash||'#/'),p=h.split('
   $('#app').innerHTML=v;if(!keep)scrollTo(0,0)}
 addEventListener('hashchange',()=>route(false));
 drawTK();drawUpd();
-try{route(false);cycle()}catch(e){$('#app').innerHTML='<div class="card">⚠️ خطا در اجرای سایت: '+e.message+'<br>کل کد را دوباره و کامل کپی کنید.</div>'}
+try{route(false);cycle()}catch(e){$('#app').innerHTML='<div class="card warn">⚠️ خطا در اجرای سایت: '+e.message+'</div>'}
 </script>
 </body>
 </html>
