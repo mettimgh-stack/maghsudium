@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>مقصودیوم پرو | تحلیل بنیادی و سیگنال‌دهی بورس تهران</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-<script>
-window.onerror=function(m,s,l){var d=document.getElementById('errbar');if(!d)return false;d.style.display='block';d.textContent='⚠️ خطای فنی: '+m+' — خط '+l+' | کد را کامل از ابتدا تا انتها کپی کنید';return false};
-</script>
 <style>
 :root{--bg:#0a1020;--bg2:#0d1730;--card:#121d38;--line:#223254;--text:#e9eefb;--mut:#8fa3c8;--brand:#1fd3a2;--blue:#3b82f6;--red:#ff7a7a;--amber:#f6c265}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.9;font-size:15px}
 a{color:inherit;text-decoration:none}
-#errbar{display:none;background:#7f1d1d;color:#fecaca;padding:8px 18px;font-size:13px;border-bottom:1px solid #b91c1c}
 header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
 .logo{font-weight:800;font-size:18px;color:var(--brand)}
 header nav{display:flex;gap:2px;flex-wrap:wrap}
 header nav a{padding:4px 10px;border-radius:8px;color:var(--mut);font-size:12.5px}
 header nav a:hover{background:var(--card);color:var(--text)}
 .demo{background:rgba(246,194,101,.1);border-bottom:1px dashed #f6c265;color:#f6c265;text-align:center;padding:5px;font-size:12px}
+#errbar{position:fixed;bottom:0;left:0;right:0;background:#7f1d1d;color:#fecaca;padding:10px 16px;font-size:13px;z-index:999;text-align:center}
 .tkwrap{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;background:var(--bg2);border-bottom:1px solid var(--line)}
 .tchip{flex:none;display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:2px 10px;font-size:12px;color:var(--mut)}
 .tchip b{color:var(--text)}
@@ -31,7 +29,6 @@ h1{font-size:25px}h2{font-size:17px;margin:26px 0 12px}
 .hero{text-align:center;padding:30px 10px 6px}
 .sbox{position:relative;max-width:560px;margin:16px auto}
 .sbox input{width:100%;padding:13px 18px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;outline:none}
-.sbox input:focus{border-color:var(--brand)}
 #res{position:absolute;inset-inline:0;top:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-top:4px;text-align:right;overflow:hidden;z-index:5}
 #res a,#res i{display:block;padding:8px 16px}#res a:hover{background:var(--bg2)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
@@ -40,9 +37,9 @@ h1{font-size:25px}h2{font-size:17px;margin:26px 0 12px}
 .qc{text-align:center;font-size:15px;padding:18px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
 .stat b{display:block;font-size:18px}.stat span{color:var(--mut);font-size:12px}
-.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);align-items:center}
+.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
 .row:last-child{border:0}
-.up{color:var(--brand)}.dn{color:var(--red)}
+.up{color:var(--brand)}.dn{color:var(--red)}.am{color:var(--amber)}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line)}
 th{color:var(--mut);font-size:11.5px}
@@ -89,7 +86,6 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
 </style>
 </head>
 <body>
-<div id="errbar"></div>
 <header>
   <a href="#/" class="logo">مقصودیوم پرو</a>
   <nav>
@@ -104,65 +100,84 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
   <span id="upd"></span>
   <span class="lvb" id="mode">در حال اتصال…</span>
 </div>
-<div class="demo">⚠️ داده‌های بنیادی نمایشی است؛ قیمت‌ها در صورت اتصال موفق از tsetmc واقعی می‌شوند.</div>
+<div class="demo">⚠️ نسخه ۵ — ۲۹ نماد شامل ۴ صندوق 🏦 · داده‌های بنیادی نمایشی · قیمت‌ها هر ۱۵ ثانیه شبیه‌سازی می‌شوند تا اتصال به سرور ایرانی</div>
+<div id="errbar" style="display:none"></div>
 <main id="app"></main>
-<footer>© ۱۴۰۵ مقصودیوم پرو · نسخه ۳٫۱ • سیگنال‌ها احتمالاتی و تحلیلی‌اند نه قطعی؛ توصیه خرید/فروش محسوب نمی‌شوند.</footer>
+<footer>© ۱۴۰۵ مقصودیوم پرو • سیگنال‌ها احتمالاتی و تحلیلی‌اند نه قطعی؛ توصیه خرید/فروش محسوب نمی‌شوند.</footer>
 <script>
-/* ================= داده‌ها ================= */
+window.onerror=function(m,s,l){var d=document.getElementById('errbar');if(!d)return false;d.style.display='block';d.textContent='⚠️ خطای کد: '+m+' — خط '+l+' — لطفاً همین پیام را برای دستیار کپی کنید.';return false};
+</script>
+<script>
+/* ================= نسخه ۵ · مقصودیوم پرو ================= */
+function errShow(m){var d=document.getElementById('errbar');if(d){d.style.display='block';d.textContent='⚠️ خطا: '+m+' — لطفاً همین پیام را برای دستیار کپی کنید.'}}
+
+/* ---------- داده‌ها ---------- */
 const MN=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
-const L=Array.from({length:24},(_,i)=>{const k=6+i;return MN[k%12]+' '+(1403+Math.floor(k/12))});
-function rnd(seed){let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280}}
-const BASE=[
+const LBL=Array.from({length:24},(_,i)=>{const k=6+i;return MN[k%12]+' '+(1403+Math.floor(k/12))});
+function rnd(seed){let s=seed;return function(){s=(s*9301+49297)%233280;return s/233280}}
+
+/* [نماد،نام،گروه،ارزش بازار،P/E،EPS،سال مالی،ROE،بدهی،P/B،مطالبات،حسابرس،تقسیم] */
+const STK=[
 ['فولاد','فولاد مبارکه اصفهان','فلزات اساسی',1100,6.5,9000,'12/29',28,35,1.2,12,'مطلق',60],
 ['فملی','ملی صنایع مس ایران','فلزات اساسی',700,5.8,6000,'12/29',32,28,1.1,10,'مطلق',70],
+['کگل','معدنی و صنعتی گل‌گهر','فلزات اساسی',420,6.0,8000,'12/29',26,30,1.3,9,'مطلق',75],
+['کچاد','معدنی و صنعتی چادرملو','فلزات اساسی',290,5.2,5000,'12/29',30,20,1.4,8,'مطلق',80],
 ['شبندر','پالایش نفت بندرعباس','فرآورده‌های نفتی',650,4.9,15000,'12/29',45,20,1.0,8,'مطلق',80],
 ['شپنا','پالایش نفت اصفهان','فرآورده‌های نفتی',520,5.2,12000,'12/29',40,22,1.1,9,'مطلق',75],
 ['شتران','پالایش نفت تهران','فرآورده‌های نفتی',210,5.5,7000,'12/29',38,24,1.3,11,'مطلق',72],
-['وبملت','بانک ملت','بانک‌ها',900,4.1,8000,'12/29',18,70,0.9,25,'مشروط',35],
-['وتجارت','بانک تجارت','بانک‌ها',800,3.9,7000,'12/29',16,75,0.8,28,'مشروط',30],
+['نوری','پتروشیمی نوری','پتروشیمی',260,4.6,4500,'12/29',35,18,1.2,7,'مطلق',85],
 ['شپدیس','پتروشیمی پردیس','پتروشیمی',1000,6.2,10000,'12/29',30,18,1.5,7,'مطلق',65],
 ['شکبیر','پتروشیمی امیرکبیر','پتروشیمی',90,7.0,2500,'12/29',22,15,1.8,9,'مطلق',68],
+['وبملت','بانک ملت','بانک‌ها',900,4.1,8000,'12/29',18,70,0.9,25,'مشروط',35],
+['وتجارت','بانک تجارت','بانک‌ها',800,3.9,7000,'12/29',16,75,0.8,28,'مشروط',30],
+['خودرو','ایران‌خودرو','خودرو و قطعات',480,9.5,1500,'12/29',14,55,1.6,20,'مشروط',15],
+['خساپا','سایپا','خودرو و قطعات',380,11,900,'12/29',12,60,1.8,22,'مشروط',10],
+['زمیداد','زمیداد','خودرو و قطعات',180,8.8,2000,'12/29',20,45,1.7,15,'مطلق',25],
 ['سشرق','سیمان شرق','سیمان',25,8.5,300,'12/29',12,40,1.0,18,'مطلق',55],
 ['سپاها','سیمان سپاهان','سیمان',18,9.0,250,'12/29',10,44,1.1,20,'مطلق',50],
 ['دفارا','داروسازی فارابی','دارو',60,10.2,900,'12/29',20,30,2.1,15,'مطلق',75],
 ['وخارزم','گروه سرمایه‌گذاری خوارزمی','سرمایه‌گذاری‌ها',78,6.0,400,'03/31',24,55,1.4,22,'مشروط',40],
+['غدیر','سرمایه‌گذاری غدیر','سرمایه‌گذاری‌ها',140,5.0,700,'12/29',22,50,1.1,18,'مشروط',45],
 ['تاپیکو','سرمایه‌گذاری نفت و گاز و پتروشیمی تامین','محصولات شیمیایی',527,4.2,5200,'02/31',26,32,0.8,14,'مطلق',90],
 ['فخوز','صنایع غذایی خوش‌نوش','محصولات غذایی',120,7.5,1500,'12/29',18,38,1.2,16,'مطلق',62],
-['بترابر','بازرگانی و خدمات تأمین ترانهای ایران','حمل و نقل',35,6.8,600,'12/29',15,42,1.0,13,'مطلق',58]
+['بترابر','بازرگانی و خدمات تأمین ترانهای ایران','حمل و نقل',35,6.8,600,'12/29',15,42,1.0,13,'مطلق',58],
+['شمپنا','مپنا گروه','تأمین برق',340,9.2,3000,'12/29',21,40,2.0,14,'مطلق',30],
+['گولزار','گلرنگ صنعتی','لوازم خانگی',90,7.8,1200,'12/29',19,35,1.5,12,'مطلق',40]
+];
+/* [نماد،نام،نوع صندوق،اندازه(همت)،بازده سال،NAV(تومان)،کارمزد%] */
+const FND=[
+['یاقوت','صندوق یاقوت','مختلط',45,32,1485,1.4],
+['الماس','صندوق الماس','مختلط',38,29,2620,1.5],
+['وجاهت','صندوق آرمان وجاهت','درآمد ثابت',52,23,1060,1.2],
+['اعتماد','صندوق اعتماد','سهامی',18,41,1530,1.6]
 ];
 const INTRO={
-'فولاد':'بزرگ‌ترین تولیدکننده فولاد ایران و خاورمیانه؛ ورق گرم و سرد، تختال و محصولات نهایی. بازیگر اصلی صادرات فولاد کشور.',
-'فملی':'بزرگ‌ترین تولیدکننده مس ایران؛ از معدن تا کاتد مس و مفتول. درآمد به‌شدت وابسته به قیمت جهانی مس.',
+'فولاد':'بزرگ‌ترین تولیدکننده فولاد ایران و خاورمیانه؛ ورق گرم و سرد و تختال. بازیگر اصلی صادرات فولاد کشور.',
+'فملی':'بزرگ‌ترین تولیدکننده مس ایران؛ از معدن تا کاتد مس. درآمد وابسته به قیمت جهانی مس.',
 'شبندر':'پالایشگاه بندرعباس؛ بنزین، گازوئیل و روغن موتور. حاشیه سود وابسته به نرخ خوراک و فرآورده.',
-'شپنا':'پالایشگاه اصفهان؛ سبد محصولات سوختی متنوع با ظرفیت پالایش بالا و بازار داخلی پایدار.',
-'شتران':'قدیمی‌ترین پالایشگاه ایران در تهران؛ ارزشمند از نظر دارایی‌ها اما با محدودیت ظرفیت پالایش.',
-'وبملت':'بانک خصوصی بزرگ با شبکه شعب گسترده؛ درآمد از تسهیلات و کارمزد. مالک اصلی گروه صنعتی امید.',
-'وتجارت':'بانک دولتی بزرگ؛ ارزانی نسبی نسبت به ارزش دفتری اما ریسک مطالبات و دارایی‌های مقطوع بالا.',
-'شپدیس':'قطب الفین کشور؛ تولید پلی‌اتیلن و محصولات پتروشیمی با ظرفیت صادراتی بالا.',
-'شکبیر':'پتروشیمی امیرکبیر؛ متانول و آمونیاک؛ حساسیت بالا به قیمت جهانی و نرخ خوراک.',
-'سشرق':'تولید کلینکر و سیمان در شرق کشور؛ وابسته به ساخت‌وساز و پروژه‌های عمرانی منطقه.',
-'سپاها':'سیمان سپاهان؛ حضور در بازار مرکزی کشور با سبد محصولات سیمانی و کلینکر.',
-'دفارا':'داروسازی فارابی؛ تولید داروهای ژنریک و تزریقی؛ صنعت دفاعی با تقاضای پایدار.',
+'شپنا':'پالایشگاه اصفهان؛ سبد محصولات سوختی متنوع با ظرفیت پالایش بالا.',
+'شتران':'قدیمی‌ترین پالایشگاه ایران در تهران؛ ارزشمند از نظر دارایی اما با محدودیت ظرفیت.',
+'وبملت':'بانک خصوصی بزرگ با شبکه شعب گسترده؛ مالک اصلی گروه صنعتی امید.',
+'وتجارت':'بانک دولتی بزرگ؛ ارزانی نسبت به ارزش دفتری اما ریسک مطالبات و دارایی‌های مقطوع.',
+'شپدیس':'قطب الفین کشور؛ پلی‌اتیلن و محصولات پتروشیمی با ظرفیت صادراتی بالا.',
 'وخارزم':'هلدینگ مالی خوارزمی؛ سرمایه‌گذاری در بانک‌ها و صنایع با رویکرد ارزش دفتری.',
 'تاپیکو':'هلدینگ نفت و گاز تامین؛ مادر پتروشیمی‌های بورسی و غیربورسی؛ سبد هلدینگی گسترده.',
-'فخوز':'گروه غذایی خوش‌نوش؛ مالک برند چی‌توز؛ تنوع محصولات غذایی و صادرات منطقه‌ای.',
-'بترابر':'هلدینگ تران؛ در ترکیب دارایی‌ها سهام تپسی و اسنپ‌فود؛ بازیگر حمل‌ونقل دیجیتال کشور.'
+'فخوز':'گروه غذایی خوش‌نوش؛ مالک برند چی‌توز؛ تنوع محصولات و صادرات منطقه‌ای.',
+'بترابر':'هلدینگ تران؛ در دارایی‌ها سهام تپسی و اسنپ‌فود؛ بازیگر حمل‌ونقل دیجیتال.',
+'شمپنا':'مپنا؛ غول توسعه نیروگاه و انرژی کشور با زیرمجموعه‌های متنوع.',
+'خودرو':'ایران‌خودرو؛ بزرگ‌ترین خودروساز کشور؛ وابسته به نرخ ارز و قیمت‌گذاری دستوری.'
 };
-const NSENT={'فولاد':1,'تاپیکو':1,'شبندر':1,'شپدیس':-1,'وتجارت':-1};
-const S=BASE.map(([s,n,g,mc,pe,eps,fy,roe,debt,pb,rec,aud,payout],i)=>{
-  const r=rnd(i*13+5);let v=mc*1.5+300;
-  const sales=L.map(()=>{v=Math.max(1,v*(0.93+r()*0.17));return Math.round(v)});
-  const profit=Array.from({length:8},(_,q)=>Math.round(sales.slice(q*3,q*3+3).reduce((a,b)=>a+b,0)*0.12*(0.7+r()*0.6)));
-  return {s,n,g,fy,mc,pe,eps,roe,debt,pb,rec,aud,payout,sales,profit,nws:NSENT[s]||0,
-    dps:Math.round(eps*payout/100)};
-});
+const NSENT={'فولاد':1,'تاپیکو':1,'شبندر':1,'شپدیس':-1,'وتجارت':-1,'خودرو':-1};
 const PORTS={
-'تاپیکو':{b:[['فولاد',5200,5.2],['فملی',3100,-2.1],['شپدیس',2800,8.4],['شبندر',1900,0.6],['شتران',700,-4.0]],
-  nb:[['پتروشیمی زاگرس',2600,3.1],['پتروشیمی مهاباد',1400,-1.2],['مهندسی و توسعه انرژی تامین',2200,0.4],['سایر شرکت‌ها',900,1.0]]},
-'وخارزم':{b:[['وتجارت',180,2.2],['وبملت',150,-1.0],['فخوز',120,6.5],['دفارا',80,1.2]],
-  nb:[['صندوق درآمد ثابت تابان',140,0.2],['سپرده‌های بانکی',210,0.1],['شرکت ساختمانی البرز',60,-0.5]]},
-'فخوز':{b:[['وتجارت',95,1.5],['سپاها',40,3.2]],
-  nb:[['کارخانه آبمیوه سن‌ایچ',420,2.0],['شرکت پخش سراسری',260,0.8],['دامداری و کشاورزی',150,-1.5]]}
+'تاپیکو':{b:[['فولاد',5200,5.2],['فملی',3100,-2.1],['شپدیس',2800,8.4],['شبندر',1900,0.6],['شتران',700,-4.0]],nb:[['پتروشیمی زاگرس',2600,3.1],['پتروشیمی مهاباد',1400,-1.2],['مهندسی و توسعه انرژی تامین',2200,0.4],['سایر شرکت‌ها',900,1.0]]},
+'وخارزم':{b:[['وتجارت',180,2.2],['وبملت',150,-1.0],['فخوز',120,6.5],['دفارا',80,1.2]],nb:[['صندوق درآمد ثابت تابان',140,0.2],['سپرده‌های بانکی',210,0.1],['شرکت ساختمانی البرز',60,-0.5]]},
+'فخوز':{b:[['وتجارت',95,1.5],['سپاها',40,3.2]],nb:[['کارخانه آبمیوه سن‌ایچ',420,2.0],['شرکت پخش سراسری',260,0.8],['دامداری و کشاورزی',150,-1.5]]},
+'بترابر':{b:[['خودرو',60,0.5],['زمیداد',35,1.1]],nb:[['تپسی',1900,4.0],['اسنپ‌فود',1150,2.3],['باسکول',320,-2.0]]},
+'غدیر':{b:[['شپنا',420,1.0],['شمپنا',380,0.7],['سشرق',140,-1.8],['زمیداد',110,0.3]],nb:[['نیروگاه غدیر',880,0.5],['صنایع دریایی',350,1.2],['هلدینگ‌ها و زیرمجموعه‌ها',540,0.1]]},
+'یاقوت':{b:[['فولاد',980,1.2],['فملی',760,0.5],['شپدیس',540,2.0],['شبندر',320,-1.5],['خودرو',210,0.8]],nb:[['سپرده بانکی',180,0.1],['اوراق مشارکت',240,0.2],['واحدهای صندوق درآمد ثابت',90,0.0]]},
+'الماس':{b:[['تاپیکو',620,1.8],['شمپنا',310,0.4],['فخوز',150,-0.6],['بترابر',110,0.2]],nb:[['سپرده بانکی',420,0.1],['اوراق خزانه',310,0.3],['اوراق مسدود',60,0.0]]},
+'وجاهت':{b:[['خودرو',60,0.0]],nb:[['سپرده بانکی',1500,0.1],['اوراق خزانه و مشارکت',2100,0.2],['اوراق شرکت‌ها',800,0.1]]},
+'اعتماد':{b:[['فولاد',220,0.6],['شبندر',180,1.1],['وبملت',140,-0.4],['کچاد',120,2.2]],nb:[['سپرده و اوراق',160,0.1]]}
 };
 const FALERTS=[
 ['۰۹:۴۵','صندوق آبان‌سپاهان (سهامی)','ورود','فولاد','+۱.۸٪ سبد'],
@@ -171,54 +186,96 @@ const FALERTS=[
 ['۱۱:۳۰','شخص حقوقی بزرگ (سایم)','خروج','وبملت','−۲.۴٪'],
 ['۱۲:۱۰','صندوق آکاند','ورود','فملی','+۲.۱٪ سبد'],
 ['۱۳:۰۵','صندوق سرمایه‌گذاری غدیر','افزایش سهم','تاپیکو','+۰.۶٪ سبد']];
-const GFLOW=[['فلزات اساسی',340],['فرآورده‌های نفتی',210],['پتروشیمی',150],['محصولات غذایی',60],['دارو',30],['سرمایه‌گذاری‌ها',-70],['بانک‌ها',-90],['سیمان',-120],['حمل و نقل',-25]];
 const NEWS=[
-['افزایش ۳۵٪ فروش ماهانه فولاد مبارکه نسبت به مدت مشابه سال قبل','فولاد','۱ ساعت پیش'],
-['تاپیکو: تصویب افزایش سرمایه از محل آورده نقدی','تاپیکو','۳ ساعت پیش'],
-['جهش نرخ خوراک پتروشیمی‌ها؛ اثر مستقیم بر حاشیه سود','شپدیس','۵ ساعت پیش'],
+['گزارش سبد یاقوت: سهم فولاد به ۴.۳ درصد پرتفوی رسید','یاقوت','۲ ساعت پیش'],
+['افزایش ۳۵٪ فروش ماهانه فولاد مبارکه نسبت به مدت مشابه','فولاد','۳ ساعت پیش'],
+['تاپیکو: تصویب افزایش سرمایه از محل آورده نقدی','تاپیکو','۵ ساعت پیش'],
+['جهش نرخ خوراک پتروشیمی‌ها؛ اثر مستقیم بر حاشیه سود','شپدیس','دیروز'],
 ['اصلاح نرخ سوخت؛ افزایش حاشیه سود پالایشی‌ها','شبندر','دیروز'],
-['گزارش حسابرس مشروط بانک تجارت با تأکید بر مطالبات مشکوک‌الوصول','وتجارت','دیروز']];
+['گزارش حسابرس مشروط تجارت با تأکید بر مطالبات مشکوک‌الوصول','وتجارت','دیروز'],
+['غدیر از خروج کامل سهام سایپا از پرتفوی خبر داد','غدیر','۲ روز پیش']];
+const GFLOW=[['فلزات اساسی',340],['فرآورده‌های نفتی',210],['پتروشیمی',150],['صندوق‌ها',95],['محصولات غذایی',60],['خودرو و قطعات',35],['دارو',30],['سرمایه‌گذاری‌ها',-70],['بانک‌ها',-90],['سیمان',-120],['حمل و نقل',-25]];
+/* [تاریخ، نماد نهاد، نام نهاد، اقدام، هدف، از%، به%، ارزش(میلیارد)، بازار] */
+const CHG=[
+['1405/07/12','یاقوت','صندوق یاقوت','خرید','فولاد','3.1','4.3',980,'بورس'],
+['1405/07/12','تاپیکو','تاپیکو','افزایش','پتروشیمی زاگرس','6.0','7.5',2600,'غیربورس'],
+['1405/07/10','غدیر','سرمایه‌گذاری غدیر','فروش','خساپا','2.2','0.9',380,'بورس'],
+['1405/07/10','الماس','صندوق الماس','خرید','شمپنا','1.4','2.2',310,'بورس'],
+['1405/07/08','وخارزم','سرمایه‌گذاری خوارزمی','ورود','فملی','0.0','1.8',310,'بورس'],
+['1405/07/08','بترابر','بترابر','کاهش','تپسی','4.0','2.5',1900,'غیربورس'],
+['1405/07/05','یاقوت','صندوق یاقوت','افزایش','فولاد','2.6','3.1',760,'بورس'],
+['1405/07/05','وخارزم','سرمایه‌گذاری خوارزمی','خرید','دفارا','0.8','1.6',80,'بورس'],
+['1405/07/03','اعتماد','صندوق اعتماد','فروش','شتران','2.5','1.1',240,'بورس'],
+['1405/07/03','غدیر','سرمایه‌گذاری غدیر','خروج','شپنا','1.5','0.0',520,'بورس'],
+['1405/06/30','یاقوت','صندوق یاقوت','افزایش','اوراق مشارکت','12.0','15.0',240,'غیربورس'],
+['1405/06/28','اعتماد','صندوق اعتماد','خرید','کچاد','0.0','1.2',120,'بورس']];
 
-/* ================= ابزار ================= */
+/* ---------- ابزار ---------- */
 const $=q=>document.querySelector(q);
 const FA='۰۱۲۳۴۵۶۷۸۹',fa=x=>String(x).replace(/\d/g,d=>FA[d]);
-const fmtS=v=>fa(String(v).replace('.','٫'));
+const fmtS=v=>String(v).replace('.','٫');
 const nfa=x=>fa(String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g,'٬'));
 const sum=a=>a.reduce((x,y)=>x+y,0);
 const med=a=>{a=[...a].sort((x,y)=>x-y);return a[Math.floor(a.length/2)]};
-const pc=x=>`<span class="${x>=0?'up':'dn'}">${x>=0?'+':'−'}${fa(Math.abs(Math.round(x)))}٪</span>`;
+const pc=x=>'<span class="'+(x>=0?'up':'dn')+'">'+(x>=0?'+':'−')+fa(Math.round(Math.abs(x)))+'٪</span>';
 const norm=t=>t.replace(/ي/g,'ی').replace(/ك/g,'ک');
 const href=s=>'#/s/'+encodeURIComponent(s);
 const C=['#1fd3a2','#3b82f6','#f6c265','#a78bfa','#ff7a7a','#38bdf8','#fb923c','#4ade80','#f472b6'];
-function scb(v){return `<span class="sc-b" style="background:${v>=7?'#1fd3a2':v>=5?'#f6c265':'#ff7a7a'}">${fmtS(v)}</span>`}
+function scb(v){return '<span class="sc-b" style="background:'+(v>=7?'#1fd3a2':(v>=5?'#f6c265':'#ff7a7a'))+'">'+fmtS(v)+'</span>'}
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+const ACT={خرید:'خرید',فروش:'فروش',افزایش:'افزایش',کاهش:'کاهش',ورود:'ورود',خروج:'خروج'};
+function chgBadge(a){const good=['خرید','افزایش','ورود'].indexOf(a)>=0;return '<span class="badge '+(good?'b':'s')+'">'+ACT[a]+'</span>'}
+function chgTable(rows){
+  return '<table><tr><th>تاریخ</th><th>نهاد</th><th>اقدام</th><th>هدف</th><th>تغییر سهم</th><th>ارزش (میلیارد)</th><th>بازار</th></tr>'+
+  rows.map(c=>{
+    const tgt=c[4];
+    const link=S.some(v=>v.s===tgt)?'<a href="'+href(tgt)+'"><b>'+tgt+'</b></a>':'<b>'+tgt+'</b>';
+    return '<tr><td class="sub">'+fa(c[0])+'</td><td><b>'+c[2]+'</b></td><td>'+chgBadge(c[3])+'</td><td>'+link+'</td><td class="sub">'+fa(c[5])+'٪ به '+fa(c[6])+'٪</td><td>'+nfa(c[7])+'</td><td class="sub">'+c[8]+'</td></tr>';
+  }).join('')+'</table>';
+}
 
-/* ================= محاسبات ================= */
+/* ---------- ساخت داده ---------- */
+function mkStock(a,i){
+  const [s,n,g,mc,pe,eps,fy,roe,debt,pb,rec,aud,payout]=a;
+  const r=rnd(i*13+5);let v=mc*1.5+300;
+  const sales=LBL.map(()=>{v=Math.max(1,v*(0.93+r()*0.17));return Math.round(v)});
+  const profit=Array.from({length:8},(_,q)=>Math.round(sales.slice(q*3,q*3+3).reduce((x,y)=>x+y,0)*0.12*(0.7+r()*0.6)));
+  return {t:'s',s,n,g,fy,mc,pe,eps,roe,debt,pb,rec,aud,payout,sales,profit,nws:NSENT[s]||0,dps:Math.round(eps*payout/100)};
+}
+function mkFund(a,i){
+  const [s,n,kind,mc,ret,nav,fee]=a;
+  const r=rnd(i*31+9);let v=mc*8;
+  const sales=LBL.map(()=>{v=Math.max(1,v*(0.97+r()*0.08));return Math.round(v)});
+  const profit=Array.from({length:8},(_,q)=>Math.round(sales.slice(q*3,q*3+3).reduce((x,y)=>x+y,0)*0.06*(0.8+r()*0.5)));
+  let nv=nav/(1+ret/100);
+  const navT=Array.from({length:12},()=>{nv=nv*(1+ret/100/12);return Math.round(nv)});
+  return {t:'f',s,n,g:'صندوق‌ها',kind,mc,ret,nav,fee,pe:0,peG:0,eps:0,roe:ret,debt:0,pb:0,rec:0,aud:'—',payout:0,fy:'—',sales,profit,navT,nws:0,dps:0};
+}
+const S=STK.map(mkStock).concat(FND.map(mkFund));
 S.forEach(x=>{
-  x.peG=med(S.filter(v=>v.g===x.g).map(v=>v.pe));
+  if(x.t==='s')x.peG=med(S.filter(v=>v.g===x.g&&v.t==='s').map(v=>v.pe));
   const a=x.sales;
-  x.mom=(a[23]/a[22]-1)*100;x.yoy=(a[23]/a[11]-1)*100;x.cum=(sum(a.slice(18))/sum(a.slice(12,18))-1)*100;
+  x.mom=(a[23]/a[22]-1)*100;x.yoy=(a[23]/a[11]-1)*100;
   x.mar=Math.round(sum(x.profit)/sum(x.sales)*1000)/10;
   x.pg=(x.profit[7]/x.profit[6]-1)*100;
-  const r=rnd(x.mc+x.pe);
+  const r=rnd(Math.round(x.mc*10)+x.pe);
   x.hg=Array.from({length:10},()=>Math.round((r()-0.45)*80));
   x.flow=Math.round(sum(x.hg)/2);
-  const ret=[];let s0=0;x.profit.forEach(p=>{s0+=Math.round(p*0.55);ret.push(s0)});x.ret=ret;
-  /* --- ترازنامه --- */
-  const r5=rnd(x.mc*3+x.pe*7);
-  const TA=Math.max(100,Math.round(x.sales[23]*2.2));
-  x.ta=TA;const dr=x.debt/100;
-  x.cl=Math.round(TA*dr*.62);x.ltd=Math.round(TA*dr*.38);x.eq=TA-x.cl-x.ltd;
-  x.ca=Math.round(TA*(.34+r5()*.2));x.fa=TA-x.ca;
-  x.de=+((x.cl+x.ltd)/Math.max(x.eq,1)).toFixed(2);
-  x.roa=Math.round(x.profit[7]*4/TA*1000)/10;
-  x.cr=+(x.ca/Math.max(x.cl,1)).toFixed(2);
-  /* --- جریان نقد فصلی --- */
-  x.cfq=x.profit.map(p=>{const op=Math.round(p*(.6+r5()*.5)),iv=-Math.round(p*(.2+r5()*.4)),fi=-Math.round(p*(x.payout/100)*(.7+r5()*.5));return [op,iv,fi]});
-  x.ocfN=+(sum(x.cfq.map(q=>q[0]))/Math.max(sum(x.profit.slice(4)),1)).toFixed(2);
-  x.dps2=[Math.round(x.dps*.85),x.dps];
-  /* --- تازگی سیگنال --- */
-  const r4=rnd(x.pe*29+x.mc);const AG=['امروز','این هفته','این ماه'];
+  const rt=[];let s0=0;x.profit.forEach(p=>{s0+=Math.round(p*0.55);rt.push(s0)});x.retE=rt;
+  if(x.t==='s'){
+    const r5=rnd(Math.round(x.mc*3)+x.pe*7);
+    const TA=Math.max(100,Math.round(x.sales[23]*2.2));
+    x.ta=TA;const dr=x.debt/100;
+    x.cl=Math.round(TA*dr*.62);x.ltd=Math.round(TA*dr*.38);x.eq=TA-x.cl-x.ltd;
+    x.ca=Math.round(TA*(.34+r5()*.2));x.fa=TA-x.ca;
+    x.de=+((x.cl+x.ltd)/Math.max(x.eq,1)).toFixed(2);
+    x.roa=Math.round(x.profit[7]*4/TA*1000)/10;
+    x.cr=+(x.ca/Math.max(x.cl,1)).toFixed(2);
+    x.cfq=x.profit.map(p=>{const op=Math.round(p*(.6+r5()*.5)),iv=-Math.round(p*(.2+r5()*.4)),fi=-Math.round(p*(x.payout/100)*(.7+r5()*.5));return [op,iv,fi]});
+    x.ocfN=+(sum(x.cfq.map(q=>q[0]))/Math.max(sum(x.profit.slice(4)),1)).toFixed(2);
+    x.dps2=[Math.round(x.dps*.85),x.dps];
+  }
+  const r4=rnd(x.pe*29+Math.round(x.mc));const AG=['امروز','این هفته','این ماه'];
   x.fr={K:AG[Math.floor(r4()*3)],M:AG[Math.floor(r4()*3)],L:'این ماه'};
 });
 
@@ -226,306 +283,60 @@ S.forEach(x=>{
 const FBK=[['ارزش‌گذاری',.25],['سودآوری',.25],['رشد',.2],['سلامت ترازنامه',.15],['تقسیم سود',.15]];
 function calcScore(x){
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const F={
-  'ارزش‌گذاری':cl(cl(x.peG/x.pe,0,2)/2*0.6+cl((3-Math.max(x.pb,.3))/2.2,0,1)*0.4,0,1),
-  'سودآوری':cl(x.roe/35,0,1)*0.6+cl(x.mar/22,0,1)*0.4,
-  'رشد':cl(x.yoy/35,0,1)*0.6+cl(x.pg/25,0,1)*0.4,
-  'سلامت ترازنامه':cl(1-x.debt/85,0,1)*0.5+cl(1-x.rec/45,0,1)*0.35+(x.aud==='مطلق'?1:0.35)*0.15,
-  'تقسیم سود':cl(x.payout/90,0,1)};
-  let t=0;FBK.forEach(([k,w])=>t+=w*F[k]);
-  x.F=F;return Math.round((1+9*t)*10)/10;
+  let F;
+  if(x.t==='f'){
+    F={'ارزش‌گذاری':cl(1-(x.fee-1)/1.5,0,1),'سودآوری':cl(x.ret/45,0,1),'رشد':cl(x.ret/45,0,1)*.7+cl(x.mom/8,0,1)*.3,'سلامت ترازنامه':1,'تقسیم سود':cl(x.ret/40,0,1)*.8};
+  }else{
+    F={'ارزش‌گذاری':cl(cl(x.peG/Math.max(x.pe,.1),0,2)/2*0.6+cl((3-Math.max(x.pb,.3))/2.2,0,1)*0.4,0,1),
+    'سودآوری':cl(x.roe/35,0,1)*0.6+cl(x.mar/22,0,1)*0.4,
+    'رشد':cl(x.yoy/35,0,1)*0.6+cl(x.pg/25,0,1)*0.4,
+    'سلامت ترازنامه':cl(1-x.debt/85,0,1)*0.5+cl(1-x.rec/45,0,1)*0.35+(x.aud==='مطلق'?1:0.35)*0.15,
+    'تقسیم سود':cl(x.payout/90,0,1)};
+  }
+  x.F=F;let t=0;FBK.forEach(p=>{t+=p[1]*F[p[0]]});
+  return Math.round((1+9*t)*10)/10;
 }
 S.forEach(x=>{x.score=Math.max(1,Math.min(10,Math.round((calcScore(x)+x.nws*0.2)*10)/10))});
-function fbars(F){return FBK.map(([k])=>`<div class="fb"><span>${k}</span><div class="fbar"><i style="width:${Math.round(F[k]*100)}%"></i></div><b>${fa(Math.round(F[k]*100))}٪</b></div>`).join('')}
+function fbars(F){return FBK.map(p=>'<div class="fb"><span>'+p[0]+'</span><div class="fbar"><i style="width:'+Math.round(F[p[0]]*100)+'%"></i></div><b>'+fa(Math.round(F[p[0]]*100))+'٪</b></div>').join('')}
 function gauge(sc){
-  const col=sc>=7?'#1fd3a2':sc>=5?'#f6c265':'#ff7a7a';
+  const col=sc>=7?'#1fd3a2':(sc>=5?'#f6c265':'#ff7a7a');
   const r=42,c=2*Math.PI*r,p=Math.max(0,Math.min(1,(sc-1)/9));
-  return `<svg viewBox="0 0 110 110" width="116" height="116"><circle cx="55" cy="55" r="${r}" fill="none" stroke="#223254" stroke-width="11"/><circle cx="55" cy="55" r="${r}" fill="none" stroke="${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${(c*p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 55 55)"/><text x="55" y="52" text-anchor="middle" font-size="24" fill="#e9eefb" font-weight="700">${fmtS(sc)}</text><text x="55" y="72" text-anchor="middle" font-size="10" fill="#8fa3c8">از ۱۰</text></svg>`;
+  return '<svg viewBox="0 0 110 110" width="116" height="116"><circle cx="55" cy="55" r="42" fill="none" stroke="#223254" stroke-width="11"/><circle cx="55" cy="55" r="42" fill="none" stroke="'+col+'" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 55 55)"/><text x="55" y="52" text-anchor="middle" font-size="24" fill="#e9eefb" font-weight="700">'+fmtS(sc)+'</text><text x="55" y="72" text-anchor="middle" font-size="10" fill="#8fa3c8">از ۱۰</text></svg>';
 }
 
 /* ---------- سیگنال‌ها ---------- */
 function calcSig(x){
-  const gap=Math.round((x.peG-x.pe)/x.peG*100);
-  const Lg={s:x.s,a:x.fr.L,d:x.score>=7?'خرید':x.score>=5.5?'نگهداری':'فروش',c:Math.round(Math.min(92,45+x.score*5)),w:[
-    `امتیاز بنیادی ${fmtS(x.score)} از ۱۰`,
-    gap>0?`ارزش‌گذاری ${fa(gap)}٪ پایین‌تر از میانه گروه`:`ارزش‌گذاری ${fa(-gap)}٪ بالاتر از میانه گروه`,
-    x.yoy>=0?`رشد فروش سالانه ${fa(Math.round(x.yoy))}٪`:`افت فروش سالانه ${fa(Math.round(-x.yoy))}٪`,
-    `تقسیم سود ${fa(x.payout)}٪ · نظر حسابرس ${x.aud}`,
-    x.nws>0?'اخبار اخیر مثبت است':x.nws<0?'اخبار اخیر منفی است':'اخبار خاصی مؤثر نیست']};
+  const isF=x.t==='f';
+  const gap=isF?0:Math.round((x.peG-x.pe)/Math.max(x.peG,0.1)*100);
+  const nm=isF?'اندازه صندوق':'فروش';
+  const LS={s:x.s,a:x.fr.L,d:x.score>=7?'خرید':(x.score>=5.5?'نگهداری':'فروش'),c:Math.round(Math.min(92,45+x.score*5)),w:[
+    'امتیاز بنیادی '+fmtS(x.score)+' از ۱۰',
+    isF?('صندوق '+x.kind+' · بازده از ابتدای سال '+fa(x.ret)+'٪ · NAV '+nfa(x.nav)+' تومان'):(gap>0?'ارزش‌گذاری '+fa(gap)+'٪ پایین‌تر از میانه گروه':'ارزش‌گذاری '+fa(-gap)+'٪ بالاتر از میانه گروه'),
+    x.yoy>=0?(nm+' رشد سالانه '+fa(Math.round(x.yoy))+'٪ دارد'):(nm+' افت سالانه '+fa(Math.round(-x.yoy))+'٪ دارد'),
+    isF?'کارمزد مدیریت '+fmtS(x.fee)+'٪ از دارایی':'تقسیم سود '+fa(x.payout)+'٪ · نظر حسابرس: '+(x.aud==='مطلق'?'مطلق':'مشروط'),
+    x.nws>0?'اخبار اخیر مثبت است':(x.nws<0?'اخبار اخیر منفی است':'اخبار خاصی مؤثر نیست')]};
   const mid=(x.score-5.5)*11+gap*0.5;
-  const M={s:x.s,a:x.fr.M,d:mid>=15?'خرید':mid<=-15?'فروش':'بی‌طرف',c:Math.round(Math.min(88,48+Math.abs(mid))),w:[
-    `فاصله از نقطه متوازن: ${fa(Math.round(mid))} واحد`,`امتیاز بنیادی ${fmtS(x.score)}`,
-    `P/E ${fa(x.pe)} در برابر میانه گروه ${fa(x.peG)}`]};
+  const MS={s:x.s,a:x.fr.M,d:mid>=15?'خرید':(mid<=-15?'فروش':'بی‌طرف'),c:Math.round(Math.min(88,48+Math.abs(mid))),w:[
+    'فاصله از نقطه متوازن: '+fa(Math.round(mid))+' واحد','امتیاز بنیادی '+fmtS(x.score),
+    isF?'عملکرد صندوق بر اساس بازده و NAV سنجیده می‌شود':'P/E '+fa(x.pe)+' در برابر میانه گروه '+fa(x.peG)]};
   const sh=x.mom*0.6+x.flow*0.12;
-  const K={s:x.s,a:x.fr.K,d:sh>=7?'خرید':sh<=-7?'فروش':'بی‌طرف',c:Math.round(Math.min(85,48+Math.abs(sh)*1.8)),w:[
-    `رشد فروش ماه اخیر ${fa(Math.round(x.mom))}٪`,
-    `خالص خرید حقیقی: ${x.flow>=0?'+':'−'}${nfa(Math.abs(x.flow))} میلیارد تومان`,
-    `فشار ${x.flow>=0?'خرید':'فروش'} حقیقی در روزهای اخیر`]};
-  return {L:Lg,M,K};
+  const KS={s:x.s,a:x.fr.K,d:sh>=7?'خرید':(sh<=-7?'فروش':'بی‌طرف'),c:Math.round(Math.min(85,48+Math.abs(sh)*1.8)),w:[
+    'رشد '+nm+' ماه اخیر '+fa(Math.round(x.mom))+'٪',
+    'خالص خرید حقیقی: '+(x.flow>=0?'+':'−')+nfa(Math.abs(x.flow))+' میلیارد تومان',
+    (x.flow>=0?'فشار خرید':'فشار فروش')+' در روزهای اخیر']};
+  return {L:LS,M:MS,K:KS};
 }
-function sigCard(r){return `<div class="card"><div class="head"><a href="${href(r.s)}"><b>${r.s}</b></a><span class="badge ${r.d==='خرید'?'b':r.d==='فروش'?'s':'n'}">${r.d}</span></div>
-<div class="sub">قدرت سیگنال: ${fa(r.c)}٪${r.a?` · تازگی: ${r.a}${r.a==='امروز'?' 🆕':''}`:''}</div>
-<ul class="why">${r.w.map(y=>`<li>${y}</li>`).join('')}</ul></div>`}
+function sigCard(r){
+  const bd=r.d==='خرید'?'b':(r.d==='فروش'?'s':'n');
+  const fresh=r.a?(' · تازگی: '+r.a+(r.a==='امروز'?' 🆕':'')):'';
+  return '<div class="card"><div class="head"><a href="'+href(r.s)+'"><b>'+r.s+'</b></a><span class="badge '+bd+'">'+r.d+'</span></div>'+
+  '<div class="sub">قدرت سیگنال: '+fa(r.c)+'٪'+fresh+'</div>'+
+  '<ul class="why">'+r.w.map(y=>'<li>'+y+'</li>').join('')+'</ul></div>';
+}
 
 /* ---------- گرافیک ---------- */
-function bars(v,l,h=170){const w=640,mx=Math.max(...v),mn=Math.min(0,...v),m=(mx-mn)||1,bw=w/v.length,y0=h-(0-mn)/m*h;
-  return `<svg viewBox="0 0 ${w} ${h+26}" class="ch">`+(mn<0?`<line x1="0" y1="${y0}" x2="${w}" y2="${y0}" stroke="#223254" stroke-dasharray="4 4"/>`:'')+
-  v.map((x,i)=>{const yv=h-(x-mn)/m*h,yT=Math.min(yv,y0),bh=Math.abs(yv-y0),t=bw>=60?l[i]:l[i].split(' ')[0];
-  return `<rect x="${(i*bw+3).toFixed(1)}" y="${yT.toFixed(1)}" width="${(bw-6).toFixed(1)}" height="${Math.max(bh,1).toFixed(1)}" rx="3" fill="${x<0?'#ff7a7a':(i==v.length-1?'#1fd3a2':'#3b82f6')}"><title>${l[i]}: ${nfa(x)}</title></rect>`+
-  (i%3==0?`<text x="${(i*bw+bw/2).toFixed(1)}" y="${h+16}" text-anchor="middle">${t}</text>`:'')}).join('')+'</svg>'}
-function donut(items,size=150){const T=items.reduce((a,b)=>a+b.v,0)||1;let acc=0;
-  const seg=items.map((it,i)=>{const st=acc/T*100;acc+=it.v;return `${C[i%C.length]} ${st.toFixed(1)}% ${(acc/T*100).toFixed(1)}%`}).join(',');
-  return `<div class="dwrap"><div class="donut" style="width:${size}px;height:${size}px;background:conic-gradient(${seg})"><b>${nfa(T)}</b><span>میلیارد تومان</span></div>
-  <div class="dleg">`+items.map((it,i)=>`<div class="dli"><i style="background:${C[i%C.length]}"></i><span>${it.t}</span><b>${fa(Math.round(it.v/T*100))}٪</b>${it.ch!=null?`<em class="${it.ch>=0?'up':'dn'}">${it.ch>=0?'▲':'▼'}${fa(Math.abs(it.ch))}٪</em>`:''}</div>`).join('')+`</div></div>`}
-function portChanges(s){const out=[];
-  [['b','بورسی'],['nb','غیربورسی']].forEach(([k,lbl])=>PORTS[s][k].forEach(([t,v,ch])=>{
-    if(ch>=3)out.push(`<div class="al"><span class="badge b">ورود</span><div><b>${s}</b> سهم <b>${t}</b> (${lbl}) را افزایش داد <em class="up">▲ +${fa(ch)}٪</em></div></div>`);
-    else if(ch<=-3)out.push(`<div class="al"><span class="badge s">خروج</span><div><b>${s}</b> سهم <b>${t}</b> (${lbl}) را کاهش داد <em class="dn">▼ −${fa(-ch)}٪</em></div></div>`)}));
-  return out.length?out.join(''):'<i class="sub">تغییر مهمی در این دوره ثبت نشده است.</i>'}
-
-/* ================= صفحات ================= */
-const MKT={idx:2184000,chg:0.86,tr:4.6,flow:215};
-function homePage(){
-  const top=[...S].sort((a,b)=>b.score-a.score).slice(0,5);
-  const buys=[];S.forEach(x=>{const g=calcSig(x).M;if(g.d==='خرید')buys.push(g)});buys.sort((a,b)=>b.c-a.c);
-  return `<div class="hero"><h1>مقصودیوم پرو</h1>
-  <p class="sub">نمره بنیادی ۱ تا ۱۰ · صورت‌های مالی کامل · سیگنال سه‌لایه · سناریوهای بازار</p>
-  <div class="sbox"><input placeholder="جستجوی نماد یا نام شرکت…" oninput="sr(this.value)"><div id="res"></div></div></div>
-  <div class="stats">
-  <div class="card stat"><b id="mki">${nfa(MKT.idx)}</b><span id="mkc">شاخص کل ${pc(MKT.chg)}</span></div>
-  <div class="card stat"><b>${fmtS(MKT.tr.toFixed(1))} همت</b><span>ارزش معاملات (نمایشی)</span></div>
-  <div class="card stat"><b class="${MKT.flow>=0?'up':'dn'}">${MKT.flow>=0?'+':'−'}${nfa(Math.abs(MKT.flow))} میلیارد</b><span>ورودی خالص حقیقی (نمایشی)</span></div>
-  <div class="card stat"><b class="up">${fa(buys.length)}/${fa(S.length)}</b><span>نماد با سیگنال خرید میان‌مدت</span></div></div>
-  <h2>امتیازهای برتر بنیادی</h2>
-  <div class="card tw"><table><tr><th>نماد</th><th>نمره</th><th>P/E</th><th>ROE</th><th>رشد سالانه</th><th>اثر اخبار</th></tr>`+
-  top.map(x=>`<tr><td><a href="${href(x.s)}"><b>${x.s}</b></a> <small class="sub">${x.g}</small></td><td>${scb(x.score)}</td><td>${fa(x.pe)}</td><td>${fa(x.roe)}٪</td><td>${pc(x.yoy)}</td><td>${x.nws>0?'<span class="up">مثبت</span>':x.nws<0?'<span class="dn">منفی</span>':'<span class="sub">خنثی</span>'}</td></tr>`).join('')+`</table></div>
-  <h2>سیگنال‌های خرید میان‌مدت</h2><div class="grid3">${buys.slice(0,3).map(sigCard).join('')||'<div class="card sub">در داده فعلی سیگنال خرید میان‌مدت وجود ندارد.</div>'}</div>
-  <h2>دسترسی سریع</h2><div class="grid3">${[['#/scores','⭐ جدول نمره بنیادی'],['#/signals','⚡ سیگنال‌های سه‌لایه'],['#/basket','🧺 سبد پیشنهادی'],['#/ports','📊 سبدهای بورسی و غیربورسی'],['#/scen','🔮 سناریوهای بازار'],['#/liq','💧 رصد نقدینگی']].map(([h,t])=>`<a class="card qc" href="${h}"><b>${t}</b></a>`).join('')}</div>
-  <h2>آخرین اخبار</h2><div class="card">${NEWS.slice(0,3).map(([t,s,d])=>`<a class="row" href="${href(s)}"><span>${t}</span><span class="sub">${d}</span></a>`).join('')}</div>`}
-
-function scoresPage(){const l=[...S].sort((a,b)=>b.score-a.score);
-  return `<h1>نمره بنیادی (۱ تا ۱۰)</h1><div class="sub">ترکیب ۵ محور + اثر اخبار — برای ریز امتیازها روی نماد کلیک کنید.</div>
-  <div class="card tw" style="margin-top:14px"><table><tr><th>نماد</th><th>نمره</th><th>گروه</th><th>P/E</th><th>P/B</th><th>ROE</th><th>ROA</th><th>رشد سالانه</th><th>بدهی</th><th>تقسیم</th></tr>`+
-  l.map(x=>`<tr><td><a href="${href(x.s)}"><b>${x.s}</b></a></td><td>${scb(x.score)}</td><td class="sub">${x.g}</td><td>${fa(x.pe)}</td><td>${fa(x.pb)}</td><td>${fa(x.roe)}٪</td><td>${fa(x.roa)}٪</td><td>${pc(x.yoy)}</td><td>${fa(x.debt)}٪</td><td>${fa(x.payout)}٪</td></tr>`).join('')+`</table></div>`}
-
-let SIGT='M';
-function signalsPage(){
-  const tabs=[['K','کوتاه‌مدت (روزانه)'],['M','میان‌مدت (هفتگی)'],['L','بلندمدت (ماهانه)']];
-  const all=[];S.forEach(x=>all.push(calcSig(x)[SIGT]));
-  all.sort((a,b)=>(b.d==='خرید'?2:b.d==='فروش'?0:1)-(a.d==='خرید'?2:a.d==='فروش'?0:1)||b.c-a.c);
-  return `<h1>سیگنال‌ها</h1><div class="sub">سیگنال یعنی «احتمال غالب» نه قطعیت — منطق هر سیگنال شفاف نوشته شده است.</div>
-  <div class="tabs">${tabs.map(([k,t])=>`<button class="tb ${SIGT===k?'on':''}" onclick="SIGT='${k}';route(true)">${t}</button>`).join('')}</div>
-  <div class="grid3">${all.map(sigCard).join('')}</div>`}
-
-function bestFactor(x){let bk='',bv=-1;FBK.forEach(([k])=>{if(x.F[k]>bv){bv=x.F[k];bk=k}});return bk}
-function basketPage(){
-  const sel=[],gs={};
-  [...S].sort((a,b)=>b.score-a.score).forEach(x=>{if(sel.length<5&&!gs[x.g]){gs[x.g]=1;sel.push(x)}});
-  const WT=[25,22,20,18,15];
-  const items=sel.map((x,i)=>({t:x.s+' · '+fa(WT[i])+'٪',v:x.mc*WT[i]}));
-  return `<h1>سبد پیشنهادی رشدی</h1><div class="sub">انتخاب خودکار ۵ نماد برتر از گروه‌های مختلف — تنوع‌بخشی برای کاهش ریسک.</div>
-  <div class="grid2" style="margin-top:14px">
-  <div class="card"><b>ترکیب سبد (وزن‌ها)</b>${donut(items,150)}</div>
-  <div class="card tw"><b>اعضای سبد</b><table><tr><th>نماد</th><th>وزن</th><th>نمره</th><th>حد ضرر</th><th>نقطه قوت</th></tr>`+
-  sel.map((x,i)=>`<tr><td><a href="${href(x.s)}"><b>${x.s}</b></a><div class="sub">${x.n}</div></td><td>${fa(WT[i])}٪</td><td>${scb(x.score)}</td><td class="dn">−۱۰٪</td><td class="sub">${bestFactor(x)}</td></tr>`).join('')+
-  `</table><div class="sub" style="margin-top:8px">خروجی الگوریتمی از داده نمایشی؛ توصیه سرمایه‌گذاری نیست.</div></div></div>`}
-
-function portsPage(){
-  return `<h1>سبدهای بورسی و غیربورسی شرکت‌ها</h1><div class="sub">ترکیب دارایی‌های هلدینگ‌ها با درصد، ارزش و تغییرات (داده نمایشی)</div>`+
-  S.filter(x=>PORTS[x.s]).map(x=>`<h2>${x.s} — ${x.n}</h2><div class="grid2">
-  <div class="card"><b>ترکیب سبد بورسی</b>${donut(PORTS[x.s].b.map(p=>({t:p[0],v:p[1],ch:p[2]})),130)}</div>
-  <div class="card"><b>سبد غیربورسی</b>${donut(PORTS[x.s].nb.map(p=>({t:p[0],v:p[1],ch:p[2]})),130)}</div></div>
-  <div class="card note" style="margin-top:12px"><b>تغییرات اخیر سبد ${x.s}:</b><br>${portChanges(x.s)}</div>`).join('')}
-
-function liqPage(){
-  const GF=[...GFLOW].sort((a,b)=>b[1]-a[1]);
-  const tot=GF.reduce((a,x)=>a+x[1],0);
-  const mx=Math.max(...GF.map(x=>Math.abs(x[1])));
-  const inS=[...S].sort((a,b)=>b.flow-a.flow).slice(0,5);
-  const outS=[...S].sort((a,b)=>a.flow-b.flow).slice(0,5);
-  return `<h1>رصد نقدینگی</h1>
-  <div class="stats"><div class="card stat"><b class="${tot>=0?'up':'dn'}">${tot>=0?'+':'−'}${nfa(Math.abs(tot))}</b><span>خالص خرید حقیقی کل بازار (میلیارد تومان · نمایشی)</span></div>
-  <div class="card stat"><b>${fa(GF.filter(x=>x[1]>0).length)} از ${fa(GF.length)}</b><span>گروه با ورود پول</span></div></div>
-  <h2>ورود و خروج پول به گروه‌ها</h2><div class="card">${GF.map(([g,v])=>`<div class="lq"><span>${g}</span><div class="lbar"><i style="${v>=0?'left:50%;right:auto':'right:50%;left:auto'};width:${Math.round(Math.abs(v)/mx*48)}%;background:${v>=0?'#1fd3a2':'#ff7a7a'}"></i></div><b class="${v>=0?'up':'dn'}">${v>=0?'+':'−'}${fa(Math.abs(v))}</b></div>`).join('')}</div>
-  <div class="grid2" style="margin-top:16px">
-  <div class="card"><b>🎯 نمادهای هدف ورود پول</b>${inS.map(x=>`<a class="row" href="${href(x.s)}"><span><b>${x.s}</b> <small class="sub">${x.n}</small></span><span class="up">+${nfa(x.flow)}</span></a>`).join('')}</div>
-  <div class="card"><b>⚠️ نمادهای با خروج پول</b>${outS.map(x=>`<a class="row" href="${href(x.s)}"><span><b>${x.s}</b> <small class="sub">${x.n}</small></span><span class="dn">−${nfa(Math.abs(x.flow))}</span></a>`).join('')}</div></div>`}
-
-function alertsPage(){
-  const pch=[];Object.keys(PORTS).forEach(s=>{[['b','بورسی'],['nb','غیربورسی']].forEach(([k,lbl])=>PORTS[s][k].forEach(([t,v,ch])=>{
-    if(ch>=3)pch.push(`<div class="al"><span class="badge b">ورود</span><div><b>${s}</b> سهم <b>${t}</b> (${lbl}) را ${fa(ch)}٪ افزایش داد</div></div>`);
-    else if(ch<=-3)pch.push(`<div class="al"><span class="badge s">خروج</span><div><b>${s}</b> سهم <b>${t}</b> (${lbl}) را ${fa(-ch)}٪ کاهش داد</div></div>`)}))});
-  return `<h1>هشدارها</h1><div class="sub">ورود و خروج اشخاص، صندوق‌ها و شرکت‌ها (نمایشی — نسخه زنده به اطلاعیه‌های رسمی کدال متصل می‌شود)</div>
-  <h2>حرکت صندوق‌ها و اشخاص حقوقی</h2><div class="card">${FALERTS.map(a=>`<div class="al"><span class="badge ${(a[2]==='ورود'||a[2]==='افزایش سهم')?'b':'s'}">${a[2]}</span><div><b>${a[1]}</b> — نماد <a href="${href(a[3])}"><b>${a[3]}</b></a> <em>${a[4]}</em></div><time class="sub">${a[0]}</time></div>`).join('')}</div>
-  <h2>تغییرات سبدهای شرکت‌ها</h2><div class="card">${pch.join('')||'<i class="sub">موردی ثبت نشده</i>'}</div>`}
-
-function newsPage(){return `<h1>اخبار شرکت‌ها</h1><div class="card">${NEWS.map(([t,s,d])=>`<a class="row" href="${href(s)}"><span>${t}</span><span class="sub">${s} · ${d}</span></a>`).join('')}</div>`}
-
-function scenPage(){
-  const SC=[
-  {n:'خوش‌بینانه 🌱',p:30,ip:15,c:'#1fd3a2',d:'تثبیت نرخ ارز، جهش قیمت‌های جهانی فلزات و پتروشیمی، کاهش تدریجی نرخ بهره.',win:'فلزات، پتروشیمی، پالایش',lose:'—',act:'وزن کامل سهامی؛ تمرکز بر صادرات‌محورها'},
-  {n:'محتمل ⚖️',p:45,ip:6,c:'#f6c265',d:'ادامه روند فعلی؛ رشد ملایم فروش شرکت‌ها و نوسان در محدوده شاخص.',win:'پالایش، غذایی، دارو',lose:'سیمان',act:'تعادل سهام و اوراق؛ سبد پیشنهادی سایت'},
-  {n:'بدبینانه 🌧',p:25,ip:-8,c:'#ff7a7a',d:'فشار نرخ بهره، رکود تقاضای داخلی و خروج نقدینگی از بازار.',win:'دارو، غذایی (دفاعی)',lose:'فلزات، سرمایه‌گذاری‌ها',act:'کاهش وزن سهام؛ حد ضرر سخت −۷٪'}];
-  return `<h1>پیش‌بینی بازار و سناریوها</h1><div class="sub">سه سناریوی محتمل برای ۶ ماه آینده — برآورد مدل است، نه قطعیت.</div>
-  <div class="grid3" style="margin-top:14px">${SC.map(s=>`<div class="card" style="border-top:3px solid ${s.c}"><b style="color:${s.c}">${s.n}</b>
-  <div class="fb"><span>احتمال</span><div class="fbar"><i style="width:${s.p}%;background:${s.c}"></i></div><b>${fa(s.p)}٪</b></div>
-  <div class="fb"><span>هدف شاخص</span><div class="fbar"><i style="width:${Math.min(100,Math.abs(s.ip)*5)}%;background:${s.c}"></i></div><b class="${s.ip>=0?'up':'dn'}">${s.ip>=0?'+':'−'}${fa(Math.abs(s.ip))}٪</b></div>
-  <p class="sub" style="margin:8px 0">${s.d}</p>
-  <div class="row"><span>برندگان</span><b class="up">${s.win}</b></div>
-  <div class="row"><span>بازندگان</span><b class="dn">${s.lose}</b></div>
-  <div class="row"><span>راهبرد</span><b>${s.act}</b></div></div>`).join('')}</div>
-  <h2>اثر سناریوها بر نمادهای رصدشده (برآورد مدل)</h2>
-  <div class="card tw"><table><tr><th>نماد</th><th>نمره</th><th>خوش‌بینانه</th><th>محتمل</th><th>بدبینانه</th></tr>
-  ${[...S].sort((a,b)=>b.score-a.score).map(x=>{const up=Math.round(x.score*2.1),md=Math.round(x.score*1.2),dn=Math.round(Math.abs(x.score*0.4-2));
-  return `<tr><td><a href="${href(x.s)}"><b>${x.s}</b></a></td><td>${scb(x.score)}</td><td class="up">+${fa(up)}٪</td><td class="up">+${fa(md)}٪</td><td class="dn">−${fa(dn)}٪</td></tr>`}).join('')}</table></div>
-  <div class="note warn" style="margin-top:12px">⚠️ این اعداد خروجی مدل احتمالاتی از داده نمایشی است؛ پیش‌بینی قطعی وجود ندارد.</div>`}
-
-function autoNotes(x,peers){const mp=med(peers.map(v=>v.pe));const n=[];
-  n.push(x.score>=7?`نمره بنیادی ${fmtS(x.score)} — وضعیت قوی.`:x.score>=5?`نمره بنیادی ${fmtS(x.score)} — متوسط.`:`نمره بنیادی ${fmtS(x.score)} — ضعیف.`);
-  n.push(x.mom>=0?`فروش ماه آخر ${fa(Math.round(x.mom))}٪ رشد داشته.`:`فروش ماه آخر ${fa(Math.round(-x.mom))}٪ افت داشته.`);
-  n.push(x.pe<mp?`P/E (${fa(x.pe)}) پایین‌تر از میانه گروه (${fa(mp)}) است.`:`P/E (${fa(x.pe)}) بالاتر از میانه گروه (${fa(mp)}) است.`);
-  n.push(`کیفیت سود: جریان نقد عملیاتی ${fmtS(x.ocfN)} برابر سود خالص است${x.ocfN<0.8?' — هشدار: سود بیشتر از نقد واقعی است':''}.`);
-  if(x.aud==='مشروط')n.push('نظر حسابرس مشروط است؛ نیازمند دقت بیشتر.');
-  return n.join(' ')+'<div class="sub" style="margin-top:6px">برآورد ماشینی — توصیه سرمایه‌گذاری نیست.</div>'}
-
-function peerTable(l,me){return `<div class="card tw"><table><tr><th>نماد</th><th>نمره</th><th>ارزش بازار (همت)</th><th>P/E</th><th>رشد ماهانه</th><th>رشد سالانه</th><th>ROE</th></tr>`+
-  l.map(v=>`<tr class="${v.s===me?'me':''}"><td><a href="${href(v.s)}"><b>${v.s}</b></a></td><td>${scb(v.score)}</td><td>${fa(v.mc)}</td><td>${fa(v.pe)}</td><td>${pc(v.mom)}</td><td>${pc(v.yoy)}</td><td>${fa(v.roe)}٪</td></tr>`).join('')+'</table></div>'}
-
-function symPage(sym){
-  const x=S.find(v=>v.s===sym);if(!x)return '<div class="card">نماد پیدا نشد.</div>';
-  const peers=S.filter(v=>v.g===x.g).sort((a,b)=>b.mc-a.mc);
-  const sg=calcSig(x);
-  const tk=TK.find(v=>v.s===x.s);
-  const IQ=Array.from({length:8},(_,q)=>({rev:sum(x.sales.slice(q*3,q*3+3)),net:x.profit[q]}));
-  IQ.forEach(o=>o.op=Math.round(o.net*1.22));
-  const QN=['۱','۲','۳','۴','۵','۶','۷','۸'].map(n=>'فصل '+n);
-  return `<div class="head"><div><h1>${x.s} ${scb(x.score)}</h1><div class="sub">${x.n} · ${x.g} · سال مالی ${fa(x.fy)}</div></div>
-  <button class="btn ${W.includes(x.s)?'g':''}" onclick="tw('${x.s}')">${W.includes(x.s)?'حذف از دیده‌بان':'⭐ دیده‌بان'}</button></div>
-  <div class="stats">
-  <div class="card stat"><b data-sym="${x.s}">${nfa(tk.p)} <small>تومان</small></b><span>قیمت (${MODE==='live'?'🟢 زنده':'نمایشی'}) <span class="${tk.d>=0?'up':'dn'}">${tk.d>=0?'+':'−'}${fmtS(Math.abs(tk.d).toFixed(1))}٪</span></span></div>
-  <div class="card stat"><b>${fa(x.mc)} همت</b><span>ارزش بازار</span></div>
-  <div class="card stat"><b>${fa(x.pe)}</b><span>P/E (میانه گروه ${fa(x.peG)})</span></div>
-  <div class="card stat"><b>${nfa(x.eps)}</b><span>EPS (ریال)</span></div></div>
-  <h2>📋 خلاصه بنیادی</h2>
-  <div class="card note">
-  <div class="row"><span>نام شرکت</span><b>${x.n}</b></div>
-  <div class="row"><span>گروه صنعتی</span><b>${x.g}</b></div>
-  <div class="row"><span>ارزش بازار</span><b>${fa(x.mc)} همت</b></div>
-  <div class="row"><span>پایان سال مالی</span><b>${fa(x.fy)}</b></div>
-  <div class="row"><span>میانگین تقسیم سود ۲ سال اخیر</span><b>${nfa((x.dps2[0]+x.dps2[1])/2)} ریال</b></div>
-  <div class="row"><span>اثر اخبار</span><b class="${x.nws>0?'up':x.nws<0?'dn':''}">${x.nws>0?'مثبت':x.nws<0?'منفی':'خنثی'}</b></div>
-  <p style="margin-top:8px">${INTRO[x.s]}</p>
-  <div style="margin-top:8px"><a class="btn g" target="_blank" href="https://codal.ir/Search.aspx?Symbol=${encodeURIComponent(x.s)}">📄 صورت‌های مالی در کدال</a></div></div>
-  <h2>نمره بنیادی</h2>
-  <div class="card" style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">${gauge(x.score)}
-  <div style="flex:1;min-width:240px"><b>ریز امتیازها</b>${fbars(x.F)}
-  <div class="sub" style="margin-top:6px">نظر حسابرس: <b style="color:${x.aud==='مطلق'?'var(--brand)':'var(--red)'}">${x.aud}</b> · مطالبات به دارایی: <b>${fa(x.rec)}٪</b> · اثر اخبار: <b>${x.nws>0?'+':''}${fmtS(x.nws*0.2)}</b></div></div></div>
-  <h2>خلاصه تحلیل خودکار</h2><div class="card note">${autoNotes(x,peers)}</div>
-  <h2>سیگنال‌های این نماد</h2><div class="grid3">${['K','M','L'].map(k=>{const r=sg[k];
-  return `<div class="card"><div class="head"><span class="sub">${k==='K'?'کوتاه‌مدت':k==='M'?'میان‌مدت':'بلندمدت'}</span><span class="badge ${r.d==='خرید'?'b':r.d==='فروش'?'s':'n'}">${r.d}</span></div><div class="sub">قدرت ${fa(r.c)}٪ · تازگی: ${r.a}</div><ul class="why">${r.w.map(y=>`<li>${y}</li>`).join('')}</ul></div>`}).join('')}</div>
-  <h2>صورت سود و زیان فصلی (میلیارد تومان)</h2>
-  <div class="card tw"><table><tr><th>فصل</th>${QN.map(q=>`<th>${q}</th>`).join('')}</tr>
-  <tr><td>فروش</td>${IQ.map(o=>`<td>${nfa(o.rev)}</td>`).join('')}</tr>
-  <tr><td>سود عملیاتی</td>${IQ.map(o=>`<td>${nfa(o.op)}</td>`).join('')}</tr>
-  <tr><td>سود خالص</td>${IQ.map(o=>`<td>${nfa(o.net)}</td>`).join('')}</tr>
-  <tr><td>حاشیه خالص</td>${IQ.map(o=>`<td>${fa(Math.round(o.net/o.rev*100))}٪</td>`).join('')}</tr></table></div>
-  <h2>ترازنامه خلاصه (میلیارد تومان)</h2>
-  <div class="grid2"><div class="card">
-  <div class="row"><span>دارایی‌های جاری</span><b>${nfa(x.ca)}</b></div>
-  <div class="row"><span>دارایی‌های ثابت و سایر</span><b>${nfa(x.fa)}</b></div>
-  <div class="row"><span>جمع دارایی‌ها</span><b>${nfa(x.ta)}</b></div>
-  <div class="row"><span>بدهی جاری</span><b class="dn">${nfa(x.cl)}</b></div>
-  <div class="row"><span>بدهی بلندمدت</span><b class="dn">${nfa(x.ltd)}</b></div>
-  <div class="row"><span>حقوق صاحبان سهام</span><b class="up">${nfa(x.eq)}</b></div></div>
-  <div class="card">
-  <div class="row"><span>بدهی به حقوق صاحبان سهام</span><b>${fmtS(x.de)}</b></div>
-  <div class="row"><span>نسبت جاری</span><b>${fmtS(x.cr)}</b></div>
-  <div class="row"><span>ROA (بازده دارایی)</span><b>${fa(x.roa)}٪</b></div>
-  <div class="row"><span>ROE</span><b>${fa(x.roe)}٪</b></div>
-  <div class="row"><span>P/B (ارزش دفتری)</span><b>${fa(x.pb)}</b></div>
-  <div class="row"><span>سود انباشته ۲ ساله</span><b>${nfa(x.ret[7])}</b></div></div></div>
-  <h2>جریان نقد فصلی (میلیارد تومان)</h2>
-  <div class="card tw"><table><tr><th>فصل</th>${QN.map(q=>`<th>${q}</th>`).join('')}</tr>
-  <tr><td>عملیاتی</td>${x.cfq.map(q=>`<td class="${q[0]>=0?'up':'dn'}">${nfa(q[0])}</td>`).join('')}</tr>
-  <tr><td>سرمایه‌گذاری</td>${x.cfq.map(q=>`<td class="dn">${nfa(q[1])}</td>`).join('')}</tr>
-  <tr><td>تأمین مالی</td>${x.cfq.map(q=>`<td class="dn">${nfa(q[2])}</td>`).join('')}</tr></table>
-  <div class="sub" style="margin-top:8px">کیفیت سود (نقد عملیاتی ÷ سود خالص): <b class="${x.ocfN>=0.8?'up':'am'}">${fmtS(x.ocfN)}</b> — ${x.ocfN>=0.8?'مطلوب':'سود بیشتر از نقد واقعی است؛ احتیاط'}</div></div>
-  <h2>سیاست تقسیم سود</h2>
-  <div class="card">
-  <div class="row"><span>DPS سال قبل</span><b>${nfa(x.dps2[0])} ریال</b></div>
-  <div class="row"><span>DPS سال جاری (برآورد)</span><b>${nfa(x.dps2[1])} ریال</b></div>
-  <div class="row"><span>میانگین تقسیم سود</span><b>${fa(x.payout)}٪ از سود</b></div>
-  <div class="row"><span>نظر حسابرس</span><b class="${x.aud==='مطلق'?'up':'am'}">${x.aud}</b></div></div>
-  <h2>فروش ماهانه (میلیارد تومان)</h2><div class="card">${bars(x.sales,L)}</div>
-  <h2>سود خالص فصلی (میلیارد تومان)</h2><div class="card">${bars(x.profit,QN)}</div>
-  <h2>روند سود انباشته (میلیارد تومان)</h2><div class="card">${bars(x.ret,QN)}</div>
-  <h2>تابلوخوانی: خالص خرید حقیقی (۱۰ روز اخیر)</h2><div class="card">${bars(x.hg,Array.from({length:10},(_,i)=>fa(i+1)))}</div>
-  ${PORTS[x.s]?`<h2>ترکیب سبد بورسی و غیربورسی</h2><div class="grid2">
-  <div class="card"><b>سبد بورسی</b>${donut(PORTS[x.s].b.map(p=>({t:p[0],v:p[1],ch:p[2]})),130)}</div>
-  <div class="card"><b>سبد غیربورسی</b>${donut(PORTS[x.s].nb.map(p=>({t:p[0],v:p[1],ch:p[2]})),130)}</div></div>
-  <div class="card note" style="margin-top:12px"><b>تغییرات اخیر سبد:</b><br>${portChanges(x.s)}</div>`:''}
-  <h2>مقایسه با هم‌گروهی‌ها (${x.g})</h2>${peerTable(peers,x.s)}`}
-
-function groupsPage(){const g=[...new Set(S.map(x=>x.g))];
-  return `<h1>گروه‌های صنعت</h1><div class="grid3" style="margin-top:16px">${g.map(n=>{const l=S.filter(x=>x.g===n);
-  return `<a class="card" href="#/g/${encodeURIComponent(n)}"><b>${n}</b><div class="sub">${fa(l.length)} نماد · P/E میانه ${fa(med(l.map(v=>v.pe)))}</div></a>`}).join('')}</div>`}
-function groupPage(n){const l=S.filter(x=>x.g===n).sort((a,b)=>b.mc-a.mc);
-  return `<h1>${n}</h1><div class="sub">مقایسه نمادهای گروه</div><div style="margin-top:14px">${peerTable(l,'')}</div>`}
-
-let W;try{W=JSON.parse(localStorage.w||'[]')}catch(e){W=[]}
-function tw(s){const i=W.indexOf(s);
-  if(i>=0)W.splice(i,1);else{if(W.length>=10)return alert('حداکثر ۱۰ نماد در دیده‌بان');W.push(s)}
-  localStorage.w=JSON.stringify(W);route(false)}
-function watchPage(){const l=S.filter(x=>W.includes(x.s));
-  return `<h1>دیده‌بان من <span class="sub">${fa(l.length)}/۱۰ نماد</span></h1>`+
-  (l.length?`<div style="margin-top:14px">${peerTable(l,'')}</div>`:'<div class="card" style="margin-top:14px">هنوز نمادی اضافه نکرده‌اید. در صفحه هر نماد روی «⭐ دیده‌بان» بزنید.</div>')}
-
-function sr(q){q=norm(q.trim());
-  $('#res').innerHTML=q?(S.filter(x=>norm(x.s+x.n).includes(q)).slice(0,8)
-  .map(x=>`<a href="${href(x.s)}"><b>${x.s}</b> · ${x.n} ${scb(x.score)}</a>`).join('')||'<i>نمادی پیدا نشد</i>'):''}
-
-/* ================= لایه داده زنده ================= */
-const TK=S.map(x=>({s:x.s,p:Math.round(x.eps*x.pe/100+50),d:Math.round((x.score-5)/3*10)/10}));
-let MODE='demo',LIVEP={};
-function drawTK(){$('#tk').innerHTML=TK.map(t=>`<a href="${href(t.s)}" class="tchip"><b>${t.s}</b> ${nfa(t.p)} <em class="${t.d>=0?'up':'dn'}" style="font-style:normal">${t.d>=0?'+':'−'}${fmtS(Math.abs(t.d).toFixed(1))}٪</em></a>`).join('')}
-let UPD=new Date();
-function drawUpd(){const t=n=>(n<10?'0'+n:n);$('#upd').textContent='آخرین به‌روزرسانی: '+fa(t(UPD.getHours())+':'+t(UPD.getMinutes())+':'+t(UPD.getSeconds()))+(MODE==='live'?' (زنده)':' (شبیه‌سازی)')}
-function badge(){const m=$('#mode');
-  if(MODE==='live'){m.textContent='🟢 متصل به TSETMC — قیمت '+fa(Object.keys(LIVEP).length)+' نماد واقعی است';m.classList.add('ok')}
-  else{m.textContent='🟡 حالت نمایشی — قیمت واقعی در دسترس نیست';m.classList.remove('ok')}}
-async function pull(){try{const r=await fetch('api/market',{cache:'no-store'});const j=await r.json();
-  if(j&&j.ok&&j.prices&&Object.keys(j.prices).length){MODE='live';LIVEP=j.prices}else MODE='demo'}
-  catch(e){MODE='demo'}}
-function refreshEls(){
-  document.querySelectorAll('[data-sym]').forEach(el=>{const t=TK.find(v=>v.s===el.getAttribute('data-sym'));if(t)el.innerHTML=nfa(t.p)+' <small>تومان</small>'});
-  const a=$('#mki'),b=$('#mkc');
-  if(a)a.textContent=nfa(MKT.idx);if(b)b.innerHTML='شاخص کل '+pc(MKT.chg)}
-async function cycle(){
-  await pull();UPD=new Date();
-  if(MODE==='live'){
-    TK.forEach(t=>{const Lp=LIVEP[t.s];if(Lp){t.p=Math.round(Lp.p/10);t.d=Math.round(Lp.d*10)/10}});
-    const ls=Object.values(LIVEP);if(ls.length)MKT.chg=ls.reduce((a,b)=>a+b.d,0)/ls.length;
-  }else{
-    TK.forEach(t=>{const c=(Math.random()-.5)*.6;t.d=Math.max(-9,Math.min(9,t.d+c*.4));t.p=Math.max(1,t.p*(1+c/100))});
-    MKT.chg+=(Math.random()-.5)*.06;MKT.idx*=(1+(Math.random()-.5)*.0015);
-  }
-  badge();drawTK();drawUpd();refreshEls()}
-async function refresh(){await cycle();toast(MODE==='live'?'به‌روزرسانی از TSETMC انجام شد':'به‌روزرسانی شد (حالت نمایشی)')}
-setInterval(cycle,15000);
-
-/* ================= مسیریابی ================= */
-function route(keep){const h=decodeURIComponent(location.hash||'#/'),p=h.split('/');
-  let v;
-  if(p[1]==='s')v=symPage(p[2]);else if(p[1]==='scores')v=scoresPage();
-  else if(p[1]==='signals')v=signalsPage();else if(p[1]==='basket')v=basketPage();
-  else if(p[1]==='ports')v=portsPage();else if(p[1]==='liq')v=liqPage();
-  else if(p[1]==='alerts')v=alertsPage();else if(p[1]==='news')v=newsPage();
-  else if(p[1]==='scen')v=scenPage();else if(p[1]==='groups')v=groupsPage();
-  else if(p[1]==='g')v=groupPage(p[2]);else if(p[1]==='watch')v=watchPage();else v=homePage();
-  $('#app').innerHTML=v;if(!keep)scrollTo(0,0)}
-addEventListener('hashchange',()=>route(false));
-drawTK();drawUpd();
-try{route(false);cycle()}catch(e){$('#app').innerHTML='<div class="card warn">⚠️ خطا در اجرای سایت: '+e.message+'</div>'}
-</script>
-</body>
-</html>
+function bars(v,l,h){h=h||170;const w=640,mx=Math.max(...v),mn=Math.min(0,...v),m=(mx-mn)||1,bw=w/v.length,y0=h-(0-mn)/m*h;
+  return '<svg viewBox="0 0 '+w+' '+(h+26)+'" class="ch">'+(mn<0?'<line x1="0" y1="'+y0+'" x2="'+w+'" y2="'+y0+'" stroke="#223254" stroke-dasharray="4 4"/>':'')+
+  v.map((x,i)=>{const yv=h-(x-mn)/m*h,yT=Math.min(yv,y0),bh=Math.abs(yv-y0),t=bw>=60?l[i]:String(l[i]).split(' ')[0];
+  return '<rect x="'+(i*bw+3).toFixed(1)+'" y="'+yT.toFixed(1)+'" width="'+(bw-6).toFixed(1)+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="3" fill="'+(x<0?'#ff7a7a':(i==v.length-1?'#1fd3a2':'#3b82f6'))+'"><title>'+l[i]+': '+nfa(x)+'</title></rect>'+
+  (i%3==0?'<text x="'+(i*bw+bw/2).toFixed(1)+'" y="'+(h+16)+'" text-anchor="middle">'+t+'</text>':'')}).join('')+'</svg>'}
