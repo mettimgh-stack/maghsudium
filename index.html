@@ -100,12 +100,13 @@ footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var
   <span id="upd"></span>
   <span class="lvb" id="mode">در حال اتصال…</span>
 </div>
-<div class="demo">⚠️ نسخه ۵ — ۲۹ نماد شامل ۴ صندوق 🏦 · داده‌های بنیادی نمایشی · قیمت‌ها هر ۱۵ ثانیه شبیه‌سازی می‌شوند تا اتصال به سرور ایرانی</div>
+<div class="demo">⚠️ نسخه ۵ (کامل) — ۲۹ نماد شامل ۴ صندوق 🏦 · داده‌های بنیادی نمایشی · قیمت‌ها هر ۱۵ ثانیه شبیه‌سازی می‌شوند تا اتصال به سرور ایرانی</div>
 <div id="errbar" style="display:none"></div>
 <main id="app"></main>
 <footer>© ۱۴۰۵ مقصودیوم پرو • سیگنال‌ها احتمالاتی و تحلیلی‌اند نه قطعی؛ توصیه خرید/فروش محسوب نمی‌شوند.</footer>
 <script>
 window.onerror=function(m,s,l){var d=document.getElementById('errbar');if(!d)return false;d.style.display='block';d.textContent='⚠️ خطای کد: '+m+' — خط '+l+' — لطفاً همین پیام را برای دستیار کپی کنید.';return false};
+setTimeout(function(){var m=document.getElementById('mode'),d=document.getElementById('errbar');if(m&&m.textContent.indexOf('در حال اتصال')>-1&&d&&d.style.display==='none'){d.style.display='block';d.textContent='⚠️ فایل ناقص کپی شده — برنامه در میانه راه قطع شده است. کل کد را از ابتدا کپی و جایگزین کنید؛ خط آخر فایل باید <\/html> باشد.';}},2500);
 </script>
 <script>
 /* ================= نسخه ۵ · مقصودیوم پرو ================= */
@@ -340,7 +341,8 @@ function bars(v,l,h){h=h||170;const w=640,mx=Math.max(...v),mn=Math.min(0,...v),
   v.map((x,i)=>{const yv=h-(x-mn)/m*h,yT=Math.min(yv,y0),bh=Math.abs(yv-y0),t=bw>=60?l[i]:String(l[i]).split(' ')[0];
   return '<rect x="'+(i*bw+3).toFixed(1)+'" y="'+yT.toFixed(1)+'" width="'+(bw-6).toFixed(1)+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="3" fill="'+(x<0?'#ff7a7a':(i==v.length-1?'#1fd3a2':'#3b82f6'))+'"><title>'+l[i]+': '+nfa(x)+'</title></rect>'+
   (i%3==0?'<text x="'+(i*bw+bw/2).toFixed(1)+'" y="'+(h+16)+'" text-anchor="middle">'+t+'</text>':'')}).join('')+'</svg>'}
-  /* ============ نیمه دوم برنامه — قیمت‌ها، صفحات و اجرا ============ */
+
+/* ============ قیمت‌ها، صفحات و اجرای برنامه ============ */
 
 /* ---------- قیمت‌ها و شبیه‌سازی زنده ---------- */
 const PX={};
@@ -542,11 +544,11 @@ function pgGroups(){
 
 /* ---------- دیده‌بان ---------- */
 var WQ='';
-function wfil(q){WQ=norm(q);pgWatch()}
+function wfil(q){WQ=norm(q);pgWatch();var el=document.getElementById('wf');if(el){el.focus();try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}}}
 function pgWatch(){
   var arr=S.filter(x=>!WQ||norm(x.s).indexOf(WQ)>-1||norm(x.n).indexOf(WQ)>-1).sort((a,b)=>pxChg(b.s)-pxChg(a.s));
   $('#app').innerHTML='<h1>دیده‌بان بازار</h1><p class="sub">قیمت‌ها هر ۱۵ ثانیه به‌روز می‌شوند · '+fa(arr.length)+' نماد</p>'+
-  '<div class="sbox" style="margin:10px auto 16px;max-width:420px"><input placeholder="فیلتر نماد…" value="'+WQ.replace(/"/g,'')+'" oninput="wfil(this.value)"></div>'+
+  '<div class="sbox" style="margin:10px auto 16px;max-width:420px"><input id="wf" placeholder="فیلتر نماد…" value="'+WQ.replace(/"/g,'&quot;')+'" oninput="wfil(this.value)"></div>'+
   '<div class="tw card"><table><tr><th>نماد</th><th>قیمت (تومان)</th><th>تغییر</th><th>حجم (میلیون سهم)</th><th>خالص حقیقی (میلیارد)</th><th>نمره</th></tr>'+
   arr.map(x=>'<tr><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td>'+priceTxt(x.s)+'</td><td>'+chgTxt(x.s)+'</td><td class="sub">'+nfa(PX[x.s].v)+'</td><td>'+(x.flow>=0?'<span class="up">+'+nfa(x.flow)+'</span>':'<span class="dn">−'+nfa(-x.flow)+'</span>')+'</td><td>'+scb(x.score)+'</td></tr>').join('')+'</table></div>';
 }
