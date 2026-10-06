@@ -340,3 +340,286 @@ function bars(v,l,h){h=h||170;const w=640,mx=Math.max(...v),mn=Math.min(0,...v),
   v.map((x,i)=>{const yv=h-(x-mn)/m*h,yT=Math.min(yv,y0),bh=Math.abs(yv-y0),t=bw>=60?l[i]:String(l[i]).split(' ')[0];
   return '<rect x="'+(i*bw+3).toFixed(1)+'" y="'+yT.toFixed(1)+'" width="'+(bw-6).toFixed(1)+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="3" fill="'+(x<0?'#ff7a7a':(i==v.length-1?'#1fd3a2':'#3b82f6'))+'"><title>'+l[i]+': '+nfa(x)+'</title></rect>'+
   (i%3==0?'<text x="'+(i*bw+bw/2).toFixed(1)+'" y="'+(h+16)+'" text-anchor="middle">'+t+'</text>':'')}).join('')+'</svg>'}
+  /* ============ نیمه دوم برنامه — قیمت‌ها، صفحات و اجرا ============ */
+
+/* ---------- قیمت‌ها و شبیه‌سازی زنده ---------- */
+const PX={};
+S.forEach(x=>{
+  const base=x.t==='f'?x.nav:Math.round(x.eps*x.pe);
+  PX[x.s]={p:base,c:base,v:Math.round(x.mc*0.15+20)};
+});
+function pxChg(s){return (PX[s].p/PX[s].c-1)*100}
+function chgTxt(s){return pc(pxChg(s))}
+function priceTxt(s){return nfa(PX[s].p)}
+function buildTicker(){
+  $('#tk').innerHTML=S.slice().sort((a,b)=>Math.abs(pxChg(b.s))-Math.abs(pxChg(a.s))).slice(0,12)
+  .map(x=>'<a class="tchip" href="'+href(x.s)+'"><b>'+x.s+'</b> '+priceTxt(x.s)+' '+chgTxt(x.s)+'</a>').join('');
+}
+function clockUpd(){var d=new Date();$('#upd').textContent='🕒 '+fa(d.getHours())+':'+fa(String(d.getMinutes()).padStart(2,'0'))+':'+fa(String(d.getSeconds()).padStart(2,'0'))}
+function tick(){
+  S.forEach(x=>{const q=PX[x.s];let np=q.p*(1+(Math.random()-0.5)*0.014);
+    if(x.t==='f')np=Math.max(x.nav*0.93,Math.min(x.nav*1.07,np));
+    q.p=Math.max(50,Math.round(np));q.v=Math.round(q.v*(0.85+Math.random()*0.3));});
+  buildTicker();
+  var ae=document.activeElement&&document.activeElement.tagName==='INPUT';
+  var h=location.hash.split('?')[0];
+  if(!ae&&(h==='#/'||h==='#/watch'||h==='#/scores'))render();
+}
+function refresh(){
+  S.forEach(x=>{const q=PX[x.s];q.p=Math.max(50,Math.round(q.p*(1+(Math.random()-0.47)*0.035)));q.v=Math.round(q.v*(0.8+Math.random()*0.4))});
+  buildTicker();render();toast('✅ به‌روزرسانی انجام شد');
+}
+
+/* ---------- دونات و جدول سبد ---------- */
+function donut(items,ctr,sub){
+  const tot=sum(items.map(i=>i[1]))||1;let off=25;
+  const seg=items.map((it,i)=>{const p=it[1]/tot*100,d=off;off=(off+p)%100;
+    return '<circle r="15.9155" cx="21" cy="21" fill="none" stroke="'+C[i%C.length]+'" stroke-width="6" stroke-dasharray="'+p.toFixed(2)+' '+(100-p).toFixed(2)+'" stroke-dashoffset="'+d.toFixed(2)+'"><title>'+it[0]+': '+fa(p.toFixed(1))+'٪</title></circle>';}).join('');
+  return '<svg viewBox="0 0 42 42" width="150" height="150" style="flex:none">'+seg+'<text x="21" y="20.5" text-anchor="middle" font-size="6" fill="#e9eefb" font-weight="700">'+ctr+'</text><text x="21" y="26" text-anchor="middle" font-size="3.6" fill="#8fa3c8">'+sub+'</text></svg>';
+}
+function dlegend(items){
+  const tot=sum(items.map(i=>i[1]))||1;
+  return '<div class="dleg">'+items.map((it,i)=>'<div class="dli"><i style="background:'+C[i%C.length]+'"></i><span>'+it[0]+'</span><em>'+fa((it[1]/tot*100).toFixed(1))+'٪ · '+nfa(it[1])+'</em></div>').join('')+'</div>';
+}
+function holdTable(rows,mkt){
+  const tot=sum(rows.map(r=>r[1]))||1;
+  return '<div class="tw"><table><tr><th>دارایی ('+mkt+')</th><th>ارزش (میلیارد تومان)</th><th>سهم از سبد</th><th>تغییر اخیر</th></tr>'+
+  rows.map(r=>{const lk=S.some(v=>v.s===r[0])?'<a href="'+href(r[0])+'"><b>'+r[0]+'</b></a>':'<b>'+r[0]+'</b>';
+  return '<tr><td>'+lk+'</td><td>'+nfa(r[1])+'</td><td class="sub">'+fa((r[1]/tot*100).toFixed(1))+'٪</td><td>'+pc(r[2])+'</td></tr>';}).join('')+'</table></div>';
+}
+
+/* ---------- جستجو ---------- */
+function hideRes(){$('#res').style.display='none'}
+function srch(q){
+  q=norm(q.trim());
+  var r=q?S.filter(x=>norm(x.s).indexOf(q)>-1||norm(x.n).indexOf(q)>-1||norm(x.g).indexOf(q)>-1).slice(0,8):[];
+  $('#res').innerHTML=r.length?r.map(x=>'<a href="'+href(x.s)+'" onclick="hideRes()"><b>'+x.s+'</b> — '+x.n+'</a>').join(''):'<i style="color:var(--mut)">نمادی یافت نشد</i>';
+  $('#res').style.display=q?'block':'none';
+}
+
+/* ---------- صفحه خانه ---------- */
+function pgHome(){
+  var topS=S.slice().sort((a,b)=>b.score-a.score).slice(0,6);
+  var adv=S.filter(x=>pxChg(x.s)>0).length;
+  var avg=(sum(S.map(x=>x.score))/S.length).toFixed(1);
+  var bg=GFLOW.slice().sort((a,b)=>b[1]-a[1])[0];
+  $('#app').innerHTML=
+  '<div class="hero"><h1>مقصودیوم پرو</h1><p class="sub">تحلیل بنیادی، نمره ۱ تا ۱۰، سیگنال و پایش سبد نهادها و صندوق‌ها — '+fa(S.length)+' نماد (۲۵ سهم + ۴ صندوق)</p>'+
+  '<div class="sbox"><input placeholder="جستجوی نماد یا صندوق… مثلاً تاپیکو یا یاقوت" oninput="srch(this.value)"><div id="res" style="display:none"></div></div></div>'+
+  '<div class="stats">'+
+  '<div class="card stat qc"><b>'+fa(S.length)+'</b><span>نماد تحت پوشش</span></div>'+
+  '<div class="card stat qc"><b>'+fmtS(avg)+'</b><span>میانگین نمره بنیادی</span></div>'+
+  '<div class="card stat qc"><b class="up">'+fa(adv)+'</b><span>مثبت / '+fa(S.length-adv)+' منفی</span></div>'+
+  '<div class="card stat qc"><b class="up">'+bg[0]+'</b><span>بیشترین ورود نقدی ('+nfa(bg[1])+' میلیارد)</span></div></div>'+
+  '<h2>⭐ برترین نمره‌های بنیادی</h2>'+
+  '<div class="grid3">'+topS.map(x=>'<a class="card qc" href="'+href(x.s)+'"><b style="font-size:17px">'+x.s+(x.t==='f'?' 🏦':'')+'</b><div class="sub">'+x.n+'</div><div style="margin:8px 0">'+scb(x.score)+'</div><div>'+priceTxt(x.s)+' تومان '+chgTxt(x.s)+'</div></a>').join('')+'</div>'+
+  '<h2>📡 تازه‌ترین سیگنال‌های بلندمدت</h2>'+
+  '<div class="grid2">'+topS.slice(0,4).map(x=>sigCard(calcSig(x).L)).join('')+'</div>'+
+  '<h2>📰 آخرین اخبار مؤثر</h2>'+
+  '<div class="card">'+NEWS.slice(0,4).map(n=>'<div class="row"><div><b>'+n[0]+'</b></div><span class="sub">'+(S.some(v=>v.s===n[1])?'<a href="'+href(n[1])+'">'+n[1]+'</a> · ':'')+n[2]+'</span></div>').join('')+'</div>';
+}
+
+/* ---------- نمره‌ها ---------- */
+function pgScores(){
+  var rows=S.slice().sort((a,b)=>b.score-a.score);
+  $('#app').innerHTML='<h1>نمره‌های بنیادی</h1><p class="sub">نمره ۱ تا ۱۰ بر اساس ۵ محور: ارزش‌گذاری، سودآوری، رشد، سلامت ترازنامه، تقسیم سود</p>'+
+  '<div class="tw card"><table><tr><th>رتبه</th><th>نماد</th><th>نام</th><th>گروه</th><th>نمره</th><th>معیار کلیدی</th><th>قیمت</th></tr>'+
+  rows.map((x,i)=>'<tr'+(i<3?' class="me"':'')+'><td class="sub">'+fa(i+1)+'</td><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td class="sub">'+x.n+'</td><td class="sub">'+x.g+'</td><td>'+scb(x.score)+'</td><td class="sub">'+(x.t==='f'?('بازده سالانه '+fa(x.ret)+'٪'):('P/E '+fa(x.pe)+' · EPS '+nfa(x.eps)))+'</td><td>'+priceTxt(x.s)+' '+chgTxt(x.s)+'</td></tr>').join('')+'</table></div>';
+}
+
+/* ---------- سیگنال‌ها ---------- */
+var SIGTAB='L';
+function setSig(t){SIGTAB=t;pgSignals()}
+function pgSignals(){
+  var T={K:'کوتاه‌مدت (روزانه)',M:'میان‌مدت (هفتگی)',L:'بلندمدت (ماهانه)'};
+  var arr=S.map(x=>calcSig(x)[SIGTAB]);
+  var b=arr.filter(r=>r.d==='خرید').length,s=arr.filter(r=>r.d==='فروش').length;
+  $('#app').innerHTML='<h1>سیگنال‌های سرمایه‌گذاری</h1><p class="sub">بر پایه نمره بنیادی، ارزش‌گذاری گروهی و جریان نقدینگی — احتمالاتی و تحلیلی</p>'+
+  '<div class="tabs">'+['K','M','L'].map(t=>'<button class="tb'+(SIGTAB===t?' on':'')+'" onclick="setSig(\''+t+'\')">'+T[t]+'</button>').join('')+'</div>'+
+  '<div class="stats"><div class="card stat qc"><b class="up">'+fa(b)+'</b><span>خرید</span></div><div class="card stat qc"><b class="am">'+fa(S.length-b-s)+'</b><span>بی‌طرف / نگهداری</span></div><div class="card stat qc"><b class="dn">'+fa(s)+'</b><span>فروش</span></div></div>'+
+  '<div class="grid2">'+arr.sort((a,b)=>b.c-a.c).map(sigCard).join('')+'</div>';
+}
+
+/* ---------- سبد پیشنهادی ---------- */
+function pgBasket(){
+  var picks=S.filter(x=>x.score>=6.5).sort((a,b)=>b.score-a.score).slice(0,8);
+  if(picks.length<4)picks=S.slice().sort((a,b)=>b.score-a.score).slice(0,6);
+  var tot=sum(picks.map(x=>x.score)),used=0;
+  var items=picks.map((x,i)=>{var w=i===picks.length-1?Math.round((100-used)*10)/10:Math.round(x.score/tot*1000)/10;used+=w;return [x.s,w];});
+  $('#app').innerHTML='<h1>سبد پیشنهادی رشدی</h1><p class="sub">نمادهای نمره '+fa(6.5)+'+ با وزن متناسب با نمره — بازبینی ماهانه</p>'+
+  '<div class="card"><div class="dwrap">'+donut(items,'۱۰۰٪','سبد رشدی')+dlegend(items)+'</div></div>'+
+  '<h2>مشخصات سبد</h2><div class="tw card"><table><tr><th>نماد</th><th>وزن</th><th>قیمت فعلی</th><th>هدف ۱۲ ماهه</th><th>حد ضرر</th><th>نمره</th><th>دلیل اصلی</th></tr>'+
+  picks.map((x,i)=>{var p=PX[x.s].p;
+  return '<tr><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td><b>'+fa(items[i][1])+'٪</b></td><td>'+nfa(p)+'</td><td class="up">'+nfa(Math.round(p*(1+x.score*0.028)))+'</td><td class="dn">'+nfa(Math.round(p*0.92))+'</td><td>'+scb(x.score)+'</td><td class="sub">'+(x.t==='f'?('بازده '+fa(x.ret)+'٪ · NAV '+nfa(x.nav)):('P/E '+fa(x.pe)+' در برابر گروه '+fa(x.peG)))+'</td></tr>';}).join('')+'</table></div>'+
+  '<div class="note warn">⚠️ این سبد صرفاً تحلیلی و نمایشی است و توصیه خرید نیست؛ قبل از تصمیم، تحلیل شخصی انجام شود.</div>';
+}
+
+/* ---------- سبدهای نهادها ---------- */
+function pgPorts(){
+  var keys=Object.keys(PORTS);
+  $('#app').innerHTML='<h1>سبد نهادها و صندوق‌ها</h1><p class="sub">ترکیب بورسی و غیربورسی '+fa(keys.length)+' نهاد + ریز تغییرات (خرید/فروش/افزایش/کاهش)</p>'+
+  '<div class="grid2">'+keys.map(k=>{var P=PORTS[k];
+  var bv=sum(P.b.map(r=>r[1])),nv=sum(P.nb.map(r=>r[1])),t=bv+nv;
+  var nm=S.some(v=>v.s===k)?k+' — '+S.find(v=>v.s===k).n:k;
+  return '<a class="card" href="#/p/'+encodeURIComponent(k)+'"><div class="head"><b>'+nm+'</b><span class="badge n">مشاهده</span></div>'+
+  '<div class="sub">بورسی '+fa(Math.round(bv/t*100))+'٪ · غیربورسی '+fa(Math.round(nv/t*100))+'٪ · ارزش '+nfa(t)+' میلیارد تومان</div>'+
+  '<div style="margin-top:6px">'+P.b.slice(0,3).map(r=>r[0]+' '+pc(r[2])).join(' · ')+'</div></a>';}).join('')+'</div>'+
+  '<h2>📋 آخرین تغییرات سبدها</h2><div class="tw card">'+chgTable(CHG)+'</div>';
+}
+function pgPort(k){
+  var P=PORTS[k];
+  if(!P){location.hash='#/ports';return}
+  var ent=S.find(v=>v.s===k);
+  var bv=P.b.map(r=>[r[0],r[1]]),nv=P.nb.map(r=>[r[0],r[1]]);
+  var tv=sum(bv.map(r=>r[1]))+sum(nv.map(r=>r[1]));
+  var bps=Math.round(sum(bv.map(r=>r[1]))/tv*100);
+  var ch=CHG.filter(c=>c[1]===k);
+  $('#app').innerHTML='<a href="#/ports" class="sub">← بازگشت به سبدها</a>'+
+  '<h1>'+(ent?ent.n:k)+'</h1>'+
+  (ent?'<div class="stats"><div class="card stat qc">'+scb(ent.score)+'<span>نمره بنیادی</span></div><div class="card stat qc"><b>'+priceTxt(k)+'</b><span>قیمت '+chgTxt(k)+'</span></div><div class="card stat qc"><b>'+nfa(tv)+'</b><span>ارزش کل سبد (میلیارد تومان)</span></div></div>':'')+
+  '<h2>🧺 سبد بورسی ('+fa(bps)+'٪ از کل)</h2><div class="card"><div class="dwrap">'+donut(bv,fa(bps)+'٪','بورسی')+dlegend(bv)+'</div>'+holdTable(P.b,'بورس')+'</div>'+
+  '<h2>🏦 سبد غیربورسی ('+fa(100-bps)+'٪ از کل)</h2><div class="card"><div class="dwrap">'+donut(nv,fa(100-bps)+'٪','غیربورسی')+dlegend(nv)+'</div>'+holdTable(P.nb,'غیربورس')+'</div>'+
+  '<h2>📋 تغییرات ثبت‌شده این نهاد</h2><div class="tw card">'+(ch.length?chgTable(ch):'<div class="sub" style="padding:8px">تغییر جدیدی ثبت نشده است.</div>')+'</div>';
+}
+
+/* ---------- نقدینگی ---------- */
+function pgLiq(){
+  var net=sum(S.map(x=>x.flow));
+  var adv=S.filter(x=>pxChg(x.s)>0).length;
+  var gmax=Math.max.apply(null,GFLOW.map(g=>Math.abs(g[1])));
+  $('#app').innerHTML='<h1>رصد نقدینگی</h1><p class="sub">جریان پول حقیقی و بین‌گروهی — ارقام شبیه‌سازی‌شده</p>'+
+  '<div class="stats">'+
+  '<div class="card stat qc"><b class="'+(net>=0?'up':'dn')+'">'+(net>=0?'+':'−')+nfa(Math.abs(net))+'</b><span>خالص خرید حقیقی بازار (میلیارد تومان)</span></div>'+
+  '<div class="card stat qc"><b>'+fa(Math.round(adv/S.length*100))+'٪</b><span>نسبت نمادهای مثبت</span></div>'+
+  '<div class="card stat qc"><b>'+nfa(sum(GFLOW.map(g=>Math.abs(g[1]))))+'</b><span>جابه‌جایی نقدینگی گروه‌ها (میلیارد تومان)</span></div></div>'+
+  '<h2>🌊 ورود و خروج نقدینگی گروه‌ها</h2><div class="card">'+
+  GFLOW.map(g=>{var w=Math.abs(g[1])/gmax*50;
+  return '<div class="lq"><span>'+g[0]+'</span><div class="lbar"><i style="'+(g[1]>=0?'right:50%;background:var(--brand)':'left:50%;background:var(--red)')+';width:'+w.toFixed(1)+'%"></i></div><b class="'+(g[1]>=0?'up':'dn')+'">'+(g[1]>=0?'+':'−')+nfa(Math.abs(g[1]))+'</b></div>';}).join('')+'</div>'+
+  '<h2>📊 خالص خرید حقیقی نمادهای منتخب (میلیارد تومان)</h2><div class="card">'+bars(S.slice(0,8).map(x=>x.flow),S.slice(0,8).map(x=>x.s),150)+'</div>';
+}
+
+/* ---------- هشدارها ---------- */
+function armAlert(s){toast('🔔 هشدار ورود/خروج برای '+s+' فعال شد')}
+function pgAlerts(){
+  $('#app').innerHTML='<h1>هشدارهای ورود و خروج</h1><p class="sub">رصد اقدامات بزرگ صندوق‌ها و اشخاص حقوقی — با درصد قبل و بعد</p>'+
+  '<div class="card">'+FALERTS.map(a=>{var good=a[2]==='ورود'||a[2]==='افزایش سهم';
+  return '<div class="al"><span class="badge '+(good?'b':'s')+'">'+a[2]+'</span><div><b>'+(S.some(v=>v.s===a[3])?'<a href="'+href(a[3])+'">'+a[3]+'</a>':a[3])+'</b> — '+a[1]+' <span class="sub">'+a[4]+'</span></div><span class="sub">'+fa(a[0])+'</span><button class="btn g" onclick="armAlert(\''+a[3]+'\')">🔔 هشدار</button></div>';}).join('')+'</div>'+
+  '<h2>📋 ریز تغییرات سبدها (چه خریدند، چه فروختند، چه اضافه/کم کردند)</h2><div class="tw card">'+chgTable(CHG)+'</div>';
+}
+
+/* ---------- اخبار ---------- */
+function pgNews(){
+  $('#app').innerHTML='<h1>اخبار مؤثر شرکت‌ها</h1><p class="sub">خبرهای اثرگذار بر نمره بنیادی</p>'+
+  '<div class="card">'+NEWS.map(n=>'<div class="row"><div><b>'+n[0]+'</b></div><span class="sub">'+(S.some(v=>v.s===n[1])?'<a href="'+href(n[1])+'">'+n[1]+'</a> · ':'')+n[2]+'</span></div>').join('')+'</div>';
+}
+
+/* ---------- سناریوها ---------- */
+var SCEN=[
+['🌍 خوش‌بینانه',25,'تثبیت نرخ ارز + نرخ‌گذاری آزادتر فولاد و بهبود نرخ خوراک پتروشیمی','رشد شاخص تا ۳۵٪','فلزات، پتروشیمی و پالایش',['فولاد','فملی','شپدیس','شبندر']],
+['⚖️ محتمل',55,'ادامه روند با نوسان؛ ورود هدفمند نقدینگی به گروه‌های ارزنده','رشد ملایم تا ۱۲٪','صندوق‌ها و نمادهای نمره بالا',['یاقوت','تاپیکو','فخوز','اعتماد']],
+['⛈ بدبینانه',20,'تشدید تحریم و افت درآمد ارزی؛ رکود تقاضای داخلی','اصلاح تا ۱۵٪','پناهگاه: درآمد ثابت و دارو',['وجاهت','الماس','دفارا','یاقوت']]];
+function pgScen(){
+  $('#app').innerHTML='<h1>سناریوهای ۶ ماه آینده</h1><p class="sub">برآورد تحلیلی و نمایشی — مبنای تصمیم نیست</p>'+
+  '<div class="grid3">'+SCEN.map(sc=>'<div class="card"><div class="head"><b>'+sc[0]+'</b><span class="badge n">'+fa(sc[1])+'٪</span></div>'+
+  '<div class="fb" style="margin-top:6px"><span>احتمال</span><div class="fbar"><i style="width:'+sc[1]+'%"></i></div><b>'+fa(sc[1])+'٪</b></div>'+
+  '<p class="sub" style="margin-top:8px">'+sc[2]+'</p>'+
+  '<div class="row"><span>اثر بر شاخص</span><b class="am">'+sc[3]+'</b></div>'+
+  '<div class="row"><span>برندگان</span><b class="sub">'+sc[4]+'</b></div>'+
+  '<div style="margin-top:8px">'+sc[5].map(s=>'<a class="tchip" style="display:inline-flex;margin:2px" href="'+href(s)+'"><b>'+s+'</b></a>').join('')+'</div></div>').join('')+'</div>';
+}
+
+/* ---------- گروه‌ها ---------- */
+function pgGroups(){
+  var gs={};S.forEach(x=>{(gs[x.g]=gs[x.g]||[]).push(x)});
+  $('#app').innerHTML='<h1>تحلیل گروه‌ها</h1><p class="sub">میانه P/E، میانگین نمره و جریان نقدینگی هر گروه</p>'+
+  '<div class="grid2">'+Object.keys(gs).map(g=>{
+  var arr=gs[g],f=GFLOW.filter(z=>z[0]===g),flow=f.length?f[0][1]:0;
+  var st=arr.filter(x=>x.t==='s');
+  return '<div class="card"><div class="head"><b>'+g+'</b>'+(flow?'<span class="badge '+(flow>=0?'b':'s')+'">'+(flow>=0?'+':'−')+nfa(Math.abs(flow))+' میلیارد</span>':'')+'</div>'+
+  '<div class="sub">'+fa(arr.length)+' نماد · میانگین نمره '+fmtS((sum(arr.map(x=>x.score))/arr.length).toFixed(1))+(st.length?' · میانه P/E '+fa(med(st.map(x=>x.pe))):'')+'</div>'+
+  '<div style="margin-top:8px">'+arr.map(x=>'<a class="tchip" style="display:inline-flex;margin:2px" href="'+href(x.s)+'"><b>'+x.s+'</b>'+scb(x.score)+'</a>').join('')+'</div></div>';}).join('')+'</div>';
+}
+
+/* ---------- دیده‌بان ---------- */
+var WQ='';
+function wfil(q){WQ=norm(q);pgWatch()}
+function pgWatch(){
+  var arr=S.filter(x=>!WQ||norm(x.s).indexOf(WQ)>-1||norm(x.n).indexOf(WQ)>-1).sort((a,b)=>pxChg(b.s)-pxChg(a.s));
+  $('#app').innerHTML='<h1>دیده‌بان بازار</h1><p class="sub">قیمت‌ها هر ۱۵ ثانیه به‌روز می‌شوند · '+fa(arr.length)+' نماد</p>'+
+  '<div class="sbox" style="margin:10px auto 16px;max-width:420px"><input placeholder="فیلتر نماد…" value="'+WQ.replace(/"/g,'')+'" oninput="wfil(this.value)"></div>'+
+  '<div class="tw card"><table><tr><th>نماد</th><th>قیمت (تومان)</th><th>تغییر</th><th>حجم (میلیون سهم)</th><th>خالص حقیقی (میلیارد)</th><th>نمره</th></tr>'+
+  arr.map(x=>'<tr><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td>'+priceTxt(x.s)+'</td><td>'+chgTxt(x.s)+'</td><td class="sub">'+nfa(PX[x.s].v)+'</td><td>'+(x.flow>=0?'<span class="up">+'+nfa(x.flow)+'</span>':'<span class="dn">−'+nfa(-x.flow)+'</span>')+'</td><td>'+scb(x.score)+'</td></tr>').join('')+'</table></div>';
+}
+
+/* ---------- صفحه هر نماد ---------- */
+function pgStock(s){
+  var x=S.find(v=>v.s===s);
+  if(!x){location.hash='#/';return}
+  var sg=calcSig(x),isF=x.t==='f',P=PORTS[s],nw=NEWS.filter(n=>n[1]===s);
+  $('#app').innerHTML='<a href="#/" class="sub">← بازگشت به خانه</a>'+
+  '<div class="head" style="margin-top:10px"><h1>'+x.s+(isF?' 🏦':'')+' <span class="sub" style="font-size:14px">'+x.n+'</span></h1>'+gauge(x.score)+'</div>'+
+  '<div class="stats">'+
+  '<div class="card stat qc"><b>'+priceTxt(s)+'</b><span>قیمت (تومان) '+chgTxt(s)+'</span></div>'+
+  (isF?('<div class="card stat qc"><b>'+nfa(x.nav)+'</b><span>NAV (تومان)</span></div><div class="card stat qc"><b class="up">'+fa(x.ret)+'٪</b><span>بازده از ابتدای سال</span></div><div class="card stat qc"><b>'+fmtS(x.fee)+'٪</b><span>کارمزد · '+x.kind+'</span></div>')
+  :('<div class="card stat qc"><b>'+fa(x.pe)+'</b><span>P/E (میانه گروه '+fa(x.peG)+')</span></div><div class="card stat qc"><b>'+nfa(x.eps)+'</b><span>EPS (ریال)</span></div><div class="card stat qc"><b>'+nfa(x.mc*100)+'</b><span>ارزش بازار (میلیارد تومان)</span></div>'))+'</div>'+
+  '<h2>📖 خلاصه بنیادی</h2><div class="card note">'+(INTRO[s]||('فعالیت در گروه «'+x.g+'» — ارقام این بخش نمایشی است.'))+'</div>'+
+  '<h2>🧮 ریز نمره بنیادی</h2><div class="card">'+fbars(x.F)+'</div>'+
+  '<h2>📡 سیگنال‌های سه افق</h2><div class="grid3">'+
+  [sg.K,sg.M,sg.L].map((r,i)=>{var t=['کوتاه‌مدت','میان‌مدت','بلندمدت'][i];
+  return '<div class="card"><div class="head"><b>'+t+'</b><span class="badge '+(r.d==='خرید'?'b':(r.d==='فروش'?'s':'n'))+'">'+r.d+'</span></div><div class="sub">قدرت '+fa(r.c)+'٪</div><ul class="why">'+r.w.slice(0,3).map(w=>'<li>'+w+'</li>').join('')+'</ul></div>';}).join('')+'</div>'+
+  (isF?('<h2>📈 روند NAV ۱۲ ماه اخیر</h2><div class="card">'+bars(x.navT,LBL.slice(12))+'</div>')
+  :('<h2>📊 فروش ۸ فصل اخیر (میلیارد تومان)</h2><div class="card">'+bars(x.sales.slice(-8),LBL.slice(-8))+'</div>'+
+  '<h2>💰 سود خالص فصلی (میلیارد تومان)</h2><div class="card">'+bars(x.profit,LBL.slice(-8))+'</div>'+
+  '<h2>🧾 صورت وضعیت مالی (میلیارد تومان)</h2><div class="card">'+
+  '<div class="row"><span>دارایی جاری</span><b>'+nfa(x.ca)+'</b></div>'+
+  '<div class="row"><span>دارایی ثابت</span><b>'+nfa(x.fa)+'</b></div>'+
+  '<div class="row"><span>جمع دارایی‌ها</span><b>'+nfa(x.ta)+'</b></div>'+
+  '<div class="row"><span>بدهی جاری</span><b>'+nfa(x.cl)+'</b></div>'+
+  '<div class="row"><span>بدهی بلندمدت</span><b>'+nfa(x.ltd)+'</b></div>'+
+  '<div class="row"><span>حقوق صاحبان سهام</span><b class="up">'+nfa(x.eq)+'</b></div></div>'+
+  '<h2>📐 نسبت‌های کلیدی</h2><div class="card">'+
+  '<div class="row"><span>ROE بازده حقوق صاحبان سهام</span><b class="up">'+fa(x.roe)+'٪</b></div>'+
+  '<div class="row"><span>ROA بازده دارایی</span><b class="up">'+fmtS(x.roa)+'٪</b></div>'+
+  '<div class="row"><span>حاشیه سود خالص</span><b class="up">'+fmtS(x.mar)+'٪</b></div>'+
+  '<div class="row"><span>نسبت جاری</span><b>'+fmtS(x.cr)+'</b></div>'+
+  '<div class="row"><span>بدهی / حقوق صاحبان سهام</span><b>'+fmtS(x.de)+'</b></div>'+
+  '<div class="row"><span>کیفیت سود (نقدی/سود)</span><b>'+fmtS(x.ocfN)+'</b></div>'+
+  '<div class="row"><span>P/B ارزش دفتری</span><b>'+fmtS(x.pb)+'</b></div></div>'+
+  '<h2>💵 جریان نقد عملیاتی فصلی (میلیارد تومان)</h2><div class="card">'+bars(x.cfq.map(q=>q[0]),LBL.slice(-8),140)+'</div>'+
+  '<h2>🎁 سود تقسیمی</h2><div class="card">'+
+  '<div class="row"><span>DPS امسال / پارسال</span><b>'+nfa(x.dps2[1])+' / '+nfa(x.dps2[0])+' ریال</b></div>'+
+  '<div class="row"><span>نسبت تقسیم سود</span><b>'+fa(x.payout)+'٪</b></div>'+
+  '<div class="row"><span>نظر حسابرس</span><b class="'+(x.aud==='مطلق'?'up':'am')+'">'+x.aud+'</b></div>'+
+  '<div class="row"><span>مطالبات مشکوک‌الوصول</span><b class="am">'+fa(x.rec)+'٪ دارایی‌ها</b></div>'+
+  '<div class="row"><span>سال مالی</span><b class="sub">'+fa(x.fy)+'</b></div></div>'+
+  '<h2>🏦 سود انباشته (میلیارد تومان)</h2><div class="card">'+bars(x.retE,LBL.slice(-8),140)+'</div>'))+
+  (P?('<h2>🧺 سبد دارایی‌های این نهاد</h2><div class="card">'+
+  '<div class="dwrap">'+donut(P.b.map(r=>[r[0],r[1]]),'بورسی','دارایی‌ها')+dlegend(P.b.map(r=>[r[0],r[1]]))+'</div>'+holdTable(P.b,'بورس')+
+  '<div style="height:14px"></div><div class="dwrap">'+donut(P.nb.map(r=>[r[0],r[1]]),'غیربورسی','دارایی‌ها')+dlegend(P.nb.map(r=>[r[0],r[1]]))+'</div>'+holdTable(P.nb,'غیربورس')+'</div>'+
+  '<h2>📋 تغییرات ثبت‌شده سبد</h2><div class="tw card">'+(CHG.filter(c=>c[1]===s).length?chgTable(CHG.filter(c=>c[1]===s)):'<div class="sub" style="padding:8px">تغییر جدیدی ثبت نشده است.</div>')+'</div>'):'')+
+  (nw.length?('<h2>📰 اخبار مرتبط</h2><div class="card">'+nw.map(n=>'<div class="row"><div><b>'+n[0]+'</b></div><span class="sub">'+n[2]+'</span></div>').join('')+'</div>'):'');
+}
+
+/* ---------- مسیریابی و اجرا ---------- */
+var lastH='';
+function render(){
+  var h=decodeURIComponent(location.hash||'#/');
+  if(h!==lastH){window.scrollTo(0,0);lastH=h}
+  try{
+    if(h.indexOf('#/s/')===0)return pgStock(h.slice(4));
+    if(h.indexOf('#/p/')===0)return pgPort(h.slice(4));
+    var R={'#/':pgHome,'#/scores':pgScores,'#/signals':pgSignals,'#/basket':pgBasket,'#/ports':pgPorts,'#/liq':pgLiq,'#/alerts':pgAlerts,'#/news':pgNews,'#/scen':pgScen,'#/groups':pgGroups,'#/watch':pgWatch};
+    (R[h.split('?')[0]]||pgHome)();
+  }catch(e){errShow(e.message)}
+}
+window.addEventListener('hashchange',render);
+buildTicker();
+$('#mode').className='lvb ok';$('#mode').textContent='🟢 زنده — قیمت‌ها هر ۱۵ ثانیه';
+if(!location.hash)location.hash='#/';
+render();
+clockUpd();
+setInterval(clockUpd,1000);
+setInterval(tick,15000);
+</script>
+</body>
+</html>
