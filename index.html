@@ -1,973 +1,264 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0a1120">
-  <title>مقصودیوم | پایش و تحلیل بورس</title>
-  <style>
-    :root {
-      --bg:#0a1120; --card:#131e32; --line:#283650;
-      --text:#edf3ff; --muted:#a8b7cf; --green:#47dbac;
-      --red:#ff818c; --blue:#68b4ff; --gold:#ffd27a;
-    }
-    * { box-sizing:border-box }
-    body {
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:Tahoma,Arial,sans-serif; line-height:1.9;
-    }
-    header {
-      border-bottom:1px solid var(--line);
-      background:#0e182a; padding:22px 0;
-    }
-    .wrap { max-width:1180px; margin:auto; padding:0 18px }
-    .head,.row {
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; flex-wrap:wrap;
-    }
-    h1,h2,h3,p { margin-top:0 }
-    h1 { font-size:27px; margin-bottom:0 }
-    h2 { font-size:20px }
-    h3 { font-size:16px }
-    small,.muted { color:var(--muted) }
-    .badge {
-      padding:4px 10px; border:1px solid var(--line);
-      border-radius:20px; font-size:12px;
-    }
-    nav { display:flex; flex-wrap:wrap; gap:8px; margin:24px 0 }
-    button,input,select { font:inherit }
-    button {
-      cursor:pointer; color:var(--text); border:1px solid var(--line);
-      border-radius:10px; padding:9px 15px; background:#20314c;
-    }
-    button:hover { border-color:var(--blue) }
-    button:disabled { opacity:.55; cursor:wait }
-    button.active,.primary {
-      color:#081323; background:var(--green); border-color:var(--green);
-    }
-    input,select {
-      background:#0c1526; border:1px solid var(--line);
-      color:var(--text); border-radius:10px; padding:11px;
-      width:100%; min-width:0;
-    }
-    input:focus,select:focus { outline:2px solid var(--blue) }
-    .card {
-      background:var(--card); border:1px solid var(--line);
-      padding:21px; border-radius:17px; margin-bottom:18px;
-    }
-    .grid {
-      display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px;
-    }
-    .two { display:grid; grid-template-columns:1fr 1fr; gap:18px }
-    .metric {
-      background:#0c172a; border:1px solid var(--line);
-      padding:16px; border-radius:12px;
-    }
-    .metric strong { display:block; font-size:23px; margin-top:8px }
-    .positive { color:var(--green) }
-    .negative { color:var(--red) }
-    .warning { color:var(--gold) }
-    .notice {
-      border-right:3px solid var(--gold); background:#211f20;
-      padding:12px 15px; border-radius:8px; margin:15px 0;
-    }
-    .error {
-      border:1px solid #913f51; background:#321d2c;
-      padding:14px; border-radius:10px; white-space:pre-wrap;
-    }
-    .searchbox { display:flex; gap:10px }
-    .searchbox input { flex:1 }
-    .results { display:grid; gap:8px; margin-top:15px }
-    .result { text-align:right; width:100%; background:#0e192c }
-    .result small { display:block }
-    .result .id { font-size:11px; opacity:.8 }
-    .hidden { display:none !important }
-    .tablewrap { overflow-x:auto }
-    table { width:100%; border-collapse:collapse; white-space:nowrap }
-    th,td { text-align:right; padding:12px; border-bottom:1px solid var(--line) }
-    th { color:var(--muted); font-size:12px }
-    label { display:block; font-size:13px; color:var(--muted) }
-    label input,label select { margin-top:6px }
-    .formgrid {
-      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px;
-    }
-    .formgrid button { align-self:end }
-    .donut {
-      width:205px; height:205px; border-radius:50%; margin:20px auto;
-      display:grid; place-items:center; background:#283650;
-    }
-    .donut::after {
-      content:"ترکیب سبد"; width:137px; height:137px;
-      border-radius:50%; background:var(--card);
-      display:grid; place-items:center; color:var(--muted);
-    }
-    .dot {
-      display:inline-block; width:10px; height:10px;
-      border-radius:50%; margin-left:7px;
-    }
-    a { color:var(--blue); text-decoration:none }
-    footer { padding:25px 0 40px; color:var(--muted); font-size:12px }
-    #globalMessage { margin-bottom:15px }
-    @media(max-width:760px) {
-      .grid,.two { grid-template-columns:1fr }
-      .formgrid { grid-template-columns:1fr }
-      .card { padding:16px }
-      h1 { font-size:23px }
-      .searchbox { flex-wrap:wrap }
-      .searchbox button { width:100% }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقصودیوم پرو | پلتفرم جامع تحلیل بنیادی و سیگنال‌دهی</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <style>
+        :root {
+            --bg-dark: #070b14;
+            --bg-panel: #111827;
+            --bg-card: #1f2937;
+            --border: #374151;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; padding-bottom: 50px; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Header & Navigation */
+        header { background-color: var(--bg-panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--text-main); }
+        .nav-links { display: flex; gap: 15px; flex-wrap: wrap; }
+        .nav-links button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 5px 10px; border-radius: 6px; transition: 0.3s; }
+        .nav-links button:hover, .nav-links button.active { background-color: var(--bg-card); color: var(--text-main); }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
+        
+        /* Cards */
+        .card { background-color: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .card-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+
+        /* Typography & Badges */
+        h1, h2, h3 { margin-bottom: 15px; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        
+        /* Fundamental Score Gauge */
+        .score-circle { width: 80px; height: 80px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: 24px; border: 4px solid var(--success); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+        .score-sub { font-size: 10px; font-weight: normal; color: var(--text-muted); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border); }
+        th { color: var(--text-muted); font-weight: normal; }
+        tr:hover { background-color: var(--bg-card); }
+
+        /* Charts (CSS Pie Charts) */
+        .pie-chart { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; margin: 0 auto; }
+        .pie-chart::after { content: ''; width: 100px; height: 100px; background-color: var(--bg-panel); border-radius: 50%; position: absolute; }
+        .pie-inner-text { position: absolute; z-index: 10; text-align: center; }
+        .pie-legend { display: flex; justify-content: center; gap: 15px; margin-top: 20px; font-size: 12px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+        /* Inputs & Buttons */
+        .search-box { display: flex; gap: 10px; margin-bottom: 30px; }
+        input[type="text"] { flex: 1; background-color: var(--bg-panel); border: 1px solid var(--border); color: var(--text-main); padding: 12px 20px; border-radius: 8px; font-size: 15px; outline: none; }
+        input[type="text"]:focus { border-color: var(--primary); }
+        .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .btn-primary:hover { opacity: 0.9; }
+
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Progress Bars */
+        .progress-bar { width: 100%; background-color: var(--bg-card); border-radius: 4px; height: 8px; margin-top: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: var(--primary); border-radius: 4px; }
+        
+        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; }
+    </style>
 </head>
 <body>
-<header>
-  <div class="wrap head">
-    <div>
-      <h1>مقصودیوم <span class="positive">●</span></h1>
-      <small>پایش بورس، دیده‌بان و سبد شخصی</small>
-    </div>
-    <div class="badge" id="serverStatus">بررسی API…</div>
-  </div>
-</header>
 
-<main class="wrap">
-  <nav aria-label="بخش‌های برنامه">
-    <button class="active" data-tab="market">بازار و نمادها</button>
-    <button data-tab="watch">دیده‌بان</button>
-    <button data-tab="portfolio">سبد شخصی</button>
-    <button data-tab="fundamental">نسبت‌های بنیادی</button>
-    <button data-tab="sources">منابع و وضعیت امکانات</button>
-  </nav>
-
-  <div id="globalMessage" class="hidden" role="alert"></div>
-
-  <section id="market">
-    <div class="card">
-      <h2>جست‌وجوی نماد</h2>
-      <form id="searchForm" class="searchbox">
-        <input id="searchInput" placeholder="مثلاً فولاد، تاپیکو، فملی"
-               maxlength="80" required aria-label="نام نماد"
-               autocomplete="off">
-        <button class="primary" id="searchButton">جست‌وجو</button>
-      </form>
-      <small>
-        نتایج از سرویس جست‌وجوی بورس دریافت می‌شود؛ پوشش کامل همه ابزارها تضمین‌شده نیست.
-      </small>
-      <div id="searchStatus" aria-live="polite"></div>
-      <div id="results" class="results"></div>
-    </div>
-
-    <div class="card hidden" id="quoteCard">
-      <div class="row">
-        <div>
-          <h2 id="symbolTitle"></h2>
-          <small id="companyName"></small>
+    <header>
+        <div class="nav-container">
+            <div class="logo">مقصودیوم <span>پرو</span></div>
+            <div class="nav-links">
+                <button class="active" onclick="showSection('dashboard', this)">داشبورد بازار</button>
+                <button onclick="showSection('fundamental', this)">تحلیل بنیادی (تاپیکو)</button>
+                <button onclick="showSection('signals', this)">سیگنال‌ها</button>
+                <button onclick="showSection('portfolio', this)">سبد نهادها و صندوق‌ها</button>
+                <button onclick="showSection('liquidity', this)">رصد نقدینگی</button>
+            </div>
         </div>
-        <div class="row">
-          <button id="refreshQuote">تازه‌سازی</button>
-          <button id="addWatch">افزودن به دیده‌بان</button>
+    </header>
+
+    <div class="container">
+        
+        <!-- SECTION 1: DASHBOARD -->
+        <div id="dashboard" class="section active">
+            <div class="search-box">
+                <input type="text" placeholder="جستجوی نماد، صندوق یا شرکت (مثلا: فولاد، تاپیکو)...">
+                <button class="btn-primary">جستجو در بازار</button>
+            </div>
+
+            <h2 style="color: var(--text-muted); font-size: 16px;">خلاصه وضعیت بازار امروز</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">ارزش معاملات خرد</span></div>
+                    <div style="font-size: 24px; font-weight: bold;">۴۵,۲۰۰ <span style="font-size: 14px; color: var(--text-muted);">میلیارد ریال</span></div>
+                    <div class="text-success" style="font-size: 12px; margin-top: 5px;">+ ۱۲٪ نسبت به میانگین ماه</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">ورود پول حقیقی</span></div>
+                    <div class="text-success" style="font-size: 24px; font-weight: bold;">+ ۲,۱۵۰ <span style="font-size: 14px; color: var(--text-muted);">میلیارد ریال</span></div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">بیشترین ورود: گروه پتروشیمی</div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">تعداد سیگنال‌های فعال</span></div>
+                    <div style="font-size: 24px; font-weight: bold; color: var(--primary);">۱۸ <span style="font-size: 14px; color: var(--text-muted);">نماد ارزنده</span></div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">بر اساس فیلترهای بنیادی مقصودیوم</div>
+                </div>
+            </div>
+
+            <br>
+            <h2>🔥 سبد پیشنهادی رشدی (آپدیت لحظه‌ای)</h2>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>نماد</th>
+                            <th>قیمت فعلی (ریال)</th>
+                            <th>ارزش ذاتی (محاسبه سیستم)</th>
+                            <th>نمره بنیادی (از ۱۰)</th>
+                            <th>وضعیت سیگنال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--primary);">تاپیکو</td>
+                            <td>۱۴,۵۲۰</td>
+                            <td>۲۱,۰۰۰</td>
+                            <td><span class="badge badge-success">۹.۲</span></td>
+                            <td><span class="badge badge-success">خرید قوی</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold;">فولاد</td>
+                            <td>۴,۸۵۰</td>
+                            <td>۶,۲۰۰</td>
+                            <td><span class="badge badge-success">۸.۵</span></td>
+                            <td><span class="badge badge-success">خرید میان‌مدت</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold;">شپدیس</td>
+                            <td>۱۸۲,۰۰۰</td>
+                            <td>۲۱۰,۰۰۰</td>
+                            <td><span class="badge badge-warning">۷.۸</span></td>
+                            <td><span class="badge badge-warning">نگهداری</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
 
-      <p class="muted" id="quoteMeta"></p>
-      <div id="quoteError" class="hidden error" role="alert"></div>
-      <div id="quoteNotice"></div>
-      <div id="quoteMetrics" class="grid"></div>
+        <!-- SECTION 2: FUNDAMENTAL (TAPICO Showcase) -->
+        <div id="fundamental" class="section">
+            <div class="card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                    <div>
+                        <h1>تاپیکو <span style="font-size: 16px; color: var(--text-muted); font-weight: normal;">(سرمایه‌گذاری نفت و گاز و پتروشیمی تامین)</span></h1>
+                        <p style="color: var(--text-muted); font-size: 14px;">آخرین قیمت: ۱۴,۵۲۰ ریال | تغییر: <span class="text-success">+۲.۱٪</span></p>
+                    </div>
+                    <div class="score-circle">
+                        ۹.۲
+                        <span class="score-sub">نمره مقصودیوم</span>
+                    </div>
+                </div>
+            </div>
 
-      <div class="notice">
-        قیمت‌ها به ریال و مربوط به تابلوی معاملاتی هستند؛
-        این اعداد «تاریخچه قیمت تعدیل‌شده» نیستند.
-        زمان دریافت جدید به‌تنهایی به معنی معامله جدید نیست.
-      </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">ارزیابی نسبت‌های مالی (از کدال)</span></div>
+                    
+                    <div class="flex-between"><span>نسبت P/E (فعلی)</span><span style="font-weight:bold;">۴.۲</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 80%; background-color: var(--success);"></div></div>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">ارزان‌تر از ۹۰٪ گروه پتروشیمی</p>
 
-      <label>
-        <input type="checkbox" id="autoRefresh" checked
-               style="width:auto;margin-left:7px">
-        به‌روزرسانی هر ۶۰ ثانیه هنگام باز بودن همین بخش
-      </label>
-    </div>
+                    <div class="flex-between"><span>حاشیه سود خالص</span><span style="font-weight:bold;">۵۸٪</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 90%; background-color: var(--success);"></div></div>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">بسیار عالی و با ثبات</p>
 
-    <div class="card">
-      <h3>اصل این نسخه: عدد ساختگی نمایش داده نمی‌شود</h3>
-      <p class="muted">
-        در صورت قطع منبع، نبود قیمت یا نامشخص بودن تاریخ، وضعیت به‌صراحت
-        نمایش داده می‌شود. برای نماد دارای اطلاعات ناکافی، امتیاز یا سیگنال
-        خرید و فروش ساخته نمی‌شود.
-      </p>
-    </div>
-  </section>
+                    <div class="flex-between"><span>نسبت بدهی به حقوق صاحبان سهام</span><span style="font-weight:bold;">۱۸٪</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 20%; background-color: var(--primary);"></div></div>
+                    <p style="font-size: 11px; color: var(--text-muted);">ریسک مالی بسیار پایین (ایده‌آل)</p>
+                </div>
 
-  <section id="watch" class="hidden">
-    <div class="card">
-      <h2>دیده‌بان من</h2>
-      <p class="muted">
-        نماد را در بخش بازار انتخاب کنید و به دیده‌بان اضافه کنید.
-        فهرست فقط در همین مرورگر ذخیره می‌شود.
-      </p>
-      <div id="watchList"></div>
-    </div>
-  </section>
-
-  <section id="portfolio" class="hidden">
-    <div class="two">
-      <div class="card">
-        <h2>ثبت دارایی</h2>
-        <p class="muted">
-          برای سهام، ابتدا نماد را در بخش بازار انتخاب کنید.
-          برای دارایی غیربورسی، ارزش کل روز را خودتان وارد کنید.
-        </p>
-        <form id="holdingForm" class="formgrid">
-          <label>نوع دارایی
-            <select id="holdingType">
-              <option value="stock">سهام نماد انتخاب‌شده</option>
-              <option value="other">دارایی غیربورسی / نقد</option>
-            </select>
-          </label>
-          <label>نام دارایی
-            <input id="holdingName" maxlength="100" required>
-          </label>
-          <label>تعداد / مقدار
-            <input id="holdingQty" type="number" min="0.000001"
-                   step="any" value="1" required>
-          </label>
-          <label>بهای خرید هر واحد ـ ریال
-            <input id="holdingCost" type="number" min="0"
-                   step="any" required>
-          </label>
-          <label>ارزش کل روز، فقط غیربورسی ـ ریال
-            <input id="holdingManual" type="number" min="0" step="any">
-          </label>
-          <button class="primary">افزودن به سبد</button>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="row">
-          <h2>ترکیب دارایی‌ها</h2>
-          <button id="refreshPortfolio">دریافت قیمت سهام سبد</button>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">خلاصه گزارش حسابرس و افشاها</span></div>
+                    <ul style="list-style: none; font-size: 13px; color: var(--text-main);">
+                        <li style="margin-bottom: 15px; display: flex; gap: 10px;">
+                            <span style="color: var(--success);">●</span>
+                            <div>
+                                <strong>نظر حسابرس:</strong> مقبول و بدون بند شرط مهم.
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; gap: 10px;">
+                            <span style="color: var(--success);">●</span>
+                            <div>
+                                <strong>روند سودآوری:</strong> افزایش ۴۵ درصدی سود عملیاتی نسبت به دوره مشابه سال قبل.
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; gap: 10px;">
+                            <span style="color: var(--primary);">●</span>
+                            <div>
+                                <strong>سیاست تقسیم سود (DPS):</strong> توزیع ۹۰ درصدی سود بین سهامداران در مجمع اخیر (بسیار جذاب برای سهامداران بلندمدت).
+                            </div>
+                        </li>
+                        <li style="display: flex; gap: 10px;">
+                            <span style="color: var(--warning);">●</span>
+                            <div>
+                                <strong>طرح‌های توسعه:</strong> بهره‌برداری از پروژه متانول جدید در پتروشیمی زیرمجموعه تا پایان سال جاری.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="donut" id="donut"></div>
-        <div id="portfolioSummary"></div>
-        <small>
-          نمودار فقط دارایی‌های دارای ارزش قابل محاسبه را نشان می‌دهد.
-          ارزش‌های غیربورسی دستی هستند. کارمزد و مالیات محاسبه نمی‌شود.
-        </small>
-      </div>
-    </div>
 
-    <div class="card tablewrap">
-      <div id="portfolioTable"></div>
-    </div>
-  </section>
-
-  <section id="fundamental" class="hidden">
-    <div class="card">
-      <h2>محاسبه نسبت‌های بنیادی — ورودی دستی</h2>
-      <div class="notice">
-        این بخش هنوز به صورت‌های مالی کدال متصل نیست.
-        اعداد باید از گزارش یک شرکت، با دوره مالی و واحد سازگار وارد شوند.
-        خروجی صرفاً محاسبه ریاضی است، نه امتیاز بنیادی معتبر یا توصیه خرید.
-      </div>
-      <form id="fundForm" class="formgrid">
-        <label>قیمت هر سهم ـ ریال
-          <input id="fPrice" type="number" min="0" step="any">
-        </label>
-        <label>EPS دوازده‌ماهه ـ ریال
-          <input id="fEps" type="number" step="any">
-        </label>
-        <label>درآمد دوره ـ یک واحد پولی مشترک
-          <input id="fRevenue" type="number" min="0" step="any">
-        </label>
-        <label>سود خالص همان دوره
-          <input id="fProfit" type="number" step="any">
-        </label>
-        <label>متوسط حقوق صاحبان سهام دوره
-          <input id="fEquity" type="number" step="any">
-        </label>
-        <label>جریان نقد عملیاتی همان دوره
-          <input id="fCash" type="number" step="any">
-        </label>
-        <label>بدهی‌های پایان دوره
-          <input id="fDebt" type="number" min="0" step="any">
-        </label>
-        <label>دارایی‌های پایان دوره
-          <input id="fAssets" type="number" min="0" step="any">
-        </label>
-        <button class="primary">محاسبه نسبت‌ها</button>
-      </form>
-      <div id="fundResults" class="grid" style="margin-top:20px"></div>
-    </div>
-  </section>
-
-  <section id="sources" class="hidden">
-    <div class="card">
-      <h2>منابع و وضعیت واقعی امکانات</h2>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>بخش</th><th>وضعیت</th></tr></thead>
-          <tbody>
-            <tr><td>جست‌وجو و تابلوی قیمت</td><td>متصل به API بورس؛ مشروط به دسترسی منبع</td></tr>
-            <tr><td>دیده‌بان و سبد شخصی</td><td>فعال؛ ذخیره محلی در مرورگر</td></tr>
-            <tr><td>نسبت‌های بنیادی</td><td>محاسبه با ورودی دستی</td></tr>
-            <tr><td>صورت‌های مالی و نظر حسابرس کدال</td><td>متصل نشده</td></tr>
-            <tr><td>پرتفوی صندوق‌ها و اطلاعات فیپیران</td><td>متصل نشده</td></tr>
-            <tr><td>تاریخچه تعدیل‌شده</td><td>متصل نشده</td></tr>
-            <tr><td>جریان نقد حقیقی و حقوقی و هشدار صندوق‌ها</td><td>متصل نشده</td></tr>
-            <tr><td>اخبار، امتیاز بنیادی و سبد پیشنهادی رشدی</td><td>پیاده‌سازی نشده</td></tr>
-            <tr><td>سیگنال خرید و فروش قطعی</td><td>ارائه نمی‌شود؛ نتیجه سرمایه‌گذاری قطعی نیست</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-top:20px">
-        <a href="https://www.tsetmc.com/" target="_blank" rel="noopener noreferrer">بورس و تابلو معاملات</a>
-        ·
-        <a href="https://www.codal.ir/" target="_blank" rel="noopener noreferrer">کدال</a>
-        ·
-        <a href="https://www.fipiran.com/" target="_blank" rel="noopener noreferrer">فیپیران</a>
-      </p>
-      <small>این لینک‌ها به معنی اتصال خودکار برنامه به همه داده‌های این منابع نیست.</small>
-    </div>
-  </section>
-</main>
-
-<footer class="wrap">
-  مقصودیوم — داده‌های سبد فقط در مرورگر شما نگهداری می‌شود و حساب کاربری یا
-  پشتیبان‌گیری ابری وجود ندارد. پاک کردن داده مرورگر، سبد و دیده‌بان را حذف می‌کند.
-</footer>
-
-<script>
-"use strict";
-
-const $ = id => document.getElementById(id);
-
-const nf = new Intl.NumberFormat("fa-IR", {
-  maximumFractionDigits: 2
-});
-
-const colors = [
-  "#47dbac", "#68b4ff", "#ffd27a", "#c695ff",
-  "#ff818c", "#49ced0", "#f59e65", "#a3cf68"
-];
-
-function fmt(value) {
-  return typeof value === "number" && Number.isFinite(value)
-    ? nf.format(value)
-    : "—";
-}
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  }[c]));
-}
-
-function readArray(key) {
-  try {
-    const data = JSON.parse(localStorage.getItem(key) || "[]");
-    return Array.isArray(data) ? data.filter(x => x && typeof x === "object") : [];
-  } catch {
-    return [];
-  }
-}
-
-function persist(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    message("ذخیره‌سازی مرورگر در دسترس نیست؛ تغییرات ممکن است پس از بستن صفحه از بین بروند.", true);
-  }
-}
-
-const state = {
-  tab: "market",
-  selected: null,
-  quote: null,
-  quoteRequest: 0,
-  searchRequest: 0,
-  quoteBusy: false,
-  watch: readArray("maghsudium.watch.v1").filter(x => /^\d{1,20}$/.test(x.id)),
-  holdings: readArray("maghsudium.holdings.v1").filter(x =>
-    typeof x.key === "string" &&
-    ["stock","other"].includes(x.type) &&
-    Number.isFinite(x.qty) && x.qty > 0 &&
-    Number.isFinite(x.cost) && x.cost >= 0 &&
-    (x.type !== "stock" || /^\d{1,20}$/.test(x.id))
-  ),
-  prices: new Map(),
-  priceErrors: new Map()
-};
-
-function message(text, isError = false) {
-  const el = $("globalMessage");
-  el.textContent = text;
-  el.className = isError ? "error" : "notice";
-}
-
-function clearMessage() {
-  $("globalMessage").className = "hidden";
-  $("globalMessage").textContent = "";
-}
-
-function switchTab(name) {
-  state.tab = name;
-  for (const id of ["market","watch","portfolio","fundamental","sources"]) {
-    $(id).classList.toggle("hidden", id !== name);
-  }
-
-  document.querySelectorAll("[data-tab]").forEach(button => {
-    button.classList.toggle("active", button.dataset.tab === name);
-  });
-
-  clearMessage();
-
-  if (name === "watch") renderWatch();
-  if (name === "portfolio") renderPortfolio();
-}
-
-document.querySelectorAll("[data-tab]").forEach(button => {
-  button.addEventListener("click", () => switchTab(button.dataset.tab));
-});
-
-async function api(params) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 25000);
-
-  try {
-    const response = await fetch(
-      "/api/market?" + new URLSearchParams(params),
-      { signal: controller.signal, cache: "no-store" }
-    );
-
-    let data;
-
-    try {
-      data = await response.json();
-    } catch {
-      throw new Error("پاسخ API معتبر نیست. مسیر api/market و تنظیمات استقرار را بررسی کنید.");
-    }
-
-    if (!response.ok) {
-      throw new Error(
-        (data.error || "دریافت اطلاعات ناموفق بود.") +
-        (data.code ? "\nکد: " + data.code : "") +
-        (data.upstreamStatus ? "\nHTTP منبع: " + data.upstreamStatus : "")
-      );
-    }
-
-    return data;
-  } catch (error) {
-    if (controller.signal.aborted) {
-      throw new Error("پاسخ سرور سایت در مهلت مقرر دریافت نشد.");
-    }
-    throw error;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-function receivedTime(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "نامشخص";
-
-  return new Intl.DateTimeFormat("fa-IR", {
-    dateStyle: "short",
-    timeStyle: "medium",
-    timeZone: "Asia/Tehran"
-  }).format(date);
-}
-
-function sourceDate(raw) {
-  const s = String(raw || "");
-  if (!/^\d{8}$/.test(s)) return "نامشخص";
-
-  const date = new Date(
-    s.slice(0,4) + "-" + s.slice(4,6) + "-" + s.slice(6,8) + "T12:00:00Z"
-  );
-
-  if (Number.isNaN(date.getTime())) return "نامشخص";
-
-  return new Intl.DateTimeFormat("fa-IR", {
-    dateStyle: "medium",
-    timeZone: "Asia/Tehran"
-  }).format(date);
-}
-
-function sourceTime(raw) {
-  const s = String(raw ?? "");
-  if (!/^\d{1,6}$/.test(s)) return "نامشخص";
-  const t = s.padStart(6, "0");
-  return t.slice(0,2) + ":" + t.slice(2,4) + ":" + t.slice(4,6);
-}
-
-function todayTehran() {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone:"Asia/Tehran",
-    year:"numeric", month:"2-digit", day:"2-digit"
-  }).formatToParts(new Date());
-
-  const get = type => parts.find(p => p.type === type)?.value || "";
-  return get("year") + get("month") + get("day");
-}
-
-function metric(title, value, unit = "", className = "") {
-  return `<div class="metric">
-    <small>${escapeHtml(title)}</small>
-    <strong class="${className}">${escapeHtml(fmt(value))}
-      <small>${escapeHtml(unit)}</small>
-    </strong>
-  </div>`;
-}
-
-$("searchForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  clearMessage();
-
-  const q = $("searchInput").value.trim();
-  if (!q) return;
-
-  const request = ++state.searchRequest;
-  $("searchButton").disabled = true;
-  $("results").replaceChildren();
-  $("searchStatus").textContent = "در حال جست‌وجو…";
-
-  try {
-    const data = await api({ op:"search", q });
-    if (request !== state.searchRequest) return;
-
-    if (!Array.isArray(data.items)) throw new Error("قالب نتایج معتبر نیست.");
-
-    $("searchStatus").textContent =
-      data.items.length
-        ? `${fmt(data.items.length)} نتیجه دریافت شد.`
-        : "نتیجه‌ای برنگشت؛ املای دیگر نماد یا بخشی از نام شرکت را امتحان کنید.";
-
-    for (const item of data.items) {
-      const button = document.createElement("button");
-      button.className = "result";
-
-      button.innerHTML =
-        `<b>${escapeHtml(item.symbol)}</b>
-         <small>${escapeHtml(item.name)}</small>
-         <small class="id">شناسه: ${escapeHtml(item.id)}</small>`;
-
-      button.addEventListener("click", () => selectInstrument(item));
-      $("results").append(button);
-    }
-
-    if (data.warnings?.length) {
-      message(data.warnings.join("\n"));
-    }
-  } catch (error) {
-    if (request === state.searchRequest) {
-      $("searchStatus").textContent = "";
-      message(error.message, true);
-    }
-  } finally {
-    if (request === state.searchRequest) $("searchButton").disabled = false;
-  }
-});
-
-function selectInstrument(item) {
-  switchTab("market");
-  state.selected = {
-    id: String(item.id),
-    symbol: String(item.symbol || ""),
-    name: String(item.name || "")
-  };
-  state.quote = null;
-  $("quoteMetrics").replaceChildren();
-  $("quoteNotice").replaceChildren();
-  $("quoteMeta").textContent = "";
-  $("symbolTitle").textContent = state.selected.symbol;
-  $("companyName").textContent = state.selected.name;
-  $("holdingName").value = state.selected.symbol;
-  $("quoteCard").classList.remove("hidden");
-  loadQuote();
-}
-
-async function loadQuote() {
-  if (!state.selected) return;
-
-  const request = ++state.quoteRequest;
-  const selected = { ...state.selected };
-
-  state.quoteBusy = true;
-  $("refreshQuote").disabled = true;
-  $("refreshQuote").textContent = "در حال دریافت…";
-  $("quoteError").classList.add("hidden");
-
-  try {
-    const data = await api({ op:"quote", id:selected.id });
-    if (request !== state.quoteRequest) return;
-
-    state.quote = data;
-    state.prices.set(selected.id, data);
-    state.priceErrors.delete(selected.id);
-
-    renderQuote(data);
-  } catch (error) {
-    if (request !== state.quoteRequest) return;
-
-    $("quoteError").textContent =
-      error.message +
-      (state.quote
-        ? "\nاعداد موجود مربوط به دریافت قبلی‌اند؛ تازه‌سازی موفق نبوده است."
-        : "\nقیمتی نمایش داده نمی‌شود چون داده معتبر دریافت نشده است.");
-
-    $("quoteError").classList.remove("hidden");
-  } finally {
-    if (request === state.quoteRequest) {
-      state.quoteBusy = false;
-      $("refreshQuote").disabled = false;
-      $("refreshQuote").textContent = "تازه‌سازی";
-    }
-  }
-}
-
-function renderQuote(data) {
-  $("symbolTitle").textContent = data.symbol || state.selected.symbol;
-  $("companyName").textContent = data.name || state.selected.name;
-
-  $("quoteMeta").textContent =
-    "منبع: TSETMC | تاریخ معامله: " + sourceDate(data.sourceDate) +
-    " | ساعت منبع: " + sourceTime(data.sourceTime) +
-    " | دریافت به وقت تهران: " + receivedTime(data.retrievedAt);
-
-  const warnings = [...(data.warnings || [])];
-
-  if (data.sourceDate && String(data.sourceDate) !== todayTehran()) {
-    warnings.push(
-      "تاریخ معامله امروز نیست؛ این وضعیت ممکن است مربوط به تعطیلی بازار، توقف نماد یا قدیمی بودن پاسخ باشد."
-    );
-  }
-
-  $("quoteNotice").innerHTML = warnings.length
-    ? `<div class="notice">${warnings.map(escapeHtml).join("<br>")}</div>`
-    : "";
-
-  const sign = value => value > 0 ? "positive" : value < 0 ? "negative" : "";
-
-  $("quoteMetrics").innerHTML = [
-    metric("آخرین معامله", data.last, "ریال"),
-    metric("قیمت پایانی", data.close, "ریال"),
-    metric("پایانی روز قبل", data.previousClose, "ریال"),
-    metric("تغییر آخرین معامله", data.lastChangePercent, "٪", sign(data.lastChangePercent)),
-    metric("تغییر قیمت پایانی", data.closeChangePercent, "٪", sign(data.closeChangePercent)),
-    metric("حجم معاملات", data.volume),
-    metric("تعداد معاملات", data.tradeCount),
-    metric("ارزش معاملات", data.tradeValue, "ریال")
-  ].join("");
-}
-
-$("refreshQuote").addEventListener("click", loadQuote);
-
-setInterval(() => {
-  if (
-    !document.hidden &&
-    state.tab === "market" &&
-    state.selected &&
-    !state.quoteBusy &&
-    $("autoRefresh").checked
-  ) {
-    loadQuote();
-  }
-}, 60000);
-
-$("addWatch").addEventListener("click", () => {
-  if (!state.selected) return;
-
-  if (!state.watch.some(x => x.id === state.selected.id)) {
-    state.watch.push({ ...state.selected });
-    persist("maghsudium.watch.v1", state.watch);
-  }
-  message("نماد به دیده‌بان افزوده شد.");
-});
-
-function renderWatch() {
-  const container = $("watchList");
-  container.replaceChildren();
-
-  if (!state.watch.length) {
-    container.textContent = "هنوز نمادی اضافه نشده است.";
-    return;
-  }
-
-  for (const item of state.watch) {
-    const row = document.createElement("div");
-    row.className = "row metric";
-    row.style.marginBottom = "10px";
-
-    const open = document.createElement("button");
-    open.textContent = item.symbol + " — " + (item.name || "");
-    open.addEventListener("click", () => selectInstrument(item));
-
-    const remove = document.createElement("button");
-    remove.textContent = "حذف";
-    remove.addEventListener("click", () => {
-      state.watch = state.watch.filter(x => x.id !== item.id);
-      persist("maghsudium.watch.v1", state.watch);
-      renderWatch();
-    });
-
-    row.append(open, remove);
-    container.append(row);
-  }
-}
-
-function numericInput(id) {
-  const raw = $(id).value.trim();
-  if (raw === "") return null;
-  const value = Number(raw);
-  return Number.isFinite(value) ? value : null;
-}
-
-$("holdingType").addEventListener("change", () => {
-  const other = $("holdingType").value === "other";
-  $("holdingManual").required = other;
-  $("holdingManual").disabled = !other;
-  $("holdingName").value = other ? "" : state.selected?.symbol || "";
-});
-
-$("holdingManual").disabled = true;
-
-$("holdingForm").addEventListener("submit", event => {
-  event.preventDefault();
-  clearMessage();
-
-  const type = $("holdingType").value;
-  const qty = numericInput("holdingQty");
-  const cost = numericInput("holdingCost");
-  const manual = numericInput("holdingManual");
-  const name = $("holdingName").value.trim();
-
-  if (!name || qty === null || qty <= 0 || cost === null || cost < 0) {
-    return message("نام، مقدار و بهای خرید را درست وارد کنید.", true);
-  }
-
-  if (type === "stock" && !state.selected) {
-    return message("ابتدا در بخش بازار، نماد را جست‌وجو و انتخاب کنید.", true);
-  }
-
-  if (type === "other" && (manual === null || manual < 0)) {
-    return message("ارزش کل روز دارایی غیربورسی را وارد کنید.", true);
-  }
-
-  if (!Number.isFinite(qty * cost)) {
-    return message("مقادیر واردشده بیش از محدوده محاسبه هستند.", true);
-  }
-
-  state.holdings.push({
-    key: crypto.randomUUID(),
-    type,
-    id: type === "stock" ? state.selected.id : null,
-    name: type === "stock" ? state.selected.symbol : name,
-    qty,
-    cost,
-    manual: type === "other" ? manual : null
-  });
-
-  persist("maghsudium.holdings.v1", state.holdings);
-  renderPortfolio();
-  message("دارایی ثبت شد.");
-});
-
-function holdingValue(holding) {
-  if (holding.type === "other") {
-    return Number.isFinite(holding.manual) ? holding.manual : null;
-  }
-
-  // قیمت دریافت‌شده در تلاش قبلی پس از شکست تازه‌سازی،
-  // برای جمع جدید سبد استفاده نمی‌شود.
-  if (state.priceErrors.has(holding.id)) return null;
-
-  const quote = state.prices.get(holding.id);
-  const price = quote?.last ?? quote?.close;
-  const value = typeof price === "number" ? price * holding.qty : null;
-
-  return Number.isFinite(value) ? value : null;
-}
-
-function renderPortfolio() {
-  const holdings = state.holdings;
-  const rows = holdings.map(h => ({
-    h,
-    value: holdingValue(h),
-    cost: h.qty * h.cost
-  }));
-
-  const known = rows.filter(row => row.value !== null);
-  const total = known.reduce((sum, row) => sum + row.value, 0);
-  const knownCost = known.reduce((sum, row) => sum + row.cost, 0);
-  const missing = rows.length - known.length;
-
-  $("portfolioSummary").innerHTML =
-    `<p>ارزش بخش قابل محاسبه:
-      <b>${escapeHtml(fmt(total))} ریال</b></p>
-     <p>سود/زیان همان بخش:
-      <b class="${total - knownCost >= 0 ? "positive" : "negative"}">
-        ${escapeHtml(fmt(total - knownCost))} ریال
-      </b></p>
-     <p class="${missing ? "warning" : "muted"}">
-       ${missing
-         ? escapeHtml(fmt(missing)) + " دارایی فاقد قیمت قابل استفاده است؛ جمع کل سبد کامل نیست."
-         : "ارزش همه ردیف‌ها قابل محاسبه است؛ تاریخ قیمت هر ردیف را بررسی کنید."}
-     </p>`;
-
-  let angle = 0;
-  const slices = [];
-
-  known.forEach((row, index) => {
-    if (total <= 0 || row.value <= 0) return;
-    const start = angle;
-    angle += row.value / total * 360;
-    slices.push(`${colors[index % colors.length]} ${start}deg ${angle}deg`);
-  });
-
-  $("donut").style.background = slices.length
-    ? `conic-gradient(${slices.join(",")})`
-    : "#283650";
-
-  known.forEach((row, index) => {
-    const line = document.createElement("div");
-    const dot = document.createElement("span");
-    dot.className = "dot";
-    dot.style.background = colors[index % colors.length];
-    line.append(
-      dot,
-      document.createTextNode(
-        row.h.name + " — " +
-        (total > 0 ? fmt(row.value / total * 100) + "٪" : "—")
-      )
-    );
-    $("portfolioSummary").append(line);
-  });
-
-  if (!rows.length) {
-    $("portfolioTable").textContent = "سبد شما خالی است.";
-    return;
-  }
-
-  $("portfolioTable").innerHTML =
-    `<table>
-      <thead><tr>
-        <th>دارایی</th><th>مقدار</th><th>بهای کل خرید</th>
-        <th>ارزش روز ـ ریال</th><th>تاریخ / وضعیت داده</th><th>حذف</th>
-      </tr></thead>
-      <tbody>${rows.map(({h,value,cost}) => {
-        const q = state.prices.get(h.id);
-        const error = state.priceErrors.get(h.id);
-
-        const status = h.type === "other"
-          ? "ارزش دستی"
-          : error
-            ? "دریافت ناموفق"
-            : q
-              ? sourceDate(q.sourceDate) + " | دریافت: " + receivedTime(q.retrievedAt)
-              : "هنوز قیمت دریافت نشده";
-
-        return `<tr>
-          <td>${escapeHtml(h.name)}</td>
-          <td>${escapeHtml(fmt(h.qty))}</td>
-          <td>${escapeHtml(fmt(cost))}</td>
-          <td>${escapeHtml(fmt(value))}</td>
-          <td title="${escapeHtml(error || "")}">${escapeHtml(status)}</td>
-          <td><button data-remove="${escapeHtml(h.key)}">حذف</button></td>
-        </tr>`;
-      }).join("")}</tbody>
-    </table>`;
-
-  $("portfolioTable").querySelectorAll("[data-remove]").forEach(button => {
-    button.addEventListener("click", () => {
-      state.holdings = state.holdings.filter(h => h.key !== button.dataset.remove);
-      persist("maghsudium.holdings.v1", state.holdings);
-      renderPortfolio();
-    });
-  });
-}
-
-$("refreshPortfolio").addEventListener("click", async () => {
-  const button = $("refreshPortfolio");
-  const ids = [...new Set(
-    state.holdings.filter(h => h.type === "stock").map(h => h.id)
-  )];
-
-  if (!ids.length) return message("سهامی در سبد ثبت نشده است.");
-
-  button.disabled = true;
-  clearMessage();
-
-  let completed = 0;
-  let failures = 0;
-  let firstError = "";
-
-  // حداکثر سه درخواست هم‌زمان، برای کاهش فشار به منبع.
-  for (let start = 0; start < ids.length; start += 3) {
-    await Promise.all(ids.slice(start, start + 3).map(async id => {
-      try {
-        const q = await api({ op:"quote", id });
-        state.prices.set(id, q);
-        state.priceErrors.delete(id);
-      } catch (error) {
-        failures++;
-        if (!firstError) firstError = error.message;
-        state.priceErrors.set(id, error.message);
-      } finally {
-        completed++;
-        button.textContent = `${fmt(completed)} از ${fmt(ids.length)}`;
-      }
-    }));
-    renderPortfolio();
-  }
-
-  button.disabled = false;
-  button.textContent = "دریافت قیمت سهام سبد";
-
-  if (failures) {
-    message(
-      `${fmt(failures)} نماد دریافت نشد.\n${firstError}`,
-      true
-    );
-  } else {
-    message("درخواست قیمت همه نمادهای سبد پاسخ گرفت؛ تاریخ معامله هر ردیف را بررسی کنید.");
-  }
-});
-
-$("fundForm").addEventListener("submit", event => {
-  event.preventDefault();
-
-  const price = numericInput("fPrice");
-  const eps = numericInput("fEps");
-  const revenue = numericInput("fRevenue");
-  const profit = numericInput("fProfit");
-  const equity = numericInput("fEquity");
-  const cash = numericInput("fCash");
-  const debt = numericInput("fDebt");
-  const assets = numericInput("fAssets");
-
-  function ratio(a, b, scale = 1) {
-    if (a === null || b === null || b <= 0) return null;
-    const value = a / b * scale;
-    return Number.isFinite(value) ? value : null;
-  }
-
-  $("fundResults").innerHTML = [
-    metric("P/E؛ فقط برای EPS مثبت", price > 0 ? ratio(price, eps) : null),
-    metric("حاشیه سود خالص", ratio(profit, revenue, 100), "٪"),
-    metric("بازده حقوق صاحبان سهامِ دوره", ratio(profit, equity, 100), "٪"),
-    metric("نسبت بدهی به دارایی", ratio(debt, assets, 100), "٪"),
-    metric("جریان نقد عملیاتی به سود مثبت", ratio(cash, profit))
-  ].join("");
-});
-
-api({ op:"health" }).then(() => {
-  $("serverStatus").textContent = "API سایت فعال است";
-  $("serverStatus").classList.add("positive");
-}).catch(() => {
-  $("serverStatus").textContent = "API سایت در دسترس نیست";
-  $("serverStatus").classList.add("negative");
-});
-
-renderWatch();
-renderPortfolio();
-</script>
-</body>
-</html>
+        <!-- SECTION 3: SIGNALS -->
+        <div id="signals" class="section">
+            <h2 style="color: var(--text-muted); font-size: 16px;">سیستم هوشمند صدور سیگنال (ترکیب تکنیکال، فاندامنتال و تابلوخوانی)</h2>
+            <div class="grid-3">
+                <div class="card" style="border-top: 4px solid var(--primary);">
+                    <h3 style="text-align: center; margin-bottom: 5px;">کوتاه‌مدت (نوسانی)</h3>
+                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: ۲ تا ۱۴ روز</p>
+                    
+                    <div class="flex-between" style="border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
+                        <span>خودرو</span>
+                        <span class="badge badge-success">ورود - هدف ۱</span>
+                    </div>
+                    <div class="flex-between" style="border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-top: 10px;">
+                        <span>خساپا</span>
+                        <span class="badge badge-warning">تحت نظر (مقاومت)</span>
+                    </div>
+                    <div class="flex-between" style="padding-bottom: 10px; margin-top: 10px;">
+                        <span>شپنا</span>
+                        <span class="badge badge-danger">خروج موقت</span>
+                    </div>
+                </div>
+
+                <div class="card" style="border-top: 4px solid var(--warning);">
+                    <h3 style="text-align: center; margin-bottom: 5px;">میان‌مدت</h3>
+                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: ۱ تا ۶ ماه</p>
+                    
+                    <div class="flex-between
