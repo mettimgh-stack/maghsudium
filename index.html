@@ -3,34 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مقصودیوم پرو | پلتفرم جامع تحلیل بنیادی و سیگنال‌دهی</title>
+    <title>مقصودیوم پرو | پلتفرم جامع تحلیل بنیادی</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <style>
         :root {
-            --bg-dark: #070b14;
-            --bg-panel: #111827;
-            --bg-card: #1f2937;
-            --border: #374151;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --primary: #3b82f6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --bg-dark: #070b14; --bg-panel: #111827; --bg-card: #1f2937;
+            --border: #374151; --text-main: #f3f4f6; --text-muted: #9ca3af;
+            --primary: #3b82f6; --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
         body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; padding-bottom: 50px; }
-        a { text-decoration: none; color: inherit; }
-
-        /* Header & Navigation */
+        
+        /* Header */
         header { background-color: var(--bg-panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
-        .logo { font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; flex-wrap: wrap; gap: 15px;}
+        .logo { font-size: 22px; font-weight: 800; color: var(--primary); }
         .logo span { color: var(--text-main); }
-        .nav-links { display: flex; gap: 15px; flex-wrap: wrap; }
-        .nav-links button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 5px 10px; border-radius: 6px; transition: 0.3s; }
-        .nav-links button:hover, .nav-links button.active { background-color: var(--bg-card); color: var(--text-main); }
+        .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-links button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 8px 12px; border-radius: 6px; transition: 0.3s; font-weight: bold;}
+        .nav-links button:hover, .nav-links button.active { background-color: var(--bg-card); color: var(--text-main); border-bottom: 2px solid var(--primary); }
 
         /* Layout */
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
@@ -38,54 +30,52 @@
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
         
         /* Cards */
-        .card { background-color: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .card-title { font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .card { background-color: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; font-weight: bold;}
 
         /* Typography & Badges */
-        h1, h2, h3 { margin-bottom: 15px; }
-        .text-success { color: var(--success); }
-        .text-danger { color: var(--danger); }
+        .text-success { color: var(--success); } .text-danger { color: var(--danger); }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
         .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
         
-        /* Fundamental Score Gauge */
+        /* Score Gauge */
         .score-circle { width: 80px; height: 80px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 900; font-size: 24px; border: 4px solid var(--success); box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-        .score-sub { font-size: 10px; font-weight: normal; color: var(--text-muted); }
+        .score-sub { font-size: 10px; color: var(--text-muted); font-weight: normal;}
 
         /* Tables */
         table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
         th, td { padding: 12px; border-bottom: 1px solid var(--border); }
-        th { color: var(--text-muted); font-weight: normal; }
+        th { color: var(--text-muted); }
         tr:hover { background-color: var(--bg-card); }
 
-        /* Charts (CSS Pie Charts) */
-        .pie-chart { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; margin: 0 auto; }
-        .pie-chart::after { content: ''; width: 100px; height: 100px; background-color: var(--bg-panel); border-radius: 50%; position: absolute; }
-        .pie-inner-text { position: absolute; z-index: 10; text-align: center; }
-        .pie-legend { display: flex; justify-content: center; gap: 15px; margin-top: 20px; font-size: 12px; }
-        .legend-item { display: flex; align-items: center; gap: 5px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        /* Pie Chart */
+        .pie-chart-container { display: flex; flex-direction: column; align-items: center; margin: 20px 0; }
+        .pie-chart {
+            width: 200px; height: 200px; border-radius: 50%;
+            background: conic-gradient(var(--primary) 0% 45%, var(--warning) 45% 75%, var(--success) 75% 100%);
+            display: flex; justify-content: center; align-items: center; position: relative;
+        }
+        .pie-chart::after {
+            content: 'ترکیب دارایی'; width: 140px; height: 140px; background-color: var(--bg-panel);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-muted);
+        }
+        .legend { display: flex; gap: 15px; margin-top: 15px; font-size: 13px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-left: 5px; vertical-align: middle;}
 
-        /* Inputs & Buttons */
+        /* Elements */
         .search-box { display: flex; gap: 10px; margin-bottom: 30px; }
-        input[type="text"] { flex: 1; background-color: var(--bg-panel); border: 1px solid var(--border); color: var(--text-main); padding: 12px 20px; border-radius: 8px; font-size: 15px; outline: none; }
-        input[type="text"]:focus { border-color: var(--primary); }
-        .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
-        .btn-primary:hover { opacity: 0.9; }
-
-        /* Sections */
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Custom Progress Bars */
-        .progress-bar { width: 100%; background-color: var(--bg-card); border-radius: 4px; height: 8px; margin-top: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background-color: var(--primary); border-radius: 4px; }
-        
+        input[type="text"] { flex: 1; background-color: var(--bg-panel); border: 1px solid var(--border); color: var(--text-main); padding: 12px 20px; border-radius: 8px; outline: none; }
+        .btn-primary { background-color: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .progress-bar { width: 100%; background-color: var(--bg-card); border-radius: 4px; height: 8px; margin-top: 5px; }
+        .progress-fill { height: 100%; border-radius: 4px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; }
+        
+        /* Section Toggling */
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -94,52 +84,52 @@
         <div class="nav-container">
             <div class="logo">مقصودیوم <span>پرو</span></div>
             <div class="nav-links">
-                <button class="active" onclick="showSection('dashboard', this)">داشبورد بازار</button>
-                <button onclick="showSection('fundamental', this)">تحلیل بنیادی (تاپیکو)</button>
-                <button onclick="showSection('signals', this)">سیگنال‌ها</button>
-                <button onclick="showSection('portfolio', this)">سبد نهادها و صندوق‌ها</button>
-                <button onclick="showSection('liquidity', this)">رصد نقدینگی</button>
+                <button class="active" onclick="switchTab('dashboard', this)">داشبورد بازار</button>
+                <button onclick="switchTab('fundamental', this)">تحلیل بنیادی (تاپیکو)</button>
+                <button onclick="switchTab('signals', this)">سیگنال‌ها</button>
+                <button onclick="switchTab('portfolio', this)">سبد نهادها و نمودار</button>
+                <button onclick="switchTab('liquidity', this)">رصد نقدینگی</button>
             </div>
         </div>
     </header>
 
     <div class="container">
         
-        <!-- SECTION 1: DASHBOARD -->
+        <!-- 1. DASHBOARD -->
         <div id="dashboard" class="section active">
             <div class="search-box">
                 <input type="text" placeholder="جستجوی نماد، صندوق یا شرکت (مثلا: فولاد، تاپیکو)...">
-                <button class="btn-primary">جستجو در بازار</button>
+                <button class="btn-primary" onclick="alert('در حال حاضر در نسخه نمایشی جستجو شبیه‌سازی شده است.')">جستجو</button>
             </div>
 
-            <h2 style="color: var(--text-muted); font-size: 16px;">خلاصه وضعیت بازار امروز</h2>
+            <h3 style="margin-bottom: 15px; color: var(--text-muted);">خلاصه بازار امروز</h3>
             <div class="grid-3">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">ارزش معاملات خرد</span></div>
+                    <div class="card-header">ارزش معاملات خرد</div>
                     <div style="font-size: 24px; font-weight: bold;">۴۵,۲۰۰ <span style="font-size: 14px; color: var(--text-muted);">میلیارد ریال</span></div>
-                    <div class="text-success" style="font-size: 12px; margin-top: 5px;">+ ۱۲٪ نسبت به میانگین ماه</div>
+                    <div class="text-success" style="font-size: 12px;">+ ۱۲٪ نسبت به میانگین ماه</div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">ورود پول حقیقی</span></div>
+                    <div class="card-header">ورود پول حقیقی</div>
                     <div class="text-success" style="font-size: 24px; font-weight: bold;">+ ۲,۱۵۰ <span style="font-size: 14px; color: var(--text-muted);">میلیارد ریال</span></div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">بیشترین ورود: گروه پتروشیمی</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">بیشترین ورود: گروه پتروشیمی</div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">تعداد سیگنال‌های فعال</span></div>
+                    <div class="card-header">سیگنال‌های فعال سیستم</div>
                     <div style="font-size: 24px; font-weight: bold; color: var(--primary);">۱۸ <span style="font-size: 14px; color: var(--text-muted);">نماد ارزنده</span></div>
-                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 5px;">بر اساس فیلترهای بنیادی مقصودیوم</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">بر اساس فیلترهای بنیادی</div>
                 </div>
             </div>
 
-            <br>
-            <h2>🔥 سبد پیشنهادی رشدی (آپدیت لحظه‌ای)</h2>
+            <br><br>
+            <h3 style="margin-bottom: 15px;">🔥 سبد پیشنهادی رشدی</h3>
             <div class="card">
                 <table>
                     <thead>
                         <tr>
                             <th>نماد</th>
                             <th>قیمت فعلی (ریال)</th>
-                            <th>ارزش ذاتی (محاسبه سیستم)</th>
+                            <th>ارزش ذاتی (محاسبه شده)</th>
                             <th>نمره بنیادی (از ۱۰)</th>
                             <th>وضعیت سیگنال</th>
                         </tr>
@@ -171,94 +161,194 @@
             </div>
         </div>
 
-        <!-- SECTION 2: FUNDAMENTAL (TAPICO Showcase) -->
+        <!-- 2. FUNDAMENTAL (TAPICO) -->
         <div id="fundamental" class="section">
             <div class="card" style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
                     <div>
-                        <h1>تاپیکو <span style="font-size: 16px; color: var(--text-muted); font-weight: normal;">(سرمایه‌گذاری نفت و گاز و پتروشیمی تامین)</span></h1>
+                        <h2 style="margin-bottom: 5px;">تاپیکو <span style="font-size: 14px; color: var(--text-muted); font-weight: normal;">(سرمایه‌گذاری نفت و گاز و پتروشیمی تامین)</span></h2>
                         <p style="color: var(--text-muted); font-size: 14px;">آخرین قیمت: ۱۴,۵۲۰ ریال | تغییر: <span class="text-success">+۲.۱٪</span></p>
                     </div>
                     <div class="score-circle">
-                        ۹.۲
-                        <span class="score-sub">نمره مقصودیوم</span>
+                        ۹.۲ <span class="score-sub">نمره مقصودیوم</span>
                     </div>
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="card">
-                    <div class="card-header"><span class="card-title">ارزیابی نسبت‌های مالی (از کدال)</span></div>
+                    <div class="card-header">نسبت‌های مالی و ارزش‌گذاری</div>
                     
-                    <div class="flex-between"><span>نسبت P/E (فعلی)</span><span style="font-weight:bold;">۴.۲</span></div>
+                    <div class="flex-between"><span>نسبت P/E</span><span style="font-weight:bold;">۴.۲</span></div>
                     <div class="progress-bar"><div class="progress-fill" style="width: 80%; background-color: var(--success);"></div></div>
-                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">ارزان‌تر از ۹۰٪ گروه پتروشیمی</p>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">ارزان‌تر از ۹۰٪ گروه</p>
 
                     <div class="flex-between"><span>حاشیه سود خالص</span><span style="font-weight:bold;">۵۸٪</span></div>
                     <div class="progress-bar"><div class="progress-fill" style="width: 90%; background-color: var(--success);"></div></div>
                     <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">بسیار عالی و با ثبات</p>
 
-                    <div class="flex-between"><span>نسبت بدهی به حقوق صاحبان سهام</span><span style="font-weight:bold;">۱۸٪</span></div>
+                    <div class="flex-between"><span>نسبت بدهی به دارایی</span><span style="font-weight:bold;">۱۸٪</span></div>
                     <div class="progress-bar"><div class="progress-fill" style="width: 20%; background-color: var(--primary);"></div></div>
-                    <p style="font-size: 11px; color: var(--text-muted);">ریسک مالی بسیار پایین (ایده‌آل)</p>
+                    <p style="font-size: 11px; color: var(--text-muted);">ریسک مالی پایین</p>
                 </div>
 
                 <div class="card">
-                    <div class="card-header"><span class="card-title">خلاصه گزارش حسابرس و افشاها</span></div>
-                    <ul style="list-style: none; font-size: 13px; color: var(--text-main);">
-                        <li style="margin-bottom: 15px; display: flex; gap: 10px;">
-                            <span style="color: var(--success);">●</span>
-                            <div>
-                                <strong>نظر حسابرس:</strong> مقبول و بدون بند شرط مهم.
-                            </div>
+                    <div class="card-header">خلاصه گزارش حسابرس و افشاها</div>
+                    <ul style="list-style: none; font-size: 13px; margin-top: 10px; line-height: 2;">
+                        <li><span style="color: var(--success);">●</span> <strong>نظر حسابرس:</strong> مقبول و بدون بند شرط مهم.</li>
+                        <li><span style="color: var(--success);">●</span> <strong>روند سودآوری:</strong> افزایش ۴۵ درصدی سود عملیاتی.</li>
+                        <li><span style="color: var(--primary);">●</span> <strong>سیاست تقسیم سود:</strong> توزیع ۹۰ درصدی سود در مجمع اخیر (بسیار جذاب).</li>
+                        <li><span style="color: var(--warning);">●</span> <strong>طرح‌های توسعه:</strong> بهره‌برداری از پروژه متانول تا پایان سال جاری.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. SIGNALS -->
+        <div id="signals" class="section">
+            <h3 style="margin-bottom: 20px;">سیستم هوشمند صدور سیگنال (ترکیب بنیادی و تابلو)</h3>
+            <div class="grid-3">
+                <div class="card" style="border-top: 3px solid var(--primary);">
+                    <h3 style="text-align: center;">کوتاه‌مدت (نوسانی)</h3>
+                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: ۲ تا ۱۴ روز</p>
+                    <div class="flex-between" style="border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                        <span>خودرو</span><span class="badge badge-success">ورود - هدف ۱</span>
+                    </div>
+                    <div class="flex-between" style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 10px;">
+                        <span>خساپا</span><span class="badge badge-warning">مقاومت</span>
+                    </div>
+                    <div class="flex-between" style="margin-top: 10px;">
+                        <span>شپنا</span><span class="badge badge-danger">خروج موقت</span>
+                    </div>
+                </div>
+
+                <div class="card" style="border-top: 3px solid var(--warning);">
+                    <h3 style="text-align: center;">میان‌مدت</h3>
+                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: ۱ تا ۶ ماه</p>
+                    <div class="flex-between" style="border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                        <span>فولاد</span><span class="badge badge-success">انباشت</span>
+                    </div>
+                    <div class="flex-between" style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 10px;">
+                        <span>فملی</span><span class="badge badge-success">نگهداری</span>
+                    </div>
+                    <div class="flex-between" style="margin-top: 10px;">
+                        <span>وبملت</span><span class="badge badge-danger">تثبیت سود</span>
+                    </div>
+                </div>
+
+                <div class="card" style="border-top: 3px solid var(--success);">
+                    <h3 style="text-align: center;">بلندمدت (ارزش‌محور)</h3>
+                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: بالای ۱ سال</p>
+                    <div class="flex-between" style="border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                        <span>تاپیکو</span><span class="badge badge-success">خرید قوی</span>
+                    </div>
+                    <div class="flex-between" style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 10px;">
+                        <span>وغدیر</span><span class="badge badge-success">خرید پله‌ای</span>
+                    </div>
+                    <div class="flex-between" style="margin-top: 10px;">
+                        <span>شپدیس</span><span class="badge badge-warning">نگهداری</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. PORTFOLIO & PIE CHART -->
+        <div id="portfolio" class="section">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">ترکیب سبد (بورسی و غیربورسی)</div>
+                    <div class="pie-chart-container">
+                        <div class="pie-chart"></div>
+                        <div class="legend">
+                            <div><span class="dot" style="background: var(--primary);"></span> سهام بورسی (۴۵٪)</div>
+                            <div><span class="dot" style="background: var(--warning);"></span> صندوق درآمد ثابت (۳۰٪)</div>
+                            <div><span class="dot" style="background: var(--success);"></span> دارایی غیربورسی/نقد (۲۵٪)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">تغییرات مالکیت نهادها (هشدارها)</div>
+                    <ul style="list-style: none; font-size: 13px;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+                            <span class="badge badge-success" style="float: left;">خرید سنگین</span>
+                            <strong>صندوق اهرمی شتاب:</strong> ورود ۲۰ میلیارد تومان به نماد <span style="color:var(--primary)">فولاد</span> در روز گذشته.
                         </li>
-                        <li style="margin-bottom: 15px; display: flex; gap: 10px;">
-                            <span style="color: var(--success);">●</span>
-                            <div>
-                                <strong>روند سودآوری:</strong> افزایش ۴۵ درصدی سود عملیاتی نسبت به دوره مشابه سال قبل.
-                            </div>
+                        <li style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+                            <span class="badge badge-danger" style="float: left;">خروج</span>
+                            <strong>شرکت سرمایه گذاری صبا:</strong> کاهش ۳ درصدی سهم در نماد <span style="color:var(--primary)">خودرو</span>.
                         </li>
-                        <li style="margin-bottom: 15px; display: flex; gap: 10px;">
-                            <span style="color: var(--primary);">●</span>
-                            <div>
-                                <strong>سیاست تقسیم سود (DPS):</strong> توزیع ۹۰ درصدی سود بین سهامداران در مجمع اخیر (بسیار جذاب برای سهامداران بلندمدت).
-                            </div>
-                        </li>
-                        <li style="display: flex; gap: 10px;">
-                            <span style="color: var(--warning);">●</span>
-                            <div>
-                                <strong>طرح‌های توسعه:</strong> بهره‌برداری از پروژه متانول جدید در پتروشیمی زیرمجموعه تا پایان سال جاری.
-                            </div>
+                        <li style="padding: 10px 0;">
+                            <span class="badge badge-warning" style="float: left;">تغییر ترکیب</span>
+                            <strong>صندوق طلا (عیار):</strong> افزایش وزن شمش نسبت به گواهی سکه.
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 3: SIGNALS -->
-        <div id="signals" class="section">
-            <h2 style="color: var(--text-muted); font-size: 16px;">سیستم هوشمند صدور سیگنال (ترکیب تکنیکال، فاندامنتال و تابلوخوانی)</h2>
-            <div class="grid-3">
-                <div class="card" style="border-top: 4px solid var(--primary);">
-                    <h3 style="text-align: center; margin-bottom: 5px;">کوتاه‌مدت (نوسانی)</h3>
-                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: ۲ تا ۱۴ روز</p>
-                    
-                    <div class="flex-between" style="border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
-                        <span>خودرو</span>
-                        <span class="badge badge-success">ورود - هدف ۱</span>
-                    </div>
-                    <div class="flex-between" style="border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-top: 10px;">
-                        <span>خساپا</span>
-                        <span class="badge badge-warning">تحت نظر (مقاومت)</span>
-                    </div>
-                    <div class="flex-between" style="padding-bottom: 10px; margin-top: 10px;">
-                        <span>شپنا</span>
-                        <span class="badge badge-danger">خروج موقت</span>
-                    </div>
-                </div>
+        <!-- 5. LIQUIDITY -->
+        <div id="liquidity" class="section">
+            <h3 style="margin-bottom: 20px;">رصد نقدینگی و پول هوشمند</h3>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>نماد</th>
+                            <th>حجم مشکوک</th>
+                            <th>قدرت خریدار به فروشنده</th>
+                            <th>ورود پول هوشمند (ریال)</th>
+                            <th>وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--primary);">ثشاهد</td>
+                            <td>۴.۵ برابر میانگین ماه</td>
+                            <td><span class="text-success">۳.۲</span></td>
+                            <td>+ ۱۲۰ میلیارد</td>
+                            <td><span class="badge badge-success">هشدار ورود پول</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--primary);">کگل</td>
+                            <td>۲.۱ برابر میانگین ماه</td>
+                            <td><span class="text-success">۱.۸</span></td>
+                            <td>+ ۸۵ میلیارد</td>
+                            <td><span class="badge badge-success">تحرکات مثبت</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; color: var(--primary);">خزامیا</td>
+                            <td>۳.۸ برابر میانگین ماه</td>
+                            <td><span class="text-danger">۰.۴</span></td>
+                            <td><span class="text-danger">- ۵۰ میلیارد</span></td>
+                            <td><span class="badge badge-danger">خروج سنگین حقیقی</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-                <div class="card" style="border-top: 4px solid var(--warning);">
-                    <h3 style="text-align: center; margin-bottom: 5px;">میان‌مدت</h3>
-                    <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">افق: ۱ تا ۶ ماه</p>
-                    
-                    <div class="flex-between
+    </div>
+
+    <!-- JavaScript For Tabs (This was missing last time!) -->
+    <script>
+        function switchTab(sectionId, btnElement) {
+            // 1. Hide all sections
+            document.querySelectorAll('.section').forEach(function(section) {
+                section.classList.remove('active');
+            });
+            
+            // 2. Remove active class from all buttons
+            document.querySelectorAll('.nav-links button').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            
+            // 3. Show clicked section and make button active
+            document.getElementById(sectionId).classList.add('active');
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
