@@ -1,627 +1,1535 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>مقصودیوم پرو | تحلیل بنیادی و سیگنال‌دهی بورس تهران</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-<style>
-:root{--bg:#0a1020;--bg2:#0d1730;--card:#121d38;--line:#223254;--text:#e9eefb;--mut:#8fa3c8;--brand:#1fd3a2;--blue:#3b82f6;--red:#ff7a7a;--amber:#f6c265}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.9;font-size:15px}
-a{color:inherit;text-decoration:none}
-header{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
-.logo{font-weight:800;font-size:18px;color:var(--brand)}
-header nav{display:flex;gap:2px;flex-wrap:wrap}
-header nav a{padding:4px 10px;border-radius:8px;color:var(--mut);font-size:12.5px}
-header nav a:hover{background:var(--card);color:var(--text)}
-.demo{background:rgba(246,194,101,.1);border-bottom:1px dashed #f6c265;color:#f6c265;text-align:center;padding:5px;font-size:12px}
-#errbar{position:fixed;bottom:0;left:0;right:0;background:#7f1d1d;color:#fecaca;padding:10px 16px;font-size:13px;z-index:999;text-align:center}
-.tkwrap{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;background:var(--bg2);border-bottom:1px solid var(--line)}
-.tchip{flex:none;display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:2px 10px;font-size:12px;color:var(--mut)}
-.tchip b{color:var(--text)}
-.updline{display:flex;gap:12px;align-items:center;padding:7px 18px;font-size:12px;color:var(--mut);flex-wrap:wrap}
-.lvb{background:rgba(246,194,101,.12);color:#f6c265;padding:2px 10px;border-radius:8px}
-.lvb.ok{background:rgba(31,211,162,.12);color:#1fd3a2}
-main{max-width:1100px;margin:0 auto;padding:20px 18px 60px}
-h1{font-size:25px}h2{font-size:17px;margin:26px 0 12px}
-.sub{color:var(--mut);font-size:13px}
-.hero{text-align:center;padding:30px 10px 6px}
-.sbox{position:relative;max-width:560px;margin:16px auto}
-.sbox input{width:100%;padding:13px 18px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;outline:none}
-#res{position:absolute;inset-inline:0;top:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-top:4px;text-align:right;overflow:hidden;z-index:5}
-#res a,#res i{display:block;padding:8px 16px}#res a:hover{background:var(--bg2)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.qc{text-align:center;font-size:15px;padding:18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
-.stat b{display:block;font-size:18px}.stat span{color:var(--mut);font-size:12px}
-.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
-.row:last-child{border:0}
-.up{color:var(--brand)}.dn{color:var(--red)}.am{color:var(--amber)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line)}
-th{color:var(--mut);font-size:11.5px}
-tr.me{background:rgba(31,211,162,.08)}
-.tw{overflow-x:auto}
-.btn{background:var(--brand);color:#04121f;border:0;border-radius:10px;padding:8px 16px;font:inherit;font-weight:700;cursor:pointer}
-.btn.g{background:none;border:1px solid var(--line);color:var(--mut)}
-.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.ch{width:100%;height:auto;margin-top:8px}.ch text{fill:var(--mut);font-size:10px}
-.note{background:var(--bg2);border-radius:12px;padding:12px 16px;font-size:13.5px}
-.warn{background:rgba(255,122,122,.08);border:1px solid rgba(255,122,122,.25)}
-footer{border-top:1px solid var(--line);padding:20px;text-align:center;color:var(--mut);font-size:12px}
-.sc-b{display:inline-block;padding:1px 9px;border-radius:8px;font-weight:800;color:#04121f;font-size:12.5px}
-.badge{padding:2px 12px;border-radius:9px;font-size:12.5px;font-weight:700;flex:none}
-.badge.b{background:rgba(31,211,162,.15);color:#1fd3a2}
-.badge.s{background:rgba(255,122,122,.15);color:#ff7a7a}
-.badge.n{background:var(--bg2);color:var(--mut)}
-.tabs{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
-.tb{background:var(--bg2);border:1px solid var(--line);color:var(--mut);padding:6px 16px;border-radius:10px;font:inherit;font-size:13px;cursor:pointer}
-.tb.on{background:var(--brand);color:#04121f;border-color:var(--brand);font-weight:700}
-.why{margin:8px 0 0;padding-right:18px;font-size:12.5px;color:var(--mut)}
-.why li{margin:2px 0}
-.dwrap{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:10px}
-.donut{border-radius:50%;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}
-.donut::after{content:'';position:absolute;inset:26%;background:var(--card);border-radius:50%;z-index:1}
-.donut b{z-index:2;font-size:14px}.donut span{z-index:2;font-size:9.5px;color:var(--mut)}
-.dleg{flex:1;min-width:210px}
-.dli{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12.5px}
-.dli i{width:10px;height:10px;border-radius:3px;flex:none}
-.dli span{flex:1;color:var(--mut)}
-.dli em{font-style:normal;font-size:11.5px}
-.fb{display:grid;grid-template-columns:105px 1fr 38px;gap:8px;align-items:center;font-size:12.5px;padding:3px 0;margin-top:4px}
-.fbar{height:8px;background:var(--bg2);border-radius:6px;overflow:hidden}
-.fbar i{display:block;height:100%;background:var(--brand);border-radius:6px}
-.lq{display:flex;gap:10px;align-items:center;padding:5px 0;font-size:13px}
-.lq>span{width:135px;flex:none;color:var(--mut)}
-.lq>b{width:60px;text-align:left}
-.lbar{position:relative;height:10px;background:var(--bg2);border-radius:6px;flex:1;min-width:110px}
-.lbar i{position:absolute;top:0;height:100%;border-radius:6px;display:block}
-.lbar::before{content:'';position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--line)}
-.al{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
-.al div{flex:1;min-width:200px;font-size:13px}
-.toast{position:fixed;bottom:24px;right:50%;transform:translateX(50%);background:var(--brand);color:#04121f;padding:10px 22px;border-radius:12px;font-weight:700;z-index:99;box-shadow:0 6px 20px rgba(0,0,0,.4)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1020">
+  <title>مقصودیوم پرو | اطلاعات و تحلیل بورس</title>
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
+  >
+
+  <style>
+    :root {
+      --bg: #0a1020;
+      --bg2: #0d1730;
+      --card: #121d38;
+      --line: #223254;
+      --text: #e9eefb;
+      --mut: #9aafd1;
+      --brand: #1fd3a2;
+      --blue: #3b82f6;
+      --red: #ff8b8b;
+      --amber: #f6c265;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Vazirmatn, Tahoma, sans-serif;
+      font-size: 15px;
+      line-height: 1.9;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 4px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 12px 18px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      color: var(--brand);
+      font-size: 19px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    nav a {
+      padding: 4px 10px;
+      color: var(--mut);
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: var(--card);
+      color: var(--text);
+    }
+
+    .topnote {
+      padding: 9px 18px;
+      color: var(--amber);
+      background: rgba(246, 194, 101, .07);
+      border-bottom: 1px solid rgba(246, 194, 101, .2);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+      background: rgba(246, 194, 101, .1);
+      color: var(--amber);
+    }
+
+    .badge.error {
+      color: var(--red);
+      background: rgba(255, 139, 139, .1);
+    }
+
+    .sub {
+      color: var(--mut);
+      font-size: 13px;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--brand);
+      color: #04121f;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 18px 60px;
+      min-height: 65vh;
+    }
+
+    h1 {
+      font-size: clamp(23px, 4vw, 32px);
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 26px 0 12px;
+    }
+
+    p + p {
+      margin-top: 10px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 26px 0 12px;
+    }
+
+    .hero > p {
+      margin-top: 8px;
+    }
+
+    .searchbox {
+      max-width: 650px;
+      margin: 24px auto;
+      text-align: right;
+    }
+
+    .searchline {
+      display: flex;
+      gap: 8px;
+    }
+
+    .searchline input {
+      width: 100%;
+      min-width: 0;
+      padding: 13px 16px;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .searchline input::placeholder {
+      color: var(--mut);
+    }
+
+    .searchhelp {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--mut);
+    }
+
+    #results {
+      margin-top: 10px;
+      max-height: 420px;
+      overflow-y: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    #results[hidden] {
+      display: none;
+    }
+
+    .result {
+      display: block;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .result:last-child {
+      border-bottom: 0;
+    }
+
+    .result:hover {
+      background: var(--bg2);
+    }
+
+    .result strong {
+      color: var(--brand);
+    }
+
+    .result small {
+      display: block;
+      margin-top: 3px;
+      color: var(--mut);
+    }
+
+    .message {
+      padding: 14px 16px;
+      color: var(--mut);
+    }
+
+    .card {
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      min-width: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat b {
+      display: block;
+      font-size: 23px;
+      overflow-wrap: anywhere;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--mut);
+      font-size: 12px;
+    }
+
+    .positive {
+      color: var(--brand);
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    .neutral {
+      color: var(--text);
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 15px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .row > span {
+      color: var(--mut);
+    }
+
+    .row b {
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      padding: 15px 18px;
+      background: var(--bg2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .warning {
+      color: var(--amber);
+      background: rgba(246, 194, 101, .06);
+      border-color: rgba(246, 194, 101, .22);
+    }
+
+    .errorbox {
+      margin: 16px auto 0;
+      width: calc(100% - 36px);
+      max-width: 1084px;
+      padding: 13px 16px;
+      color: var(--red);
+      background: rgba(255, 139, 139, .08);
+      border: 1px solid rgba(255, 139, 139, .25);
+      border-radius: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .errorbox[hidden] {
+      display: none;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 15px;
+      border: 3px solid var(--line);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .list {
+      padding-right: 22px;
+      color: var(--mut);
+      font-size: 13px;
+    }
+
+    .list li {
+      margin: 7px 0;
+    }
+
+    .spaced {
+      margin-top: 16px;
+    }
+
+    code {
+      direction: ltr;
+      unicode-bidi: isolate;
+      color: var(--brand);
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      padding: 22px 18px;
+      color: var(--mut);
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 540px) {
+      header {
+        position: static;
+      }
+
+      nav {
+        gap: 2px;
+      }
+
+      nav a {
+        padding: 4px 7px;
+      }
+
+      .searchline {
+        flex-wrap: wrap;
+      }
+
+      .searchline .btn {
+        width: 100%;
+      }
+
+      .stat b {
+        font-size: 21px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner {
+        animation: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<header>
-  <a href="#/" class="logo">مقصودیوم پرو</a>
-  <nav>
-    <a href="#/">خانه</a><a href="#/scores">نمره‌ها</a><a href="#/signals">سیگنال‌ها</a>
-    <a href="#/basket">سبد</a><a href="#/ports">سبدها</a><a href="#/liq">نقدینگی</a>
-    <a href="#/alerts">هشدارها</a><a href="#/news">اخبار</a><a href="#/scen">سناریوها</a><a href="#/groups">گروه‌ها</a><a href="#/watch">دیده‌بان</a>
-  </nav>
-</header>
-<div class="tkwrap" id="tk"></div>
-<div class="updline">
-  <button class="btn g" onclick="refresh()">⟳ به‌روزرسانی</button>
-  <span id="upd"></span>
-  <span class="lvb" id="mode">در حال اتصال…</span>
-</div>
-<div class="demo">⚠️ نسخه ۵ (کامل) — ۲۹ نماد شامل ۴ صندوق 🏦 · داده‌های بنیادی نمایشی · قیمت‌ها هر ۱۵ ثانیه شبیه‌سازی می‌شوند تا اتصال به سرور ایرانی</div>
-<div id="errbar" style="display:none"></div>
-<main id="app"></main>
-<footer>© ۱۴۰۵ مقصودیوم پرو • سیگنال‌ها احتمالاتی و تحلیلی‌اند نه قطعی؛ توصیه خرید/فروش محسوب نمی‌شوند.</footer>
-<script>
-window.onerror=function(m,s,l){var d=document.getElementById('errbar');if(!d)return false;d.style.display='block';d.textContent='⚠️ خطای کد: '+m+' — خط '+l+' — لطفاً همین پیام را برای دستیار کپی کنید.';return false};
-setTimeout(function(){var m=document.getElementById('mode'),d=document.getElementById('errbar');if(m&&m.textContent.indexOf('در حال اتصال')>-1&&d&&d.style.display==='none'){d.style.display='block';d.textContent='⚠️ فایل ناقص کپی شده — برنامه در میانه راه قطع شده است. کل کد را از ابتدا کپی و جایگزین کنید؛ خط آخر فایل باید <\/html> باشد.';}},2500);
-</script>
-<script>
-/* ================= نسخه ۵ · مقصودیوم پرو ================= */
-function errShow(m){var d=document.getElementById('errbar');if(d){d.style.display='block';d.textContent='⚠️ خطا: '+m+' — لطفاً همین پیام را برای دستیار کپی کنید.'}}
+  <header>
+    <a href="#/" class="logo">مقصودیوم پرو</a>
 
-/* ---------- داده‌ها ---------- */
-const MN=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
-const LBL=Array.from({length:24},(_,i)=>{const k=6+i;return MN[k%12]+' '+(1403+Math.floor(k/12))});
-function rnd(seed){let s=seed;return function(){s=(s*9301+49297)%233280;return s/233280}}
+    <nav aria-label="منوی اصلی">
+      <a href="#/">خانه</a>
+      <a href="#/watch">جست‌وجوی بازار</a>
+      <a href="#/scores">نمره بنیادی</a>
+      <a href="#/signals">سیگنال‌ها</a>
+      <a href="#/basket">سبد پیشنهادی</a>
+      <a href="#/ports">سبد نهادها</a>
+      <a href="#/liq">نقدینگی</a>
+      <a href="#/alerts">هشدارها</a>
+      <a href="#/news">اخبار</a>
+      <a href="#/about">وضعیت سامانه</a>
+    </nav>
+  </header>
 
-/* [نماد،نام،گروه،ارزش بازار،P/E،EPS،سال مالی،ROE،بدهی،P/B،مطالبات،حسابرس،تقسیم] */
-const STK=[
-['فولاد','فولاد مبارکه اصفهان','فلزات اساسی',1100,6.5,9000,'12/29',28,35,1.2,12,'مطلق',60],
-['فملی','ملی صنایع مس ایران','فلزات اساسی',700,5.8,6000,'12/29',32,28,1.1,10,'مطلق',70],
-['کگل','معدنی و صنعتی گل‌گهر','فلزات اساسی',420,6.0,8000,'12/29',26,30,1.3,9,'مطلق',75],
-['کچاد','معدنی و صنعتی چادرملو','فلزات اساسی',290,5.2,5000,'12/29',30,20,1.4,8,'مطلق',80],
-['شبندر','پالایش نفت بندرعباس','فرآورده‌های نفتی',650,4.9,15000,'12/29',45,20,1.0,8,'مطلق',80],
-['شپنا','پالایش نفت اصفهان','فرآورده‌های نفتی',520,5.2,12000,'12/29',40,22,1.1,9,'مطلق',75],
-['شتران','پالایش نفت تهران','فرآورده‌های نفتی',210,5.5,7000,'12/29',38,24,1.3,11,'مطلق',72],
-['نوری','پتروشیمی نوری','پتروشیمی',260,4.6,4500,'12/29',35,18,1.2,7,'مطلق',85],
-['شپدیس','پتروشیمی پردیس','پتروشیمی',1000,6.2,10000,'12/29',30,18,1.5,7,'مطلق',65],
-['شکبیر','پتروشیمی امیرکبیر','پتروشیمی',90,7.0,2500,'12/29',22,15,1.8,9,'مطلق',68],
-['وبملت','بانک ملت','بانک‌ها',900,4.1,8000,'12/29',18,70,0.9,25,'مشروط',35],
-['وتجارت','بانک تجارت','بانک‌ها',800,3.9,7000,'12/29',16,75,0.8,28,'مشروط',30],
-['خودرو','ایران‌خودرو','خودرو و قطعات',480,9.5,1500,'12/29',14,55,1.6,20,'مشروط',15],
-['خساپا','سایپا','خودرو و قطعات',380,11,900,'12/29',12,60,1.8,22,'مشروط',10],
-['زمیداد','زمیداد','خودرو و قطعات',180,8.8,2000,'12/29',20,45,1.7,15,'مطلق',25],
-['سشرق','سیمان شرق','سیمان',25,8.5,300,'12/29',12,40,1.0,18,'مطلق',55],
-['سپاها','سیمان سپاهان','سیمان',18,9.0,250,'12/29',10,44,1.1,20,'مطلق',50],
-['دفارا','داروسازی فارابی','دارو',60,10.2,900,'12/29',20,30,2.1,15,'مطلق',75],
-['وخارزم','گروه سرمایه‌گذاری خوارزمی','سرمایه‌گذاری‌ها',78,6.0,400,'03/31',24,55,1.4,22,'مشروط',40],
-['غدیر','سرمایه‌گذاری غدیر','سرمایه‌گذاری‌ها',140,5.0,700,'12/29',22,50,1.1,18,'مشروط',45],
-['تاپیکو','سرمایه‌گذاری نفت و گاز و پتروشیمی تامین','محصولات شیمیایی',527,4.2,5200,'02/31',26,32,0.8,14,'مطلق',90],
-['فخوز','صنایع غذایی خوش‌نوش','محصولات غذایی',120,7.5,1500,'12/29',18,38,1.2,16,'مطلق',62],
-['بترابر','بازرگانی و خدمات تأمین ترانهای ایران','حمل و نقل',35,6.8,600,'12/29',15,42,1.0,13,'مطلق',58],
-['شمپنا','مپنا گروه','تأمین برق',340,9.2,3000,'12/29',21,40,2.0,14,'مطلق',30],
-['گولزار','گلرنگ صنعتی','لوازم خانگی',90,7.8,1200,'12/29',19,35,1.5,12,'مطلق',40]
-];
-/* [نماد،نام،نوع صندوق،اندازه(همت)،بازده سال،NAV(تومان)،کارمزد%] */
-const FND=[
-['یاقوت','صندوق یاقوت','مختلط',45,32,1485,1.4],
-['الماس','صندوق الماس','مختلط',38,29,2620,1.5],
-['وجاهت','صندوق آرمان وجاهت','درآمد ثابت',52,23,1060,1.2],
-['اعتماد','صندوق اعتماد','سهامی',18,41,1530,1.6]
-];
-const INTRO={
-'فولاد':'بزرگ‌ترین تولیدکننده فولاد ایران و خاورمیانه؛ ورق گرم و سرد و تختال. بازیگر اصلی صادرات فولاد کشور.',
-'فملی':'بزرگ‌ترین تولیدکننده مس ایران؛ از معدن تا کاتد مس. درآمد وابسته به قیمت جهانی مس.',
-'شبندر':'پالایشگاه بندرعباس؛ بنزین، گازوئیل و روغن موتور. حاشیه سود وابسته به نرخ خوراک و فرآورده.',
-'شپنا':'پالایشگاه اصفهان؛ سبد محصولات سوختی متنوع با ظرفیت پالایش بالا.',
-'شتران':'قدیمی‌ترین پالایشگاه ایران در تهران؛ ارزشمند از نظر دارایی اما با محدودیت ظرفیت.',
-'وبملت':'بانک خصوصی بزرگ با شبکه شعب گسترده؛ مالک اصلی گروه صنعتی امید.',
-'وتجارت':'بانک دولتی بزرگ؛ ارزانی نسبت به ارزش دفتری اما ریسک مطالبات و دارایی‌های مقطوع.',
-'شپدیس':'قطب الفین کشور؛ پلی‌اتیلن و محصولات پتروشیمی با ظرفیت صادراتی بالا.',
-'وخارزم':'هلدینگ مالی خوارزمی؛ سرمایه‌گذاری در بانک‌ها و صنایع با رویکرد ارزش دفتری.',
-'تاپیکو':'هلدینگ نفت و گاز تامین؛ مادر پتروشیمی‌های بورسی و غیربورسی؛ سبد هلدینگی گسترده.',
-'فخوز':'گروه غذایی خوش‌نوش؛ مالک برند چی‌توز؛ تنوع محصولات و صادرات منطقه‌ای.',
-'بترابر':'هلدینگ تران؛ در دارایی‌ها سهام تپسی و اسنپ‌فود؛ بازیگر حمل‌ونقل دیجیتال.',
-'شمپنا':'مپنا؛ غول توسعه نیروگاه و انرژی کشور با زیرمجموعه‌های متنوع.',
-'خودرو':'ایران‌خودرو؛ بزرگ‌ترین خودروساز کشور؛ وابسته به نرخ ارز و قیمت‌گذاری دستوری.'
-};
-const NSENT={'فولاد':1,'تاپیکو':1,'شبندر':1,'شپدیس':-1,'وتجارت':-1,'خودرو':-1};
-const PORTS={
-'تاپیکو':{b:[['فولاد',5200,5.2],['فملی',3100,-2.1],['شپدیس',2800,8.4],['شبندر',1900,0.6],['شتران',700,-4.0]],nb:[['پتروشیمی زاگرس',2600,3.1],['پتروشیمی مهاباد',1400,-1.2],['مهندسی و توسعه انرژی تامین',2200,0.4],['سایر شرکت‌ها',900,1.0]]},
-'وخارزم':{b:[['وتجارت',180,2.2],['وبملت',150,-1.0],['فخوز',120,6.5],['دفارا',80,1.2]],nb:[['صندوق درآمد ثابت تابان',140,0.2],['سپرده‌های بانکی',210,0.1],['شرکت ساختمانی البرز',60,-0.5]]},
-'فخوز':{b:[['وتجارت',95,1.5],['سپاها',40,3.2]],nb:[['کارخانه آبمیوه سن‌ایچ',420,2.0],['شرکت پخش سراسری',260,0.8],['دامداری و کشاورزی',150,-1.5]]},
-'بترابر':{b:[['خودرو',60,0.5],['زمیداد',35,1.1]],nb:[['تپسی',1900,4.0],['اسنپ‌فود',1150,2.3],['باسکول',320,-2.0]]},
-'غدیر':{b:[['شپنا',420,1.0],['شمپنا',380,0.7],['سشرق',140,-1.8],['زمیداد',110,0.3]],nb:[['نیروگاه غدیر',880,0.5],['صنایع دریایی',350,1.2],['هلدینگ‌ها و زیرمجموعه‌ها',540,0.1]]},
-'یاقوت':{b:[['فولاد',980,1.2],['فملی',760,0.5],['شپدیس',540,2.0],['شبندر',320,-1.5],['خودرو',210,0.8]],nb:[['سپرده بانکی',180,0.1],['اوراق مشارکت',240,0.2],['واحدهای صندوق درآمد ثابت',90,0.0]]},
-'الماس':{b:[['تاپیکو',620,1.8],['شمپنا',310,0.4],['فخوز',150,-0.6],['بترابر',110,0.2]],nb:[['سپرده بانکی',420,0.1],['اوراق خزانه',310,0.3],['اوراق مسدود',60,0.0]]},
-'وجاهت':{b:[['خودرو',60,0.0]],nb:[['سپرده بانکی',1500,0.1],['اوراق خزانه و مشارکت',2100,0.2],['اوراق شرکت‌ها',800,0.1]]},
-'اعتماد':{b:[['فولاد',220,0.6],['شبندر',180,1.1],['وبملت',140,-0.4],['کچاد',120,2.2]],nb:[['سپرده و اوراق',160,0.1]]}
-};
-const FALERTS=[
-['۰۹:۴۵','صندوق آبان‌سپاهان (سهامی)','ورود','فولاد','+۱.۸٪ سبد'],
-['۱۰:۲۰','صندوق کیان','افزایش سهم','شپدیس','+۰.۹٪ سبد'],
-['۱۰:۵۵','صندوق لوتوس پارسیان','خروج','شتران','−۱.۲٪ سبد'],
-['۱۱:۳۰','شخص حقوقی بزرگ (سایم)','خروج','وبملت','−۲.۴٪'],
-['۱۲:۱۰','صندوق آکاند','ورود','فملی','+۲.۱٪ سبد'],
-['۱۳:۰۵','صندوق سرمایه‌گذاری غدیر','افزایش سهم','تاپیکو','+۰.۶٪ سبد']];
-const NEWS=[
-['گزارش سبد یاقوت: سهم فولاد به ۴.۳ درصد پرتفوی رسید','یاقوت','۲ ساعت پیش'],
-['افزایش ۳۵٪ فروش ماهانه فولاد مبارکه نسبت به مدت مشابه','فولاد','۳ ساعت پیش'],
-['تاپیکو: تصویب افزایش سرمایه از محل آورده نقدی','تاپیکو','۵ ساعت پیش'],
-['جهش نرخ خوراک پتروشیمی‌ها؛ اثر مستقیم بر حاشیه سود','شپدیس','دیروز'],
-['اصلاح نرخ سوخت؛ افزایش حاشیه سود پالایشی‌ها','شبندر','دیروز'],
-['گزارش حسابرس مشروط تجارت با تأکید بر مطالبات مشکوک‌الوصول','وتجارت','دیروز'],
-['غدیر از خروج کامل سهام سایپا از پرتفوی خبر داد','غدیر','۲ روز پیش']];
-const GFLOW=[['فلزات اساسی',340],['فرآورده‌های نفتی',210],['پتروشیمی',150],['صندوق‌ها',95],['محصولات غذایی',60],['خودرو و قطعات',35],['دارو',30],['سرمایه‌گذاری‌ها',-70],['بانک‌ها',-90],['سیمان',-120],['حمل و نقل',-25]];
-/* [تاریخ، نماد نهاد، نام نهاد، اقدام، هدف، از%، به%، ارزش(میلیارد)، بازار] */
-const CHG=[
-['1405/07/12','یاقوت','صندوق یاقوت','خرید','فولاد','3.1','4.3',980,'بورس'],
-['1405/07/12','تاپیکو','تاپیکو','افزایش','پتروشیمی زاگرس','6.0','7.5',2600,'غیربورس'],
-['1405/07/10','غدیر','سرمایه‌گذاری غدیر','فروش','خساپا','2.2','0.9',380,'بورس'],
-['1405/07/10','الماس','صندوق الماس','خرید','شمپنا','1.4','2.2',310,'بورس'],
-['1405/07/08','وخارزم','سرمایه‌گذاری خوارزمی','ورود','فملی','0.0','1.8',310,'بورس'],
-['1405/07/08','بترابر','بترابر','کاهش','تپسی','4.0','2.5',1900,'غیربورس'],
-['1405/07/05','یاقوت','صندوق یاقوت','افزایش','فولاد','2.6','3.1',760,'بورس'],
-['1405/07/05','وخارزم','سرمایه‌گذاری خوارزمی','خرید','دفارا','0.8','1.6',80,'بورس'],
-['1405/07/03','اعتماد','صندوق اعتماد','فروش','شتران','2.5','1.1',240,'بورس'],
-['1405/07/03','غدیر','سرمایه‌گذاری غدیر','خروج','شپنا','1.5','0.0',520,'بورس'],
-['1405/06/30','یاقوت','صندوق یاقوت','افزایش','اوراق مشارکت','12.0','15.0',240,'غیربورس'],
-['1405/06/28','اعتماد','صندوق اعتماد','خرید','کچاد','0.0','1.2',120,'بورس']];
+  <div class="topnote">
+    قیمت‌ها به ریال • دریافت از TSETMC از طریق سرور پروژه •
+    داده تصادفی و سیگنال ساختگی نمایش داده نمی‌شود
+  </div>
 
-/* ---------- ابزار ---------- */
-const $=q=>document.querySelector(q);
-const FA='۰۱۲۳۴۵۶۷۸۹',fa=x=>String(x).replace(/\d/g,d=>FA[d]);
-const fmtS=v=>String(v).replace('.','٫');
-const nfa=x=>fa(String(Math.round(x)).replace(/\B(?=(\d{3})+(?!\d))/g,'٬'));
-const sum=a=>a.reduce((x,y)=>x+y,0);
-const med=a=>{a=[...a].sort((x,y)=>x-y);return a[Math.floor(a.length/2)]};
-const pc=x=>'<span class="'+(x>=0?'up':'dn')+'">'+(x>=0?'+':'−')+fa(Math.round(Math.abs(x)))+'٪</span>';
-const norm=t=>t.replace(/ي/g,'ی').replace(/ك/g,'ک');
-const href=s=>'#/s/'+encodeURIComponent(s);
-const C=['#1fd3a2','#3b82f6','#f6c265','#a78bfa','#ff7a7a','#38bdf8','#fb923c','#4ade80','#f472b6'];
-function scb(v){return '<span class="sc-b" style="background:'+(v>=7?'#1fd3a2':(v>=5?'#f6c265':'#ff7a7a'))+'">'+fmtS(v)+'</span>'}
-function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
-const ACT={خرید:'خرید',فروش:'فروش',افزایش:'افزایش',کاهش:'کاهش',ورود:'ورود',خروج:'خروج'};
-function chgBadge(a){const good=['خرید','افزایش','ورود'].indexOf(a)>=0;return '<span class="badge '+(good?'b':'s')+'">'+ACT[a]+'</span>'}
-function chgTable(rows){
-  return '<table><tr><th>تاریخ</th><th>نهاد</th><th>اقدام</th><th>هدف</th><th>تغییر سهم</th><th>ارزش (میلیارد)</th><th>بازار</th></tr>'+
-  rows.map(c=>{
-    const tgt=c[4];
-    const link=S.some(v=>v.s===tgt)?'<a href="'+href(tgt)+'"><b>'+tgt+'</b></a>':'<b>'+tgt+'</b>';
-    return '<tr><td class="sub">'+fa(c[0])+'</td><td><b>'+c[2]+'</b></td><td>'+chgBadge(c[3])+'</td><td>'+link+'</td><td class="sub">'+fa(c[5])+'٪ به '+fa(c[6])+'٪</td><td>'+nfa(c[7])+'</td><td class="sub">'+c[8]+'</td></tr>';
-  }).join('')+'</table>';
-}
+  <div class="toolbar">
+    <button id="refreshButton" class="btn secondary" type="button">
+      ⟳ به‌روزرسانی
+    </button>
 
-/* ---------- ساخت داده ---------- */
-function mkStock(a,i){
-  const [s,n,g,mc,pe,eps,fy,roe,debt,pb,rec,aud,payout]=a;
-  const r=rnd(i*13+5);let v=mc*1.5+300;
-  const sales=LBL.map(()=>{v=Math.max(1,v*(0.93+r()*0.17));return Math.round(v)});
-  const profit=Array.from({length:8},(_,q)=>Math.round(sales.slice(q*3,q*3+3).reduce((x,y)=>x+y,0)*0.12*(0.7+r()*0.6)));
-  return {t:'s',s,n,g,fy,mc,pe,eps,roe,debt,pb,rec,aud,payout,sales,profit,nws:NSENT[s]||0,dps:Math.round(eps*payout/100)};
-}
-function mkFund(a,i){
-  const [s,n,kind,mc,ret,nav,fee]=a;
-  const r=rnd(i*31+9);let v=mc*8;
-  const sales=LBL.map(()=>{v=Math.max(1,v*(0.97+r()*0.08));return Math.round(v)});
-  const profit=Array.from({length:8},(_,q)=>Math.round(sales.slice(q*3,q*3+3).reduce((x,y)=>x+y,0)*0.06*(0.8+r()*0.5)));
-  let nv=nav/(1+ret/100);
-  const navT=Array.from({length:12},()=>{nv=nv*(1+ret/100/12);return Math.round(nv)});
-  return {t:'f',s,n,g:'صندوق‌ها',kind,mc,ret,nav,fee,pe:0,peG:0,eps:0,roe:ret,debt:0,pb:0,rec:0,aud:'—',payout:0,fy:'—',sales,profit,navT,nws:0,dps:0};
-}
-const S=STK.map(mkStock).concat(FND.map(mkFund));
-S.forEach(x=>{
-  if(x.t==='s')x.peG=med(S.filter(v=>v.g===x.g&&v.t==='s').map(v=>v.pe));
-  const a=x.sales;
-  x.mom=(a[23]/a[22]-1)*100;x.yoy=(a[23]/a[11]-1)*100;
-  x.mar=Math.round(sum(x.profit)/sum(x.sales)*1000)/10;
-  x.pg=(x.profit[7]/x.profit[6]-1)*100;
-  const r=rnd(Math.round(x.mc*10)+x.pe);
-  x.hg=Array.from({length:10},()=>Math.round((r()-0.45)*80));
-  x.flow=Math.round(sum(x.hg)/2);
-  const rt=[];let s0=0;x.profit.forEach(p=>{s0+=Math.round(p*0.55);rt.push(s0)});x.retE=rt;
-  if(x.t==='s'){
-    const r5=rnd(Math.round(x.mc*3)+x.pe*7);
-    const TA=Math.max(100,Math.round(x.sales[23]*2.2));
-    x.ta=TA;const dr=x.debt/100;
-    x.cl=Math.round(TA*dr*.62);x.ltd=Math.round(TA*dr*.38);x.eq=TA-x.cl-x.ltd;
-    x.ca=Math.round(TA*(.34+r5()*.2));x.fa=TA-x.ca;
-    x.de=+((x.cl+x.ltd)/Math.max(x.eq,1)).toFixed(2);
-    x.roa=Math.round(x.profit[7]*4/TA*1000)/10;
-    x.cr=+(x.ca/Math.max(x.cl,1)).toFixed(2);
-    x.cfq=x.profit.map(p=>{const op=Math.round(p*(.6+r5()*.5)),iv=-Math.round(p*(.2+r5()*.4)),fi=-Math.round(p*(x.payout/100)*(.7+r5()*.5));return [op,iv,fi]});
-    x.ocfN=+(sum(x.cfq.map(q=>q[0]))/Math.max(sum(x.profit.slice(4)),1)).toFixed(2);
-    x.dps2=[Math.round(x.dps*.85),x.dps];
-  }
-  const r4=rnd(x.pe*29+Math.round(x.mc));const AG=['امروز','این هفته','این ماه'];
-  x.fr={K:AG[Math.floor(r4()*3)],M:AG[Math.floor(r4()*3)],L:'این ماه'};
-});
+    <span id="mode" class="badge" role="status">
+      آماده جست‌وجو
+    </span>
 
-/* ---------- نمره بنیادی ---------- */
-const FBK=[['ارزش‌گذاری',.25],['سودآوری',.25],['رشد',.2],['سلامت ترازنامه',.15],['تقسیم سود',.15]];
-function calcScore(x){
-  const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
-  let F;
-  if(x.t==='f'){
-    F={'ارزش‌گذاری':cl(1-(x.fee-1)/1.5,0,1),'سودآوری':cl(x.ret/45,0,1),'رشد':cl(x.ret/45,0,1)*.7+cl(x.mom/8,0,1)*.3,'سلامت ترازنامه':1,'تقسیم سود':cl(x.ret/40,0,1)*.8};
-  }else{
-    F={'ارزش‌گذاری':cl(cl(x.peG/Math.max(x.pe,.1),0,2)/2*0.6+cl((3-Math.max(x.pb,.3))/2.2,0,1)*0.4,0,1),
-    'سودآوری':cl(x.roe/35,0,1)*0.6+cl(x.mar/22,0,1)*0.4,
-    'رشد':cl(x.yoy/35,0,1)*0.6+cl(x.pg/25,0,1)*0.4,
-    'سلامت ترازنامه':cl(1-x.debt/85,0,1)*0.5+cl(1-x.rec/45,0,1)*0.35+(x.aud==='مطلق'?1:0.35)*0.15,
-    'تقسیم سود':cl(x.payout/90,0,1)};
-  }
-  x.F=F;let t=0;FBK.forEach(p=>{t+=p[1]*F[p[0]]});
-  return Math.round((1+9*t)*10)/10;
-}
-S.forEach(x=>{x.score=Math.max(1,Math.min(10,Math.round((calcScore(x)+x.nws*0.2)*10)/10))});
-function fbars(F){return FBK.map(p=>'<div class="fb"><span>'+p[0]+'</span><div class="fbar"><i style="width:'+Math.round(F[p[0]]*100)+'%"></i></div><b>'+fa(Math.round(F[p[0]]*100))+'٪</b></div>').join('')}
-function gauge(sc){
-  const col=sc>=7?'#1fd3a2':(sc>=5?'#f6c265':'#ff7a7a');
-  const r=42,c=2*Math.PI*r,p=Math.max(0,Math.min(1,(sc-1)/9));
-  return '<svg viewBox="0 0 110 110" width="116" height="116"><circle cx="55" cy="55" r="42" fill="none" stroke="#223254" stroke-width="11"/><circle cx="55" cy="55" r="42" fill="none" stroke="'+col+'" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 55 55)"/><text x="55" y="52" text-anchor="middle" font-size="24" fill="#e9eefb" font-weight="700">'+fmtS(sc)+'</text><text x="55" y="72" text-anchor="middle" font-size="10" fill="#8fa3c8">از ۱۰</text></svg>';
-}
+    <span id="updated" class="sub"></span>
+  </div>
 
-/* ---------- سیگنال‌ها ---------- */
-function calcSig(x){
-  const isF=x.t==='f';
-  const gap=isF?0:Math.round((x.peG-x.pe)/Math.max(x.peG,0.1)*100);
-  const nm=isF?'اندازه صندوق':'فروش';
-  const LS={s:x.s,a:x.fr.L,d:x.score>=7?'خرید':(x.score>=5.5?'نگهداری':'فروش'),c:Math.round(Math.min(92,45+x.score*5)),w:[
-    'امتیاز بنیادی '+fmtS(x.score)+' از ۱۰',
-    isF?('صندوق '+x.kind+' · بازده از ابتدای سال '+fa(x.ret)+'٪ · NAV '+nfa(x.nav)+' تومان'):(gap>0?'ارزش‌گذاری '+fa(gap)+'٪ پایین‌تر از میانه گروه':'ارزش‌گذاری '+fa(-gap)+'٪ بالاتر از میانه گروه'),
-    x.yoy>=0?(nm+' رشد سالانه '+fa(Math.round(x.yoy))+'٪ دارد'):(nm+' افت سالانه '+fa(Math.round(-x.yoy))+'٪ دارد'),
-    isF?'کارمزد مدیریت '+fmtS(x.fee)+'٪ از دارایی':'تقسیم سود '+fa(x.payout)+'٪ · نظر حسابرس: '+(x.aud==='مطلق'?'مطلق':'مشروط'),
-    x.nws>0?'اخبار اخیر مثبت است':(x.nws<0?'اخبار اخیر منفی است':'اخبار خاصی مؤثر نیست')]};
-  const mid=(x.score-5.5)*11+gap*0.5;
-  const MS={s:x.s,a:x.fr.M,d:mid>=15?'خرید':(mid<=-15?'فروش':'بی‌طرف'),c:Math.round(Math.min(88,48+Math.abs(mid))),w:[
-    'فاصله از نقطه متوازن: '+fa(Math.round(mid))+' واحد','امتیاز بنیادی '+fmtS(x.score),
-    isF?'عملکرد صندوق بر اساس بازده و NAV سنجیده می‌شود':'P/E '+fa(x.pe)+' در برابر میانه گروه '+fa(x.peG)]};
-  const sh=x.mom*0.6+x.flow*0.12;
-  const KS={s:x.s,a:x.fr.K,d:sh>=7?'خرید':(sh<=-7?'فروش':'بی‌طرف'),c:Math.round(Math.min(85,48+Math.abs(sh)*1.8)),w:[
-    'رشد '+nm+' ماه اخیر '+fa(Math.round(x.mom))+'٪',
-    'خالص خرید حقیقی: '+(x.flow>=0?'+':'−')+nfa(Math.abs(x.flow))+' میلیارد تومان',
-    (x.flow>=0?'فشار خرید':'فشار فروش')+' در روزهای اخیر']};
-  return {L:LS,M:MS,K:KS};
-}
-function sigCard(r){
-  const bd=r.d==='خرید'?'b':(r.d==='فروش'?'s':'n');
-  const fresh=r.a?(' · تازگی: '+r.a+(r.a==='امروز'?' 🆕':'')):'';
-  return '<div class="card"><div class="head"><a href="'+href(r.s)+'"><b>'+r.s+'</b></a><span class="badge '+bd+'">'+r.d+'</span></div>'+
-  '<div class="sub">قدرت سیگنال: '+fa(r.c)+'٪'+fresh+'</div>'+
-  '<ul class="why">'+r.w.map(y=>'<li>'+y+'</li>').join('')+'</ul></div>';
-}
+  <div id="errorBox" class="errorbox" role="alert" hidden></div>
 
-/* ---------- گرافیک ---------- */
-function bars(v,l,h){h=h||170;const w=640,mx=Math.max(...v),mn=Math.min(0,...v),m=(mx-mn)||1,bw=w/v.length,y0=h-(0-mn)/m*h;
-  return '<svg viewBox="0 0 '+w+' '+(h+26)+'" class="ch">'+(mn<0?'<line x1="0" y1="'+y0+'" x2="'+w+'" y2="'+y0+'" stroke="#223254" stroke-dasharray="4 4"/>':'')+
-  v.map((x,i)=>{const yv=h-(x-mn)/m*h,yT=Math.min(yv,y0),bh=Math.abs(yv-y0),t=bw>=60?l[i]:String(l[i]).split(' ')[0];
-  return '<rect x="'+(i*bw+3).toFixed(1)+'" y="'+yT.toFixed(1)+'" width="'+(bw-6).toFixed(1)+'" height="'+Math.max(bh,1).toFixed(1)+'" rx="3" fill="'+(x<0?'#ff7a7a':(i==v.length-1?'#1fd3a2':'#3b82f6'))+'"><title>'+l[i]+': '+nfa(x)+'</title></rect>'+
-  (i%3==0?'<text x="'+(i*bw+bw/2).toFixed(1)+'" y="'+(h+16)+'" text-anchor="middle">'+t+'</text>':'')}).join('')+'</svg>'}
+  <main id="app">
+    <div class="card loading">در حال آماده‌سازی…</div>
+  </main>
 
-/* ============ قیمت‌ها، صفحات و اجرای برنامه ============ */
+  <noscript>
+    <div class="errorbox">
+      برای اجرای این سایت، جاوااسکریپت مرورگر باید فعال باشد.
+    </div>
+  </noscript>
 
-/* ---------- قیمت‌ها و شبیه‌سازی زنده ---------- */
-const PX={};
-S.forEach(x=>{
-  const base=x.t==='f'?x.nav:Math.round(x.eps*x.pe);
-  PX[x.s]={p:base,c:base,v:Math.round(x.mc*0.15+20)};
-});
-function pxChg(s){return (PX[s].p/PX[s].c-1)*100}
-function chgTxt(s){return pc(pxChg(s))}
-function priceTxt(s){return nfa(PX[s].p)}
-function buildTicker(){
-  $('#tk').innerHTML=S.slice().sort((a,b)=>Math.abs(pxChg(b.s))-Math.abs(pxChg(a.s))).slice(0,12)
-  .map(x=>'<a class="tchip" href="'+href(x.s)+'"><b>'+x.s+'</b> '+priceTxt(x.s)+' '+chgTxt(x.s)+'</a>').join('');
-}
-function clockUpd(){var d=new Date();$('#upd').textContent='🕒 '+fa(d.getHours())+':'+fa(String(d.getMinutes()).padStart(2,'0'))+':'+fa(String(d.getSeconds()).padStart(2,'0'))}
-function tick(){
-  S.forEach(x=>{const q=PX[x.s];let np=q.p*(1+(Math.random()-0.5)*0.014);
-    if(x.t==='f')np=Math.max(x.nav*0.93,Math.min(x.nav*1.07,np));
-    q.p=Math.max(50,Math.round(np));q.v=Math.round(q.v*(0.85+Math.random()*0.3));});
-  buildTicker();
-  var ae=document.activeElement&&document.activeElement.tagName==='INPUT';
-  var h=location.hash.split('?')[0];
-  if(!ae&&(h==='#/'||h==='#/watch'||h==='#/scores'))render();
-}
-function refresh(){
-  S.forEach(x=>{const q=PX[x.s];q.p=Math.max(50,Math.round(q.p*(1+(Math.random()-0.47)*0.035)));q.v=Math.round(q.v*(0.8+Math.random()*0.4))});
-  buildTicker();render();toast('✅ به‌روزرسانی انجام شد');
-}
+  <footer>
+    مقصودیوم پرو • دریافت موفق اطلاعات به معنی لحظه‌ای‌بودن آن نیست.
+    <br>
+    داده‌های بازار باید همراه با تاریخ منبع بررسی شوند؛
+    این نسخه توصیه خرید یا فروش ارائه نمی‌کند.
+  </footer>
 
-/* ---------- دونات و جدول سبد ---------- */
-function donut(items,ctr,sub){
-  const tot=sum(items.map(i=>i[1]))||1;let off=25;
-  const seg=items.map((it,i)=>{const p=it[1]/tot*100,d=off;off=(off+p)%100;
-    return '<circle r="15.9155" cx="21" cy="21" fill="none" stroke="'+C[i%C.length]+'" stroke-width="6" stroke-dasharray="'+p.toFixed(2)+' '+(100-p).toFixed(2)+'" stroke-dashoffset="'+d.toFixed(2)+'"><title>'+it[0]+': '+fa(p.toFixed(1))+'٪</title></circle>';}).join('');
-  return '<svg viewBox="0 0 42 42" width="150" height="150" style="flex:none">'+seg+'<text x="21" y="20.5" text-anchor="middle" font-size="6" fill="#e9eefb" font-weight="700">'+ctr+'</text><text x="21" y="26" text-anchor="middle" font-size="3.6" fill="#8fa3c8">'+sub+'</text></svg>';
-}
-function dlegend(items){
-  const tot=sum(items.map(i=>i[1]))||1;
-  return '<div class="dleg">'+items.map((it,i)=>'<div class="dli"><i style="background:'+C[i%C.length]+'"></i><span>'+it[0]+'</span><em>'+fa((it[1]/tot*100).toFixed(1))+'٪ · '+nfa(it[1])+'</em></div>').join('')+'</div>';
-}
-function holdTable(rows,mkt){
-  const tot=sum(rows.map(r=>r[1]))||1;
-  return '<div class="tw"><table><tr><th>دارایی ('+mkt+')</th><th>ارزش (میلیارد تومان)</th><th>سهم از سبد</th><th>تغییر اخیر</th></tr>'+
-  rows.map(r=>{const lk=S.some(v=>v.s===r[0])?'<a href="'+href(r[0])+'"><b>'+r[0]+'</b></a>':'<b>'+r[0]+'</b>';
-  return '<tr><td>'+lk+'</td><td>'+nfa(r[1])+'</td><td class="sub">'+fa((r[1]/tot*100).toFixed(1))+'٪</td><td>'+pc(r[2])+'</td></tr>';}).join('')+'</table></div>';
-}
+  <script>
+    "use strict";
 
-/* ---------- جستجو ---------- */
-function hideRes(){$('#res').style.display='none'}
-function srch(q){
-  q=norm(q.trim());
-  var r=q?S.filter(x=>norm(x.s).indexOf(q)>-1||norm(x.n).indexOf(q)>-1||norm(x.g).indexOf(q)>-1).slice(0,8):[];
-  $('#res').innerHTML=r.length?r.map(x=>'<a href="'+href(x.s)+'" onclick="hideRes()"><b>'+x.s+'</b> — '+x.n+'</a>').join(''):'<i style="color:var(--mut)">نمادی یافت نشد</i>';
-  $('#res').style.display=q?'block':'none';
-}
+    /* ==========================================
+       مقصودیوم پرو — رابط دریافت اطلاعات واقعی
+       نیازمند فایل سرور: api/market.js
+       ========================================== */
 
-/* ---------- صفحه خانه ---------- */
-function pgHome(){
-  var topS=S.slice().sort((a,b)=>b.score-a.score).slice(0,6);
-  var adv=S.filter(x=>pxChg(x.s)>0).length;
-  var avg=(sum(S.map(x=>x.score))/S.length).toFixed(1);
-  var bg=GFLOW.slice().sort((a,b)=>b[1]-a[1])[0];
-  $('#app').innerHTML=
-  '<div class="hero"><h1>مقصودیوم پرو</h1><p class="sub">تحلیل بنیادی، نمره ۱ تا ۱۰، سیگنال و پایش سبد نهادها و صندوق‌ها — '+fa(S.length)+' نماد (۲۵ سهم + ۴ صندوق)</p>'+
-  '<div class="sbox"><input placeholder="جستجوی نماد یا صندوق… مثلاً تاپیکو یا یاقوت" oninput="srch(this.value)"><div id="res" style="display:none"></div></div></div>'+
-  '<div class="stats">'+
-  '<div class="card stat qc"><b>'+fa(S.length)+'</b><span>نماد تحت پوشش</span></div>'+
-  '<div class="card stat qc"><b>'+fmtS(avg)+'</b><span>میانگین نمره بنیادی</span></div>'+
-  '<div class="card stat qc"><b class="up">'+fa(adv)+'</b><span>مثبت / '+fa(S.length-adv)+' منفی</span></div>'+
-  '<div class="card stat qc"><b class="up">'+bg[0]+'</b><span>بیشترین ورود نقدی ('+nfa(bg[1])+' میلیارد)</span></div></div>'+
-  '<h2>⭐ برترین نمره‌های بنیادی</h2>'+
-  '<div class="grid3">'+topS.map(x=>'<a class="card qc" href="'+href(x.s)+'"><b style="font-size:17px">'+x.s+(x.t==='f'?' 🏦':'')+'</b><div class="sub">'+x.n+'</div><div style="margin:8px 0">'+scb(x.score)+'</div><div>'+priceTxt(x.s)+' تومان '+chgTxt(x.s)+'</div></a>').join('')+'</div>'+
-  '<h2>📡 تازه‌ترین سیگنال‌های بلندمدت</h2>'+
-  '<div class="grid2">'+topS.slice(0,4).map(x=>sigCard(calcSig(x).L)).join('')+'</div>'+
-  '<h2>📰 آخرین اخبار مؤثر</h2>'+
-  '<div class="card">'+NEWS.slice(0,4).map(n=>'<div class="row"><div><b>'+n[0]+'</b></div><span class="sub">'+(S.some(v=>v.s===n[1])?'<a href="'+href(n[1])+'">'+n[1]+'</a> · ':'')+n[2]+'</span></div>').join('')+'</div>';
-}
+    const app = document.getElementById("app");
+    const mode = document.getElementById("mode");
+    const updated = document.getElementById("updated");
+    const errorBox = document.getElementById("errorBox");
+    const refreshButton = document.getElementById("refreshButton");
 
-/* ---------- نمره‌ها ---------- */
-function pgScores(){
-  var rows=S.slice().sort((a,b)=>b.score-a.score);
-  $('#app').innerHTML='<h1>نمره‌های بنیادی</h1><p class="sub">نمره ۱ تا ۱۰ بر اساس ۵ محور: ارزش‌گذاری، سودآوری، رشد، سلامت ترازنامه، تقسیم سود</p>'+
-  '<div class="tw card"><table><tr><th>رتبه</th><th>نماد</th><th>نام</th><th>گروه</th><th>نمره</th><th>معیار کلیدی</th><th>قیمت</th></tr>'+
-  rows.map((x,i)=>'<tr'+(i<3?' class="me"':'')+'><td class="sub">'+fa(i+1)+'</td><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td class="sub">'+x.n+'</td><td class="sub">'+x.g+'</td><td>'+scb(x.score)+'</td><td class="sub">'+(x.t==='f'?('بازده سالانه '+fa(x.ret)+'٪'):('P/E '+fa(x.pe)+' · EPS '+nfa(x.eps)))+'</td><td>'+priceTxt(x.s)+' '+chgTxt(x.s)+'</td></tr>').join('')+'</table></div>';
-}
+    const numberFormat = new Intl.NumberFormat("fa-IR", {
+      maximumFractionDigits: 2
+    });
 
-/* ---------- سیگنال‌ها ---------- */
-var SIGTAB='L';
-function setSig(t){SIGTAB=t;pgSignals()}
-function pgSignals(){
-  var T={K:'کوتاه‌مدت (روزانه)',M:'میان‌مدت (هفتگی)',L:'بلندمدت (ماهانه)'};
-  var arr=S.map(x=>calcSig(x)[SIGTAB]);
-  var b=arr.filter(r=>r.d==='خرید').length,s=arr.filter(r=>r.d==='فروش').length;
-  $('#app').innerHTML='<h1>سیگنال‌های سرمایه‌گذاری</h1><p class="sub">بر پایه نمره بنیادی، ارزش‌گذاری گروهی و جریان نقدینگی — احتمالاتی و تحلیلی</p>'+
-  '<div class="tabs">'+['K','M','L'].map(t=>'<button class="tb'+(SIGTAB===t?' on':'')+'" onclick="setSig(\''+t+'\')">'+T[t]+'</button>').join('')+'</div>'+
-  '<div class="stats"><div class="card stat qc"><b class="up">'+fa(b)+'</b><span>خرید</span></div><div class="card stat qc"><b class="am">'+fa(S.length-b-s)+'</b><span>بی‌طرف / نگهداری</span></div><div class="card stat qc"><b class="dn">'+fa(s)+'</b><span>فروش</span></div></div>'+
-  '<div class="grid2">'+arr.sort((a,b)=>b.c-a.c).map(sigCard).join('')+'</div>';
-}
+    const dateFormat = new Intl.DateTimeFormat("fa-IR", {
+      dateStyle: "short",
+      timeStyle: "medium",
+      timeZone: "Asia/Tehran"
+    });
 
-/* ---------- سبد پیشنهادی ---------- */
-function pgBasket(){
-  var picks=S.filter(x=>x.score>=6.5).sort((a,b)=>b.score-a.score).slice(0,8);
-  if(picks.length<4)picks=S.slice().sort((a,b)=>b.score-a.score).slice(0,6);
-  var tot=sum(picks.map(x=>x.score)),used=0;
-  var items=picks.map((x,i)=>{var w=i===picks.length-1?Math.round((100-used)*10)/10:Math.round(x.score/tot*1000)/10;used+=w;return [x.s,w];});
-  $('#app').innerHTML='<h1>سبد پیشنهادی رشدی</h1><p class="sub">نمادهای نمره '+fa(6.5)+'+ با وزن متناسب با نمره — بازبینی ماهانه</p>'+
-  '<div class="card"><div class="dwrap">'+donut(items,'۱۰۰٪','سبد رشدی')+dlegend(items)+'</div></div>'+
-  '<h2>مشخصات سبد</h2><div class="tw card"><table><tr><th>نماد</th><th>وزن</th><th>قیمت فعلی</th><th>هدف ۱۲ ماهه</th><th>حد ضرر</th><th>نمره</th><th>دلیل اصلی</th></tr>'+
-  picks.map((x,i)=>{var p=PX[x.s].p;
-  return '<tr><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td><b>'+fa(items[i][1])+'٪</b></td><td>'+nfa(p)+'</td><td class="up">'+nfa(Math.round(p*(1+x.score*0.028)))+'</td><td class="dn">'+nfa(Math.round(p*0.92))+'</td><td>'+scb(x.score)+'</td><td class="sub">'+(x.t==='f'?('بازده '+fa(x.ret)+'٪ · NAV '+nfa(x.nav)):('P/E '+fa(x.pe)+' در برابر گروه '+fa(x.peG)))+'</td></tr>';}).join('')+'</table></div>'+
-  '<div class="note warn">⚠️ این سبد صرفاً تحلیلی و نمایشی است و توصیه خرید نیست؛ قبل از تصمیم، تحلیل شخصی انجام شود.</div>';
-}
+    const state = {
+      pageVersion: 0,
+      searchVersion: 0,
+      searchTimer: null,
+      searchController: null,
+      quoteController: null,
+      currentId: null,
+      loadingQuote: false,
+      quote: null
+    };
 
-/* ---------- سبدهای نهادها ---------- */
-function pgPorts(){
-  var keys=Object.keys(PORTS);
-  $('#app').innerHTML='<h1>سبد نهادها و صندوق‌ها</h1><p class="sub">ترکیب بورسی و غیربورسی '+fa(keys.length)+' نهاد + ریز تغییرات (خرید/فروش/افزایش/کاهش)</p>'+
-  '<div class="grid2">'+keys.map(k=>{var P=PORTS[k];
-  var bv=sum(P.b.map(r=>r[1])),nv=sum(P.nb.map(r=>r[1])),t=bv+nv;
-  var nm=S.some(v=>v.s===k)?k+' — '+S.find(v=>v.s===k).n:k;
-  return '<a class="card" href="#/p/'+encodeURIComponent(k)+'"><div class="head"><b>'+nm+'</b><span class="badge n">مشاهده</span></div>'+
-  '<div class="sub">بورسی '+fa(Math.round(bv/t*100))+'٪ · غیربورسی '+fa(Math.round(nv/t*100))+'٪ · ارزش '+nfa(t)+' میلیارد تومان</div>'+
-  '<div style="margin-top:6px">'+P.b.slice(0,3).map(r=>r[0]+' '+pc(r[2])).join(' · ')+'</div></a>';}).join('')+'</div>'+
-  '<h2>📋 آخرین تغییرات سبدها</h2><div class="tw card">'+chgTable(CHG)+'</div>';
-}
-function pgPort(k){
-  var P=PORTS[k];
-  if(!P){location.hash='#/ports';return}
-  var ent=S.find(v=>v.s===k);
-  var bv=P.b.map(r=>[r[0],r[1]]),nv=P.nb.map(r=>[r[0],r[1]]);
-  var tv=sum(bv.map(r=>r[1]))+sum(nv.map(r=>r[1]));
-  var bps=Math.round(sum(bv.map(r=>r[1]))/tv*100);
-  var ch=CHG.filter(c=>c[1]===k);
-  $('#app').innerHTML='<a href="#/ports" class="sub">← بازگشت به سبدها</a>'+
-  '<h1>'+(ent?ent.n:k)+'</h1>'+
-  (ent?'<div class="stats"><div class="card stat qc">'+scb(ent.score)+'<span>نمره بنیادی</span></div><div class="card stat qc"><b>'+priceTxt(k)+'</b><span>قیمت '+chgTxt(k)+'</span></div><div class="card stat qc"><b>'+nfa(tv)+'</b><span>ارزش کل سبد (میلیارد تومان)</span></div></div>':'')+
-  '<h2>🧺 سبد بورسی ('+fa(bps)+'٪ از کل)</h2><div class="card"><div class="dwrap">'+donut(bv,fa(bps)+'٪','بورسی')+dlegend(bv)+'</div>'+holdTable(P.b,'بورس')+'</div>'+
-  '<h2>🏦 سبد غیربورسی ('+fa(100-bps)+'٪ از کل)</h2><div class="card"><div class="dwrap">'+donut(nv,fa(100-bps)+'٪','غیربورسی')+dlegend(nv)+'</div>'+holdTable(P.nb,'غیربورس')+'</div>'+
-  '<h2>📋 تغییرات ثبت‌شده این نهاد</h2><div class="tw card">'+(ch.length?chgTable(ch):'<div class="sub" style="padding:8px">تغییر جدیدی ثبت نشده است.</div>')+'</div>';
-}
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, function(character) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[character];
+      });
+    }
 
-/* ---------- نقدینگی ---------- */
-function pgLiq(){
-  var net=sum(S.map(x=>x.flow));
-  var adv=S.filter(x=>pxChg(x.s)>0).length;
-  var gmax=Math.max.apply(null,GFLOW.map(g=>Math.abs(g[1])));
-  $('#app').innerHTML='<h1>رصد نقدینگی</h1><p class="sub">جریان پول حقیقی و بین‌گروهی — ارقام شبیه‌سازی‌شده</p>'+
-  '<div class="stats">'+
-  '<div class="card stat qc"><b class="'+(net>=0?'up':'dn')+'">'+(net>=0?'+':'−')+nfa(Math.abs(net))+'</b><span>خالص خرید حقیقی بازار (میلیارد تومان)</span></div>'+
-  '<div class="card stat qc"><b>'+fa(Math.round(adv/S.length*100))+'٪</b><span>نسبت نمادهای مثبت</span></div>'+
-  '<div class="card stat qc"><b>'+nfa(sum(GFLOW.map(g=>Math.abs(g[1]))))+'</b><span>جابه‌جایی نقدینگی گروه‌ها (میلیارد تومان)</span></div></div>'+
-  '<h2>🌊 ورود و خروج نقدینگی گروه‌ها</h2><div class="card">'+
-  GFLOW.map(g=>{var w=Math.abs(g[1])/gmax*50;
-  return '<div class="lq"><span>'+g[0]+'</span><div class="lbar"><i style="'+(g[1]>=0?'right:50%;background:var(--brand)':'left:50%;background:var(--red)')+';width:'+w.toFixed(1)+'%"></i></div><b class="'+(g[1]>=0?'up':'dn')+'">'+(g[1]>=0?'+':'−')+nfa(Math.abs(g[1]))+'</b></div>';}).join('')+'</div>'+
-  '<h2>📊 خالص خرید حقیقی نمادهای منتخب (میلیارد تومان)</h2><div class="card">'+bars(S.slice(0,8).map(x=>x.flow),S.slice(0,8).map(x=>x.s),150)+'</div>';
-}
+    function normalize(value) {
+      return String(value || "")
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
 
-/* ---------- هشدارها ---------- */
-function armAlert(s){toast('🔔 هشدار ورود/خروج برای '+s+' فعال شد')}
-function pgAlerts(){
-  $('#app').innerHTML='<h1>هشدارهای ورود و خروج</h1><p class="sub">رصد اقدامات بزرگ صندوق‌ها و اشخاص حقوقی — با درصد قبل و بعد</p>'+
-  '<div class="card">'+FALERTS.map(a=>{var good=a[2]==='ورود'||a[2]==='افزایش سهم';
-  return '<div class="al"><span class="badge '+(good?'b':'s')+'">'+a[2]+'</span><div><b>'+(S.some(v=>v.s===a[3])?'<a href="'+href(a[3])+'">'+a[3]+'</a>':a[3])+'</b> — '+a[1]+' <span class="sub">'+a[4]+'</span></div><span class="sub">'+fa(a[0])+'</span><button class="btn g" onclick="armAlert(\''+a[3]+'\')">🔔 هشدار</button></div>';}).join('')+'</div>'+
-  '<h2>📋 ریز تغییرات سبدها (چه خریدند، چه فروختند، چه اضافه/کم کردند)</h2><div class="tw card">'+chgTable(CHG)+'</div>';
-}
+    function formatNumber(value) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        !Number.isFinite(Number(value))
+      ) {
+        return "—";
+      }
 
-/* ---------- اخبار ---------- */
-function pgNews(){
-  $('#app').innerHTML='<h1>اخبار مؤثر شرکت‌ها</h1><p class="sub">خبرهای اثرگذار بر نمره بنیادی</p>'+
-  '<div class="card">'+NEWS.map(n=>'<div class="row"><div><b>'+n[0]+'</b></div><span class="sub">'+(S.some(v=>v.s===n[1])?'<a href="'+href(n[1])+'">'+n[1]+'</a> · ':'')+n[2]+'</span></div>').join('')+'</div>';
-}
+      return numberFormat.format(Number(value));
+    }
 
-/* ---------- سناریوها ---------- */
-var SCEN=[
-['🌍 خوش‌بینانه',25,'تثبیت نرخ ارز + نرخ‌گذاری آزادتر فولاد و بهبود نرخ خوراک پتروشیمی','رشد شاخص تا ۳۵٪','فلزات، پتروشیمی و پالایش',['فولاد','فملی','شپدیس','شبندر']],
-['⚖️ محتمل',55,'ادامه روند با نوسان؛ ورود هدفمند نقدینگی به گروه‌های ارزنده','رشد ملایم تا ۱۲٪','صندوق‌ها و نمادهای نمره بالا',['یاقوت','تاپیکو','فخوز','اعتماد']],
-['⛈ بدبینانه',20,'تشدید تحریم و افت درآمد ارزی؛ رکود تقاضای داخلی','اصلاح تا ۱۵٪','پناهگاه: درآمد ثابت و دارو',['وجاهت','الماس','دفارا','یاقوت']]];
-function pgScen(){
-  $('#app').innerHTML='<h1>سناریوهای ۶ ماه آینده</h1><p class="sub">برآورد تحلیلی و نمایشی — مبنای تصمیم نیست</p>'+
-  '<div class="grid3">'+SCEN.map(sc=>'<div class="card"><div class="head"><b>'+sc[0]+'</b><span class="badge n">'+fa(sc[1])+'٪</span></div>'+
-  '<div class="fb" style="margin-top:6px"><span>احتمال</span><div class="fbar"><i style="width:'+sc[1]+'%"></i></div><b>'+fa(sc[1])+'٪</b></div>'+
-  '<p class="sub" style="margin-top:8px">'+sc[2]+'</p>'+
-  '<div class="row"><span>اثر بر شاخص</span><b class="am">'+sc[3]+'</b></div>'+
-  '<div class="row"><span>برندگان</span><b class="sub">'+sc[4]+'</b></div>'+
-  '<div style="margin-top:8px">'+sc[5].map(s=>'<a class="tchip" style="display:inline-flex;margin:2px" href="'+href(s)+'"><b>'+s+'</b></a>').join('')+'</div></div>').join('')+'</div>';
-}
+    function formatPercent(value) {
+      if (value === null || value === undefined) return "—";
 
-/* ---------- گروه‌ها ---------- */
-function pgGroups(){
-  var gs={};S.forEach(x=>{(gs[x.g]=gs[x.g]||[]).push(x)});
-  $('#app').innerHTML='<h1>تحلیل گروه‌ها</h1><p class="sub">میانه P/E، میانگین نمره و جریان نقدینگی هر گروه</p>'+
-  '<div class="grid2">'+Object.keys(gs).map(g=>{
-  var arr=gs[g],f=GFLOW.filter(z=>z[0]===g),flow=f.length?f[0][1]:0;
-  var st=arr.filter(x=>x.t==='s');
-  return '<div class="card"><div class="head"><b>'+g+'</b>'+(flow?'<span class="badge '+(flow>=0?'b':'s')+'">'+(flow>=0?'+':'−')+nfa(Math.abs(flow))+' میلیارد</span>':'')+'</div>'+
-  '<div class="sub">'+fa(arr.length)+' نماد · میانگین نمره '+fmtS((sum(arr.map(x=>x.score))/arr.length).toFixed(1))+(st.length?' · میانه P/E '+fa(med(st.map(x=>x.pe))):'')+'</div>'+
-  '<div style="margin-top:8px">'+arr.map(x=>'<a class="tchip" style="display:inline-flex;margin:2px" href="'+href(x.s)+'"><b>'+x.s+'</b>'+scb(x.score)+'</a>').join('')+'</div></div>';}).join('')+'</div>';
-}
+      const number = Number(value);
+      if (!Number.isFinite(number)) return "—";
 
-/* ---------- دیده‌بان ---------- */
-var WQ='';
-function wfil(q){WQ=norm(q);pgWatch();var el=document.getElementById('wf');if(el){el.focus();try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}}}
-function pgWatch(){
-  var arr=S.filter(x=>!WQ||norm(x.s).indexOf(WQ)>-1||norm(x.n).indexOf(WQ)>-1).sort((a,b)=>pxChg(b.s)-pxChg(a.s));
-  $('#app').innerHTML='<h1>دیده‌بان بازار</h1><p class="sub">قیمت‌ها هر ۱۵ ثانیه به‌روز می‌شوند · '+fa(arr.length)+' نماد</p>'+
-  '<div class="sbox" style="margin:10px auto 16px;max-width:420px"><input id="wf" placeholder="فیلتر نماد…" value="'+WQ.replace(/"/g,'&quot;')+'" oninput="wfil(this.value)"></div>'+
-  '<div class="tw card"><table><tr><th>نماد</th><th>قیمت (تومان)</th><th>تغییر</th><th>حجم (میلیون سهم)</th><th>خالص حقیقی (میلیارد)</th><th>نمره</th></tr>'+
-  arr.map(x=>'<tr><td><a href="'+href(x.s)+'"><b>'+x.s+'</b></a>'+(x.t==='f'?' 🏦':'')+'</td><td>'+priceTxt(x.s)+'</td><td>'+chgTxt(x.s)+'</td><td class="sub">'+nfa(PX[x.s].v)+'</td><td>'+(x.flow>=0?'<span class="up">+'+nfa(x.flow)+'</span>':'<span class="dn">−'+nfa(-x.flow)+'</span>')+'</td><td>'+scb(x.score)+'</td></tr>').join('')+'</table></div>';
-}
+      return (number > 0 ? "+" : "") + formatNumber(number) + "٪";
+    }
 
-/* ---------- صفحه هر نماد ---------- */
-function pgStock(s){
-  var x=S.find(v=>v.s===s);
-  if(!x){location.hash='#/';return}
-  var sg=calcSig(x),isF=x.t==='f',P=PORTS[s],nw=NEWS.filter(n=>n[1]===s);
-  $('#app').innerHTML='<a href="#/" class="sub">← بازگشت به خانه</a>'+
-  '<div class="head" style="margin-top:10px"><h1>'+x.s+(isF?' 🏦':'')+' <span class="sub" style="font-size:14px">'+x.n+'</span></h1>'+gauge(x.score)+'</div>'+
-  '<div class="stats">'+
-  '<div class="card stat qc"><b>'+priceTxt(s)+'</b><span>قیمت (تومان) '+chgTxt(s)+'</span></div>'+
-  (isF?('<div class="card stat qc"><b>'+nfa(x.nav)+'</b><span>NAV (تومان)</span></div><div class="card stat qc"><b class="up">'+fa(x.ret)+'٪</b><span>بازده از ابتدای سال</span></div><div class="card stat qc"><b>'+fmtS(x.fee)+'٪</b><span>کارمزد · '+x.kind+'</span></div>')
-  :('<div class="card stat qc"><b>'+fa(x.pe)+'</b><span>P/E (میانه گروه '+fa(x.peG)+')</span></div><div class="card stat qc"><b>'+nfa(x.eps)+'</b><span>EPS (ریال)</span></div><div class="card stat qc"><b>'+nfa(x.mc*100)+'</b><span>ارزش بازار (میلیارد تومان)</span></div>'))+'</div>'+
-  '<h2>📖 خلاصه بنیادی</h2><div class="card note">'+(INTRO[s]||('فعالیت در گروه «'+x.g+'» — ارقام این بخش نمایشی است.'))+'</div>'+
-  '<h2>🧮 ریز نمره بنیادی</h2><div class="card">'+fbars(x.F)+'</div>'+
-  '<h2>📡 سیگنال‌های سه افق</h2><div class="grid3">'+
-  [sg.K,sg.M,sg.L].map((r,i)=>{var t=['کوتاه‌مدت','میان‌مدت','بلندمدت'][i];
-  return '<div class="card"><div class="head"><b>'+t+'</b><span class="badge '+(r.d==='خرید'?'b':(r.d==='فروش'?'s':'n'))+'">'+r.d+'</span></div><div class="sub">قدرت '+fa(r.c)+'٪</div><ul class="why">'+r.w.slice(0,3).map(w=>'<li>'+w+'</li>').join('')+'</ul></div>';}).join('')+'</div>'+
-  (isF?('<h2>📈 روند NAV ۱۲ ماه اخیر</h2><div class="card">'+bars(x.navT,LBL.slice(12))+'</div>')
-  :('<h2>📊 فروش ۸ فصل اخیر (میلیارد تومان)</h2><div class="card">'+bars(x.sales.slice(-8),LBL.slice(-8))+'</div>'+
-  '<h2>💰 سود خالص فصلی (میلیارد تومان)</h2><div class="card">'+bars(x.profit,LBL.slice(-8))+'</div>'+
-  '<h2>🧾 صورت وضعیت مالی (میلیارد تومان)</h2><div class="card">'+
-  '<div class="row"><span>دارایی جاری</span><b>'+nfa(x.ca)+'</b></div>'+
-  '<div class="row"><span>دارایی ثابت</span><b>'+nfa(x.fa)+'</b></div>'+
-  '<div class="row"><span>جمع دارایی‌ها</span><b>'+nfa(x.ta)+'</b></div>'+
-  '<div class="row"><span>بدهی جاری</span><b>'+nfa(x.cl)+'</b></div>'+
-  '<div class="row"><span>بدهی بلندمدت</span><b>'+nfa(x.ltd)+'</b></div>'+
-  '<div class="row"><span>حقوق صاحبان سهام</span><b class="up">'+nfa(x.eq)+'</b></div></div>'+
-  '<h2>📐 نسبت‌های کلیدی</h2><div class="card">'+
-  '<div class="row"><span>ROE بازده حقوق صاحبان سهام</span><b class="up">'+fa(x.roe)+'٪</b></div>'+
-  '<div class="row"><span>ROA بازده دارایی</span><b class="up">'+fmtS(x.roa)+'٪</b></div>'+
-  '<div class="row"><span>حاشیه سود خالص</span><b class="up">'+fmtS(x.mar)+'٪</b></div>'+
-  '<div class="row"><span>نسبت جاری</span><b>'+fmtS(x.cr)+'</b></div>'+
-  '<div class="row"><span>بدهی / حقوق صاحبان سهام</span><b>'+fmtS(x.de)+'</b></div>'+
-  '<div class="row"><span>کیفیت سود (نقدی/سود)</span><b>'+fmtS(x.ocfN)+'</b></div>'+
-  '<div class="row"><span>P/B ارزش دفتری</span><b>'+fmtS(x.pb)+'</b></div></div>'+
-  '<h2>💵 جریان نقد عملیاتی فصلی (میلیارد تومان)</h2><div class="card">'+bars(x.cfq.map(q=>q[0]),LBL.slice(-8),140)+'</div>'+
-  '<h2>🎁 سود تقسیمی</h2><div class="card">'+
-  '<div class="row"><span>DPS امسال / پارسال</span><b>'+nfa(x.dps2[1])+' / '+nfa(x.dps2[0])+' ریال</b></div>'+
-  '<div class="row"><span>نسبت تقسیم سود</span><b>'+fa(x.payout)+'٪</b></div>'+
-  '<div class="row"><span>نظر حسابرس</span><b class="'+(x.aud==='مطلق'?'up':'am')+'">'+x.aud+'</b></div>'+
-  '<div class="row"><span>مطالبات مشکوک‌الوصول</span><b class="am">'+fa(x.rec)+'٪ دارایی‌ها</b></div>'+
-  '<div class="row"><span>سال مالی</span><b class="sub">'+fa(x.fy)+'</b></div></div>'+
-  '<h2>🏦 سود انباشته (میلیارد تومان)</h2><div class="card">'+bars(x.retE,LBL.slice(-8),140)+'</div>'))+
-  (P?('<h2>🧺 سبد دارایی‌های این نهاد</h2><div class="card">'+
-  '<div class="dwrap">'+donut(P.b.map(r=>[r[0],r[1]]),'بورسی','دارایی‌ها')+dlegend(P.b.map(r=>[r[0],r[1]]))+'</div>'+holdTable(P.b,'بورس')+
-  '<div style="height:14px"></div><div class="dwrap">'+donut(P.nb.map(r=>[r[0],r[1]]),'غیربورسی','دارایی‌ها')+dlegend(P.nb.map(r=>[r[0],r[1]]))+'</div>'+holdTable(P.nb,'غیربورس')+'</div>'+
-  '<h2>📋 تغییرات ثبت‌شده سبد</h2><div class="tw card">'+(CHG.filter(c=>c[1]===s).length?chgTable(CHG.filter(c=>c[1]===s)):'<div class="sub" style="padding:8px">تغییر جدیدی ثبت نشده است.</div>')+'</div>'):'')+
-  (nw.length?('<h2>📰 اخبار مرتبط</h2><div class="card">'+nw.map(n=>'<div class="row"><div><b>'+n[0]+'</b></div><span class="sub">'+n[2]+'</span></div>').join('')+'</div>'):'');
-}
+    function percentClass(value) {
+      if (value === null || value === undefined) return "neutral";
+      if (Number(value) > 0) return "positive";
+      if (Number(value) < 0) return "negative";
+      return "neutral";
+    }
 
-/* ---------- مسیریابی و اجرا ---------- */
-var lastH='';
-function render(){
-  var h=decodeURIComponent(location.hash||'#/');
-  if(h!==lastH){window.scrollTo(0,0);lastH=h}
-  try{
-    if(h.indexOf('#/s/')===0)return pgStock(h.slice(4));
-    if(h.indexOf('#/p/')===0)return pgPort(h.slice(4));
-    var R={'#/':pgHome,'#/scores':pgScores,'#/signals':pgSignals,'#/basket':pgBasket,'#/ports':pgPorts,'#/liq':pgLiq,'#/alerts':pgAlerts,'#/news':pgNews,'#/scen':pgScen,'#/groups':pgGroups,'#/watch':pgWatch};
-    (R[h.split('?')[0]]||pgHome)();
-  }catch(e){errShow(e.message)}
-}
-window.addEventListener('hashchange',render);
-buildTicker();
-$('#mode').className='lvb ok';$('#mode').textContent='🟢 زنده — قیمت‌ها هر ۱۵ ثانیه';
-if(!location.hash)location.hash='#/';
-render();
-clockUpd();
-setInterval(clockUpd,1000);
-setInterval(tick,15000);
-</script>
+    function formatReceivedTime(value) {
+      if (!value) return "نامشخص";
+
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return "نامشخص";
+
+      return dateFormat.format(date);
+    }
+
+    function formatSourceDate(value) {
+      const text = String(value ?? "");
+      if (!/^\d{8}$/.test(text)) return "نامشخص";
+
+      return (
+        text.slice(0, 4) + "/" +
+        text.slice(4, 6) + "/" +
+        text.slice(6, 8)
+      );
+    }
+
+    function formatSourceTime(value) {
+      const raw = String(value ?? "");
+
+      if (!/^\d{1,6}$/.test(raw) || Number(raw) === 0) {
+        return "نامشخص";
+      }
+
+      const text = raw.padStart(6, "0");
+      const hour = Number(text.slice(0, 2));
+      const minute = Number(text.slice(2, 4));
+      const second = Number(text.slice(4, 6));
+
+      if (hour > 23 || minute > 59 || second > 59) {
+        return "نامشخص";
+      }
+
+      return (
+        text.slice(0, 2) + ":" +
+        text.slice(2, 4) + ":" +
+        text.slice(4, 6)
+      );
+    }
+
+    function setStatus(message, isError) {
+      mode.textContent = message;
+      mode.className = isError ? "badge error" : "badge";
+    }
+
+    function showError(message) {
+      errorBox.textContent = message;
+      errorBox.hidden = false;
+    }
+
+    function clearError() {
+      errorBox.textContent = "";
+      errorBox.hidden = true;
+    }
+
+    function setQuoteLoading(value) {
+      state.loadingQuote = value;
+      refreshButton.disabled = value;
+      refreshButton.textContent = value
+        ? "در حال دریافت…"
+        : "⟳ به‌روزرسانی";
+    }
+
+    async function requestAPI(params, controller) {
+      if (location.protocol === "file:") {
+        throw new Error(
+          "فایل را از آدرس منتشرشده سایت باز کنید. دریافت API با بازکردن مستقیم index.html از حافظه دستگاه کار نمی‌کند."
+        );
+      }
+
+      if (!navigator.onLine) {
+        throw new Error("اتصال اینترنت دستگاه قطع است.");
+      }
+
+      let timedOut = false;
+
+      const timeout = setTimeout(function() {
+        timedOut = true;
+        controller.abort();
+      }, 18000);
+
+      try {
+        const response = await fetch(
+          "/api/market?" + new URLSearchParams(params).toString(),
+          {
+            method: "GET",
+            cache: "no-store",
+            signal: controller.signal,
+            headers: {
+              Accept: "application/json"
+            }
+          }
+        );
+
+        const text = await response.text();
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch (error) {
+          throw new Error(
+            "پاسخ سرور JSON نیست. وجود فایل api/market.js و تنظیمات انتشار Vercel را بررسی کنید."
+          );
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            typeof data?.error === "string"
+              ? data.error
+              : "سرور نتوانست اطلاعات را دریافت کند."
+          );
+        }
+
+        if (!data || typeof data !== "object") {
+          throw new Error("ساختار پاسخ سرور معتبر نیست.");
+        }
+
+        return data;
+      } catch (error) {
+        if (timedOut) {
+          throw new Error(
+            "زمان انتظار دریافت اطلاعات تمام شد. دوباره تلاش کنید."
+          );
+        }
+
+        if (error.name === "AbortError") throw error;
+
+        if (error instanceof TypeError) {
+          throw new Error(
+            "ارتباط با سرور پروژه برقرار نشد. اینترنت و وضعیت انتشار سایت را بررسی کنید."
+          );
+        }
+
+        throw error;
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    function loadingMarkup(message) {
+      return `
+        <div class="card loading" role="status">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>${escapeHTML(message)}</p>
+        </div>
+      `;
+    }
+
+    function statMarkup(title, value, className) {
+      return `
+        <div class="card stat">
+          <b class="${className || "neutral"}">${escapeHTML(value)}</b>
+          <span>${escapeHTML(title)}</span>
+        </div>
+      `;
+    }
+
+    /* ---------- جست‌وجو ---------- */
+
+    function renderHome() {
+      setStatus("آماده جست‌وجو از منبع رسمی");
+      updated.textContent = "";
+
+      app.innerHTML = `
+        <section class="hero">
+          <h1>مقصودیوم پرو</h1>
+
+          <p class="sub">
+            جست‌وجوی نماد و مشاهده آخرین اطلاعات قیمت موجود در منبع
+          </p>
+
+          <div class="searchbox">
+            <form id="searchForm">
+              <div class="searchline">
+                <input
+                  id="searchInput"
+                  type="search"
+                  maxlength="80"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-label="نماد یا نام شرکت"
+                  aria-controls="results"
+                  placeholder="نماد یا نام شرکت؛ مثلاً تاپیکو یا فولاد"
+                >
+
+                <button class="btn" type="submit">
+                  جست‌وجو
+                </button>
+              </div>
+            </form>
+
+            <p class="searchhelp">
+              جست‌وجو محدود به ۲۹ نماد نسخه قبلی نیست؛
+              نتایج به پاسخ سرویس منبع وابسته‌اند.
+            </p>
+
+            <div id="results" aria-live="polite" hidden></div>
+          </div>
+        </section>
+
+        <div class="grid">
+          <div class="card">
+            <b>قیمت آخرین معامله و پایانی</b>
+            <p class="sub spaced">
+              دو قیمت جداگانه، همراه با حجم و ارزش معاملات
+              و زمان ثبت‌شده در پاسخ منبع.
+            </p>
+          </div>
+
+          <div class="card">
+            <b>نمایش یکسان به ریال</b>
+            <p class="sub spaced">
+              قیمت و ارزش معاملات با واحد ریال نمایش داده می‌شوند.
+              قیمت از EPS یا اعداد تصادفی ساخته نمی‌شود.
+            </p>
+          </div>
+
+          <div class="card">
+            <b>بدون اطلاعات جایگزین ساختگی</b>
+            <p class="sub spaced">
+              در صورت قطع ارتباط، خطا نمایش داده می‌شود.
+              نبود داده به معنی صفر بودن آن نیست.
+            </p>
+          </div>
+        </div>
+
+        <div class="note warning spaced">
+          این نسخه فقط رابط جست‌وجو و قیمت است.
+          بانک مستقل کل نمادها، نمودار تعدیل‌شده و تحلیل بنیادی
+          هنوز به آن اضافه نشده‌اند.
+        </div>
+      `;
+
+      const form = document.getElementById("searchForm");
+      const input = document.getElementById("searchInput");
+
+      input.addEventListener("input", function() {
+        prepareSearch(false);
+      });
+
+      form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        prepareSearch(true);
+      });
+    }
+
+    function resultMessage(message) {
+      const results = document.getElementById("results");
+      if (!results) return;
+
+      results.hidden = false;
+      results.replaceChildren();
+
+      const paragraph = document.createElement("p");
+      paragraph.className = "message";
+      paragraph.textContent = message;
+      results.appendChild(paragraph);
+    }
+
+    function prepareSearch(immediate) {
+      const input = document.getElementById("searchInput");
+      const results = document.getElementById("results");
+
+      if (!input || !results) return;
+
+      clearTimeout(state.searchTimer);
+
+      if (state.searchController) {
+        state.searchController.abort();
+      }
+
+      const version = ++state.searchVersion;
+      const pageVersion = state.pageVersion;
+      const query = normalize(input.value);
+
+      clearError();
+      results.replaceChildren();
+
+      if (!query) {
+        results.hidden = true;
+        setStatus("آماده جست‌وجو");
+        return;
+      }
+
+      resultMessage("در حال جست‌وجو…");
+      setStatus("در حال دریافت نتایج…");
+
+      if (immediate) {
+        performSearch(query, version, pageVersion);
+      } else {
+        state.searchTimer = setTimeout(function() {
+          performSearch(query, version, pageVersion);
+        }, 500);
+      }
+    }
+
+    async function performSearch(query, version, pageVersion) {
+      const controller = new AbortController();
+      state.searchController = controller;
+
+      try {
+        const data = await requestAPI(
+          { op: "search", q: query },
+          controller
+        );
+
+        if (
+          version !== state.searchVersion ||
+          pageVersion !== state.pageVersion
+        ) return;
+
+        if (!Array.isArray(data.items)) {
+          throw new Error("ساختار نتایج جست‌وجو معتبر نیست.");
+        }
+
+        const results = document.getElementById("results");
+        if (!results) return;
+
+        results.replaceChildren();
+        results.hidden = false;
+
+        const seen = new Set();
+
+        const items = data.items.filter(function(item) {
+          if (!item || typeof item !== "object") return false;
+
+          if (
+            typeof item.id === "number" &&
+            !Number.isSafeInteger(item.id)
+          ) return false;
+
+          const id = String(item.id ?? "");
+
+          if (
+            !/^\d{1,20}$/.test(id) ||
+            typeof item.symbol !== "string" ||
+            !item.symbol.trim() ||
+            seen.has(id)
+          ) return false;
+
+          seen.add(id);
+          return true;
+        });
+
+        if (data.items.length && !items.length) {
+          throw new Error("نتایج دریافتی شناسه معتبر ندارند.");
+        }
+
+        if (!items.length) {
+          resultMessage(
+            "منبع برای این عبارت نتیجه‌ای برنگرداند. نام کوتاه‌تر یا نماد دقیق را امتحان کنید."
+          );
+          setStatus("جست‌وجو انجام شد؛ نتیجه‌ای دریافت نشد");
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        items.forEach(function(item) {
+          const link = document.createElement("a");
+          link.className = "result";
+          link.href = "#/s/" + encodeURIComponent(String(item.id));
+
+          const symbol = document.createElement("strong");
+          symbol.textContent = item.symbol;
+
+          const name = document.createElement("span");
+          name.textContent = " — " + String(item.name || "");
+
+          const identifier = document.createElement("small");
+          identifier.textContent = "شناسه ابزار: " + String(item.id);
+
+          link.append(symbol, name, identifier);
+          fragment.appendChild(link);
+        });
+
+        results.appendChild(fragment);
+
+        setStatus(
+          formatNumber(items.length) + " نتیجه از منبع دریافت شد"
+        );
+      } catch (error) {
+        if (
+          version !== state.searchVersion ||
+          pageVersion !== state.pageVersion ||
+          error.name === "AbortError"
+        ) return;
+
+        setStatus("دریافت نتایج ناموفق بود", true);
+        resultMessage(error.message);
+      } finally {
+        if (state.searchController === controller) {
+          state.searchController = null;
+        }
+      }
+    }
+
+    /* ---------- اطلاعات نماد ---------- */
+
+    function validateQuote(data, id) {
+      if (
+        String(data.id ?? "") !== id ||
+        data.currency !== "IRR" ||
+        typeof data.symbol !== "string" ||
+        !data.symbol.trim()
+      ) {
+        throw new Error(
+          "شناسه، نام نماد یا واحد پول پاسخ قابل تأیید نیست."
+        );
+      }
+
+      const fields = [
+        "last",
+        "close",
+        "previousClose",
+        "lastChangePercent",
+        "closeChangePercent",
+        "volume",
+        "tradeCount",
+        "tradeValue"
+      ];
+
+      for (const field of fields) {
+        if (!Object.prototype.hasOwnProperty.call(data, field)) {
+          throw new Error("پاسخ قیمت ناقص است.");
+        }
+
+        if (
+          data[field] !== null &&
+          (
+            typeof data[field] !== "number" ||
+            !Number.isFinite(data[field])
+          )
+        ) {
+          throw new Error("پاسخ قیمت دارای مقدار نامعتبر است.");
+        }
+      }
+
+      const nonnegative = [
+        "last",
+        "close",
+        "previousClose",
+        "volume",
+        "tradeCount",
+        "tradeValue"
+      ];
+
+      for (const field of nonnegative) {
+        if (data[field] !== null && data[field] < 0) {
+          throw new Error("یکی از مقادیر بازار نامعتبر است.");
+        }
+      }
+    }
+
+    function renderQuote(data) {
+      const sourceDate = formatSourceDate(data.sourceDate);
+      const sourceTime = formatSourceTime(data.sourceTime);
+
+      app.innerHTML = `
+        <a href="#/" class="sub">بازگشت به جست‌وجوی نمادها</a>
+
+        <div class="head">
+          <div>
+            <h1>${escapeHTML(data.symbol)}</h1>
+            <p class="sub">${escapeHTML(data.name)}</p>
+          </div>
+
+          <span class="badge">واحد قیمت: ریال</span>
+        </div>
+
+        <div class="stats">
+          ${statMarkup(
+            "آخرین معامله — ریال",
+            formatNumber(data.last)
+          )}
+
+          ${statMarkup(
+            "قیمت پایانی — ریال",
+            formatNumber(data.close)
+          )}
+
+          ${statMarkup(
+            "مبنای قیمت دیروز — ریال",
+            formatNumber(data.previousClose)
+          )}
+
+          ${statMarkup(
+            "تغییر آخرین معامله نسبت به مبنای دیروز",
+            formatPercent(data.lastChangePercent),
+            percentClass(data.lastChangePercent)
+          )}
+
+          ${statMarkup(
+            "تغییر پایانی نسبت به مبنای دیروز",
+            formatPercent(data.closeChangePercent),
+            percentClass(data.closeChangePercent)
+          )}
+
+          ${statMarkup(
+            "حجم معاملات — سهم / واحد / قرارداد",
+            formatNumber(data.volume)
+          )}
+
+          ${statMarkup(
+            "تعداد معاملات",
+            formatNumber(data.tradeCount)
+          )}
+
+          ${statMarkup(
+            "ارزش معاملات — ریال",
+            formatNumber(data.tradeValue)
+          )}
+        </div>
+
+        <h2>منبع و زمان اطلاعات</h2>
+
+        <div class="card">
+          <div class="row">
+            <span>منبع اطلاعات</span>
+            <b>${escapeHTML(data.source || "TSETMC")}</b>
+          </div>
+
+          <div class="row">
+            <span>تاریخ ثبت‌شده در پاسخ منبع — میلادی</span>
+            <b dir="ltr">${escapeHTML(sourceDate)}</b>
+          </div>
+
+          <div class="row">
+            <span>ساعت ثبت‌شده در پاسخ منبع</span>
+            <b dir="ltr">${escapeHTML(sourceTime)}</b>
+          </div>
+
+          <div class="row">
+            <span>زمان دریافت توسط سرور — به وقت تهران</span>
+            <b>${escapeHTML(formatReceivedTime(data.retrievedAt))}</b>
+          </div>
+
+          <div class="row">
+            <span>شناسه ابزار</span>
+            <b dir="ltr">${escapeHTML(data.id)}</b>
+          </div>
+        </div>
+
+        <div class="note warning spaced">
+          دریافت تازه از سرور ممکن است همان داده روز معاملاتی قبلی
+          را برگرداند. بنابراین زمان دریافت، معیار لحظه‌ای‌بودن قیمت نیست.
+          علامت «—» یعنی مقدار قابل استفاده دریافت نشده است.
+        </div>
+
+        <div class="note spaced">
+          تا زمانی که این صفحه باز و مرورگر فعال باشد،
+          هر ۶۰ ثانیه برای دریافت دوباره تلاش می‌شود.
+          این فاصله، تضمین به‌روزرسانی منبع نیست.
+        </div>
+
+        <h2>قیمت تعدیل‌شده و تحلیل بنیادی</h2>
+
+        <div class="grid">
+          <div class="card">
+            <b>نمودار تعدیل‌شده</b>
+            <p class="sub spaced">
+              هنوز متصل نیست. قیمت‌های بالا قیمت تابلو هستند.
+              تاریخچه تعدیل‌شده به رویدادهای تقسیم سود و افزایش سرمایه
+              و روش تعدیل مشخص نیاز دارد.
+            </p>
+          </div>
+
+          <div class="card">
+            <b>صورت‌های مالی و نمره بنیادی</b>
+            <p class="sub spaced">
+              تا دریافت گزارش‌های رسمی، تعیین دوره مالی و کنترل کیفیت،
+              نسبت مالی یا نمره بنیادی نمایش داده نمی‌شود.
+            </p>
+          </div>
+
+          <div class="card">
+            <b>سیگنال و سبد پیشنهادی</b>
+            <p class="sub spaced">
+              این بخش در نسخه حاضر غیرفعال است.
+              قیمت بازار به‌تنهایی مبنای سیگنال معتبر نیست.
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadQuote(id, pageVersion) {
+      if (
+        state.loadingQuote ||
+        pageVersion !== state.pageVersion
+      ) return;
+
+      const controller = new AbortController();
+      state.quoteController = controller;
+
+      setQuoteLoading(true);
+      clearError();
+      setStatus("در حال دریافت اطلاعات نماد…");
+
+      try {
+        const data = await requestAPI(
+          { op: "quote", id: id },
+          controller
+        );
+
+        if (pageVersion !== state.pageVersion) return;
+
+        validateQuote(data, id);
+
+        state.quote = data;
+        renderQuote(data);
+
+        setStatus("دریافت موفق؛ زمان منبع را بررسی کنید");
+
+        updated.textContent =
+          "آخرین دریافت موفق: " +
+          formatReceivedTime(data.retrievedAt);
+      } catch (error) {
+        if (
+          pageVersion !== state.pageVersion ||
+          error.name === "AbortError"
+        ) return;
+
+        setStatus("دریافت تازه ناموفق بود", true);
+
+        if (state.quote) {
+          showError(
+            error.message +
+            " اطلاعات نمایش‌داده‌شده مربوط به آخرین دریافت موفق است و ممکن است قدیمی باشد."
+          );
+        } else {
+          showError(error.message);
+
+          app.innerHTML = `
+            <a href="#/" class="sub">بازگشت به جست‌وجو</a>
+
+            <div class="card spaced">
+              <h1>اطلاعات نماد دریافت نشد</h1>
+
+              <p class="sub spaced">
+                ${escapeHTML(error.message)}
+              </p>
+
+              <button
+                id="retryQuote"
+                type="button"
+                class="btn spaced"
+              >
+                تلاش دوباره
+              </button>
+            </div>
+          `;
+
+          document.getElementById("retryQuote")
+            .addEventListener("click", refreshCurrentPage);
+        }
+      } finally {
+        if (pageVersion === state.pageVersion) {
+          setQuoteLoading(false);
+        }
+
+        if (state.quoteController === controller) {
+          state.quoteController = null;
+        }
+      }
+    }
+
+    /* ---------- بخش‌های متصل‌نشده ---------- */
+
+    const sections = {
+      "#/scores": {
+        title: "نمره بنیادی",
+        description:
+          "محاسبه نمره به صورت‌های مالی معتبر، دوره‌های همسان و مدل متناسب با صنعت نیاز دارد."
+      },
+      "#/signals": {
+        title: "سیگنال‌های سرمایه‌گذاری",
+        description:
+          "تا دریافت داده معتبر و ارزیابی مدل، سیگنال خرید یا فروش و درصد اطمینان نمایش داده نمی‌شود."
+      },
+      "#/basket": {
+        title: "سبد پیشنهادی",
+        description:
+          "ساخت سبد به تحلیل بازده و ریسک، نقدشوندگی و محدودیت تمرکز صنایع نیاز دارد."
+      },
+      "#/ports": {
+        title: "سبد نهادها و صندوق‌ها",
+        description:
+          "ترکیب دارایی‌ها باید از گزارش‌های رسمی هر نهاد، همراه با تاریخ گزارش و واحد ارزش‌گذاری دریافت شود."
+      },
+      "#/liq": {
+        title: "رصد نقدینگی",
+        description:
+          "جریان پول حقیقی و حقوقی به داده معتبر نوع مشتری و پوشش مشخص نمادها نیاز دارد."
+      },
+      "#/alerts": {
+        title: "هشدارها",
+        description:
+          "ذخیره تنظیمات، پایش سروری و سرویس ارسال اعلان هنوز پیاده‌سازی نشده است؛ هشدار فعالی ثبت نمی‌شود."
+      },
+      "#/news": {
+        title: "اخبار شرکت‌ها",
+        description:
+          "اخبار باید همراه با لینک منبع و تاریخ انتشار معتبر نمایش داده شوند."
+      },
+      "#/scen": {
+        title: "سناریوهای بازار",
+        description:
+          "سناریوها به فرض‌های مستند و مدل قابل بررسی نیاز دارند؛ احتمال ساختگی نمایش داده نمی‌شود."
+      },
+      "#/groups": {
+        title: "تحلیل گروه‌ها",
+        description:
+          "مقایسه صنایع به طبقه‌بندی رسمی و داده‌های قابل مقایسه نیاز دارد."
+      }
+    };
+
+    function renderUnavailable(section) {
+      setStatus("این بخش به داده معتبر متصل نشده است");
+      updated.textContent = "";
+
+      app.innerHTML = `
+        <h1>${escapeHTML(section.title)}</h1>
+
+        <div class="note warning spaced">
+          این بخش در نسخه فعلی فعال نیست.
+          اطلاعات نمایشی نسخه قبلی حذف شده‌اند.
+        </div>
+
+        <div class="card spaced">
+          <p>${escapeHTML(section.description)}</p>
+
+          <p class="sub">
+            نمایش این صفحه به معنی فعال‌بودن سرویس یا ذخیره درخواست نیست.
+          </p>
+
+          <a href="#/" class="btn spaced">
+            جست‌وجو و دریافت قیمت
+          </a>
+        </div>
+      `;
+    }
+
+    function renderAbout() {
+      setStatus("وضعیت امکانات این نسخه");
+      updated.textContent = "";
+
+      app.innerHTML = `
+        <h1>وضعیت سامانه</h1>
+
+        <div class="note spaced">
+          این نسخه رابط جست‌وجو و دریافت قیمت است،
+          نه نسخه کامل پلتفرم تحلیل بنیادی.
+        </div>
+
+        <h2>امکانات پیاده‌سازی‌شده در رابط</h2>
+
+        <div class="card">
+          <ul class="list">
+            <li>جست‌وجو با درخواست به سرور پروژه.</li>
+            <li>نمایش جداگانه آخرین معامله و قیمت پایانی به ریال.</li>
+            <li>نمایش حجم، تعداد و ارزش معاملات در صورت دریافت.</li>
+            <li>تفکیک زمان پاسخ منبع از زمان دریافت سرور.</li>
+            <li>تلاش مجدد هر ۶۰ ثانیه در صفحه فعال نماد.</li>
+            <li>نمایش خطا به جای تولید داده تصادفی.</li>
+          </ul>
+        </div>
+
+        <h2>پیش‌نیاز اجرای آنلاین</h2>
+
+        <div class="card">
+          <p>
+            فایل
+            <code>api/market.js</code>
+            باید در پروژه منتشرشده روی Vercel وجود داشته باشد.
+          </p>
+
+          <p class="sub">
+            این فایل HTML به‌تنهایی سرور ایجاد نمی‌کند.
+            دسترسی Vercel به TSETMC و سازگاری پاسخ منبع
+            باید در محیط انتشار آزموده شوند.
+          </p>
+        </div>
+
+        <h2>مواردی که هنوز آماده نیستند</h2>
+
+        <div class="card">
+          <ul class="list">
+            <li>بانک مستقل و پایدار کل نمادها و ابزارهای بازار.</li>
+            <li>تاریخچه قیمت و نمودار تعدیل‌شده.</li>
+            <li>اتصال کدال و استخراج صورت‌های مالی و نظر حسابرس.</li>
+            <li>اتصال فیپیران و مشخصات معتبر صندوق‌ها.</li>
+            <li>نمره بنیادی، ارزش‌گذاری و ارزیابی مدل سیگنال.</li>
+            <li>ترکیب سبد نهادها و ردیابی تغییرات مستند.</li>
+            <li>پایش پس‌زمینه و ارسال هشدار واقعی.</li>
+            <li>اخبار دارای منبع و زمان انتشار.</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    /* ---------- مسیریابی ---------- */
+
+    function renderPage() {
+      clearTimeout(state.searchTimer);
+      state.searchVersion++;
+      state.pageVersion++;
+
+      if (state.searchController) {
+        state.searchController.abort();
+        state.searchController = null;
+      }
+
+      if (state.quoteController) {
+        state.quoteController.abort();
+        state.quoteController = null;
+      }
+
+      state.currentId = null;
+      state.quote = null;
+
+      setQuoteLoading(false);
+      clearError();
+      updated.textContent = "";
+
+      const hash = (location.hash || "#/").split("?")[0];
+      const quoteMatch = /^#\/s\/(\d{1,20})$/.exec(hash);
+
+      document.querySelectorAll("nav a").forEach(function(link) {
+        const active = link.getAttribute("href") === hash;
+        link.classList.toggle("active", active);
+
+        if (active) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+
+      window.scrollTo(0, 0);
+
+      if (quoteMatch) {
+        state.currentId = quoteMatch[1];
+
+        app.innerHTML = loadingMarkup(
+          "در حال دریافت اطلاعات نماد از سرور…"
+        );
+
+        loadQuote(state.currentId, state.pageVersion);
+        return;
+      }
+
+      if (hash === "#/" || hash === "#/watch") {
+        renderHome();
+        return;
+      }
+
+      if (hash === "#/about") {
+        renderAbout();
+        return;
+      }
+
+      if (sections[hash]) {
+        renderUnavailable(sections[hash]);
+        return;
+      }
+
+      setStatus("صفحه پیدا نشد");
+
+      app.innerHTML = `
+        <div class="card">
+          <h1>این صفحه وجود ندارد</h1>
+          <p class="sub spaced">
+            برای مشاهده نمادها از جست‌وجوی صفحه اصلی استفاده کنید.
+          </p>
+          <a href="#/" class="btn spaced">بازگشت به خانه</a>
+        </div>
+      `;
+    }
+
+    function refreshCurrentPage() {
+      if (state.currentId) {
+        if (!state.loadingQuote) {
+          loadQuote(state.currentId, state.pageVersion);
+        }
+        return;
+      }
+
+      const input = document.getElementById("searchInput");
+
+      if (input) {
+        if (normalize(input.value)) {
+          prepareSearch(true);
+        } else {
+          setStatus("ابتدا نماد یا نام شرکت را وارد کنید");
+          input.focus();
+        }
+        return;
+      }
+
+      setStatus("این بخش هنوز سرویس داده فعال ندارد");
+    }
+
+    refreshButton.addEventListener("click", refreshCurrentPage);
+
+    window.addEventListener("hashchange", renderPage);
+
+    window.addEventListener("offline", function() {
+      setStatus("اینترنت دستگاه قطع است", true);
+      showError(
+        "اتصال اینترنت قطع شده است. اطلاعات قبلی ممکن است قدیمی باشند."
+      );
+    });
+
+    window.addEventListener("online", function() {
+      clearError();
+
+      if (state.currentId && !state.loadingQuote) {
+        loadQuote(state.currentId, state.pageVersion);
+      } else {
+        setStatus("اینترنت وصل شد؛ دریافت از منبع هنوز تأیید نشده است");
+      }
+    });
+
+    setInterval(function() {
+      if (
+        !document.hidden &&
+        navigator.onLine &&
+        state.currentId &&
+        !state.loadingQuote
+      ) {
+        loadQuote(state.currentId, state.pageVersion);
+      }
+    }, 60000);
+
+    renderPage();
+  </script>
 </body>
 </html>
