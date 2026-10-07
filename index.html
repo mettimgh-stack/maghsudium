@@ -1,1535 +1,973 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a1020">
-  <title>مقصودیوم پرو | اطلاعات و تحلیل بورس</title>
-
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
-  >
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a1120">
+  <title>مقصودیوم | پایش و تحلیل بورس</title>
   <style>
     :root {
-      --bg: #0a1020;
-      --bg2: #0d1730;
-      --card: #121d38;
-      --line: #223254;
-      --text: #e9eefb;
-      --mut: #9aafd1;
-      --brand: #1fd3a2;
-      --blue: #3b82f6;
-      --red: #ff8b8b;
-      --amber: #f6c265;
+      --bg:#0a1120; --card:#131e32; --line:#283650;
+      --text:#edf3ff; --muted:#a8b7cf; --green:#47dbac;
+      --red:#ff818c; --blue:#68b4ff; --gold:#ffd27a;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing:border-box }
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: Vazirmatn, Tahoma, sans-serif;
-      font-size: 15px;
-      line-height: 1.9;
-      min-height: 100vh;
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:Tahoma,Arial,sans-serif; line-height:1.9;
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    a:focus-visible,
-    button:focus-visible,
-    input:focus-visible {
-      outline: 2px solid var(--brand);
-      outline-offset: 4px;
-    }
-
     header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      padding: 12px 18px;
-      background: var(--bg2);
-      border-bottom: 1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background:#0e182a; padding:22px 0;
     }
-
-    .logo {
-      color: var(--brand);
-      font-size: 19px;
-      font-weight: 800;
-      white-space: nowrap;
+    .wrap { max-width:1180px; margin:auto; padding:0 18px }
+    .head,.row {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
     }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    nav a {
-      padding: 4px 10px;
-      color: var(--mut);
-      border-radius: 8px;
-      font-size: 12px;
-    }
-
-    nav a:hover,
-    nav a.active {
-      background: var(--card);
-      color: var(--text);
-    }
-
-    .topnote {
-      padding: 9px 18px;
-      color: var(--amber);
-      background: rgba(246, 194, 101, .07);
-      border-bottom: 1px solid rgba(246, 194, 101, .2);
-      text-align: center;
-      font-size: 12px;
-    }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 12px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
+    h1,h2,h3,p { margin-top:0 }
+    h1 { font-size:27px; margin-bottom:0 }
+    h2 { font-size:20px }
+    h3 { font-size:16px }
+    small,.muted { color:var(--muted) }
     .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 9px;
-      font-size: 12px;
-      background: rgba(246, 194, 101, .1);
-      color: var(--amber);
+      padding:4px 10px; border:1px solid var(--line);
+      border-radius:20px; font-size:12px;
     }
-
-    .badge.error {
-      color: var(--red);
-      background: rgba(255, 139, 139, .1);
+    nav { display:flex; flex-wrap:wrap; gap:8px; margin:24px 0 }
+    button,input,select { font:inherit }
+    button {
+      cursor:pointer; color:var(--text); border:1px solid var(--line);
+      border-radius:10px; padding:9px 15px; background:#20314c;
     }
-
-    .sub {
-      color: var(--mut);
-      font-size: 13px;
+    button:hover { border-color:var(--blue) }
+    button:disabled { opacity:.55; cursor:wait }
+    button.active,.primary {
+      color:#081323; background:var(--green); border-color:var(--green);
     }
-
-    .btn {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      padding: 9px 16px;
-      border: 0;
-      border-radius: 10px;
-      background: var(--brand);
-      color: #04121f;
-      font-weight: 700;
-      cursor: pointer;
+    input,select {
+      background:#0c1526; border:1px solid var(--line);
+      color:var(--text); border-radius:10px; padding:11px;
+      width:100%; min-width:0;
     }
-
-    .btn.secondary {
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--text);
-    }
-
-    .btn:disabled {
-      opacity: .55;
-      cursor: wait;
-    }
-
-    main {
-      width: 100%;
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 24px 18px 60px;
-      min-height: 65vh;
-    }
-
-    h1 {
-      font-size: clamp(23px, 4vw, 32px);
-    }
-
-    h2 {
-      font-size: 18px;
-      margin: 26px 0 12px;
-    }
-
-    p + p {
-      margin-top: 10px;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 26px 0 12px;
-    }
-
-    .hero > p {
-      margin-top: 8px;
-    }
-
-    .searchbox {
-      max-width: 650px;
-      margin: 24px auto;
-      text-align: right;
-    }
-
-    .searchline {
-      display: flex;
-      gap: 8px;
-    }
-
-    .searchline input {
-      width: 100%;
-      min-width: 0;
-      padding: 13px 16px;
-      color: var(--text);
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-    }
-
-    .searchline input::placeholder {
-      color: var(--mut);
-    }
-
-    .searchhelp {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--mut);
-    }
-
-    #results {
-      margin-top: 10px;
-      max-height: 420px;
-      overflow-y: auto;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-    }
-
-    #results[hidden] {
-      display: none;
-    }
-
-    .result {
-      display: block;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .result:last-child {
-      border-bottom: 0;
-    }
-
-    .result:hover {
-      background: var(--bg2);
-    }
-
-    .result strong {
-      color: var(--brand);
-    }
-
-    .result small {
-      display: block;
-      margin-top: 3px;
-      color: var(--mut);
-    }
-
-    .message {
-      padding: 14px 16px;
-      color: var(--mut);
-    }
-
+    input:focus,select:focus { outline:2px solid var(--blue) }
     .card {
-      padding: 18px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      min-width: 0;
+      background:var(--card); border:1px solid var(--line);
+      padding:21px; border-radius:17px; margin-bottom:18px;
     }
-
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-      gap: 14px;
+      display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px;
     }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
-      gap: 12px;
-      margin: 20px 0;
+    .two { display:grid; grid-template-columns:1fr 1fr; gap:18px }
+    .metric {
+      background:#0c172a; border:1px solid var(--line);
+      padding:16px; border-radius:12px;
     }
-
-    .stat {
-      text-align: center;
+    .metric strong { display:block; font-size:23px; margin-top:8px }
+    .positive { color:var(--green) }
+    .negative { color:var(--red) }
+    .warning { color:var(--gold) }
+    .notice {
+      border-right:3px solid var(--gold); background:#211f20;
+      padding:12px 15px; border-radius:8px; margin:15px 0;
     }
-
-    .stat b {
-      display: block;
-      font-size: 23px;
-      overflow-wrap: anywhere;
+    .error {
+      border:1px solid #913f51; background:#321d2c;
+      padding:14px; border-radius:10px; white-space:pre-wrap;
     }
-
-    .stat span {
-      display: block;
-      margin-top: 6px;
-      color: var(--mut);
-      font-size: 12px;
+    .searchbox { display:flex; gap:10px }
+    .searchbox input { flex:1 }
+    .results { display:grid; gap:8px; margin-top:15px }
+    .result { text-align:right; width:100%; background:#0e192c }
+    .result small { display:block }
+    .result .id { font-size:11px; opacity:.8 }
+    .hidden { display:none !important }
+    .tablewrap { overflow-x:auto }
+    table { width:100%; border-collapse:collapse; white-space:nowrap }
+    th,td { text-align:right; padding:12px; border-bottom:1px solid var(--line) }
+    th { color:var(--muted); font-size:12px }
+    label { display:block; font-size:13px; color:var(--muted) }
+    label input,label select { margin-top:6px }
+    .formgrid {
+      display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px;
     }
-
-    .positive {
-      color: var(--brand);
+    .formgrid button { align-self:end }
+    .donut {
+      width:205px; height:205px; border-radius:50%; margin:20px auto;
+      display:grid; place-items:center; background:#283650;
     }
-
-    .negative {
-      color: var(--red);
+    .donut::after {
+      content:"ترکیب سبد"; width:137px; height:137px;
+      border-radius:50%; background:var(--card);
+      display:grid; place-items:center; color:var(--muted);
     }
-
-    .neutral {
-      color: var(--text);
+    .dot {
+      display:inline-block; width:10px; height:10px;
+      border-radius:50%; margin-left:7px;
     }
-
-    .head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 15px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 11px 0;
-      border-bottom: 1px dashed var(--line);
-    }
-
-    .row:last-child {
-      border-bottom: 0;
-    }
-
-    .row > span {
-      color: var(--mut);
-    }
-
-    .row b {
-      overflow-wrap: anywhere;
-    }
-
-    .note {
-      padding: 15px 18px;
-      background: var(--bg2);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      font-size: 13px;
-    }
-
-    .warning {
-      color: var(--amber);
-      background: rgba(246, 194, 101, .06);
-      border-color: rgba(246, 194, 101, .22);
-    }
-
-    .errorbox {
-      margin: 16px auto 0;
-      width: calc(100% - 36px);
-      max-width: 1084px;
-      padding: 13px 16px;
-      color: var(--red);
-      background: rgba(255, 139, 139, .08);
-      border: 1px solid rgba(255, 139, 139, .25);
-      border-radius: 12px;
-      overflow-wrap: anywhere;
-    }
-
-    .errorbox[hidden] {
-      display: none;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .spinner {
-      width: 30px;
-      height: 30px;
-      margin: 0 auto 15px;
-      border: 3px solid var(--line);
-      border-top-color: var(--brand);
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .list {
-      padding-right: 22px;
-      color: var(--mut);
-      font-size: 13px;
-    }
-
-    .list li {
-      margin: 7px 0;
-    }
-
-    .spaced {
-      margin-top: 16px;
-    }
-
-    code {
-      direction: ltr;
-      unicode-bidi: isolate;
-      color: var(--brand);
-      overflow-wrap: anywhere;
-    }
-
-    footer {
-      padding: 22px 18px;
-      color: var(--mut);
-      font-size: 12px;
-      text-align: center;
-      border-top: 1px solid var(--line);
-    }
-
-    @media (max-width: 540px) {
-      header {
-        position: static;
-      }
-
-      nav {
-        gap: 2px;
-      }
-
-      nav a {
-        padding: 4px 7px;
-      }
-
-      .searchline {
-        flex-wrap: wrap;
-      }
-
-      .searchline .btn {
-        width: 100%;
-      }
-
-      .stat b {
-        font-size: 21px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .spinner {
-        animation: none;
-      }
+    a { color:var(--blue); text-decoration:none }
+    footer { padding:25px 0 40px; color:var(--muted); font-size:12px }
+    #globalMessage { margin-bottom:15px }
+    @media(max-width:760px) {
+      .grid,.two { grid-template-columns:1fr }
+      .formgrid { grid-template-columns:1fr }
+      .card { padding:16px }
+      h1 { font-size:23px }
+      .searchbox { flex-wrap:wrap }
+      .searchbox button { width:100% }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <a href="#/" class="logo">مقصودیوم پرو</a>
-
-    <nav aria-label="منوی اصلی">
-      <a href="#/">خانه</a>
-      <a href="#/watch">جست‌وجوی بازار</a>
-      <a href="#/scores">نمره بنیادی</a>
-      <a href="#/signals">سیگنال‌ها</a>
-      <a href="#/basket">سبد پیشنهادی</a>
-      <a href="#/ports">سبد نهادها</a>
-      <a href="#/liq">نقدینگی</a>
-      <a href="#/alerts">هشدارها</a>
-      <a href="#/news">اخبار</a>
-      <a href="#/about">وضعیت سامانه</a>
-    </nav>
-  </header>
-
-  <div class="topnote">
-    قیمت‌ها به ریال • دریافت از TSETMC از طریق سرور پروژه •
-    داده تصادفی و سیگنال ساختگی نمایش داده نمی‌شود
-  </div>
-
-  <div class="toolbar">
-    <button id="refreshButton" class="btn secondary" type="button">
-      ⟳ به‌روزرسانی
-    </button>
-
-    <span id="mode" class="badge" role="status">
-      آماده جست‌وجو
-    </span>
-
-    <span id="updated" class="sub"></span>
-  </div>
-
-  <div id="errorBox" class="errorbox" role="alert" hidden></div>
-
-  <main id="app">
-    <div class="card loading">در حال آماده‌سازی…</div>
-  </main>
-
-  <noscript>
-    <div class="errorbox">
-      برای اجرای این سایت، جاوااسکریپت مرورگر باید فعال باشد.
+<header>
+  <div class="wrap head">
+    <div>
+      <h1>مقصودیوم <span class="positive">●</span></h1>
+      <small>پایش بورس، دیده‌بان و سبد شخصی</small>
     </div>
-  </noscript>
+    <div class="badge" id="serverStatus">بررسی API…</div>
+  </div>
+</header>
 
-  <footer>
-    مقصودیوم پرو • دریافت موفق اطلاعات به معنی لحظه‌ای‌بودن آن نیست.
-    <br>
-    داده‌های بازار باید همراه با تاریخ منبع بررسی شوند؛
-    این نسخه توصیه خرید یا فروش ارائه نمی‌کند.
-  </footer>
+<main class="wrap">
+  <nav aria-label="بخش‌های برنامه">
+    <button class="active" data-tab="market">بازار و نمادها</button>
+    <button data-tab="watch">دیده‌بان</button>
+    <button data-tab="portfolio">سبد شخصی</button>
+    <button data-tab="fundamental">نسبت‌های بنیادی</button>
+    <button data-tab="sources">منابع و وضعیت امکانات</button>
+  </nav>
 
-  <script>
-    "use strict";
+  <div id="globalMessage" class="hidden" role="alert"></div>
 
-    /* ==========================================
-       مقصودیوم پرو — رابط دریافت اطلاعات واقعی
-       نیازمند فایل سرور: api/market.js
-       ========================================== */
+  <section id="market">
+    <div class="card">
+      <h2>جست‌وجوی نماد</h2>
+      <form id="searchForm" class="searchbox">
+        <input id="searchInput" placeholder="مثلاً فولاد، تاپیکو، فملی"
+               maxlength="80" required aria-label="نام نماد"
+               autocomplete="off">
+        <button class="primary" id="searchButton">جست‌وجو</button>
+      </form>
+      <small>
+        نتایج از سرویس جست‌وجوی بورس دریافت می‌شود؛ پوشش کامل همه ابزارها تضمین‌شده نیست.
+      </small>
+      <div id="searchStatus" aria-live="polite"></div>
+      <div id="results" class="results"></div>
+    </div>
 
-    const app = document.getElementById("app");
-    const mode = document.getElementById("mode");
-    const updated = document.getElementById("updated");
-    const errorBox = document.getElementById("errorBox");
-    const refreshButton = document.getElementById("refreshButton");
+    <div class="card hidden" id="quoteCard">
+      <div class="row">
+        <div>
+          <h2 id="symbolTitle"></h2>
+          <small id="companyName"></small>
+        </div>
+        <div class="row">
+          <button id="refreshQuote">تازه‌سازی</button>
+          <button id="addWatch">افزودن به دیده‌بان</button>
+        </div>
+      </div>
 
-    const numberFormat = new Intl.NumberFormat("fa-IR", {
-      maximumFractionDigits: 2
-    });
+      <p class="muted" id="quoteMeta"></p>
+      <div id="quoteError" class="hidden error" role="alert"></div>
+      <div id="quoteNotice"></div>
+      <div id="quoteMetrics" class="grid"></div>
 
-    const dateFormat = new Intl.DateTimeFormat("fa-IR", {
-      dateStyle: "short",
-      timeStyle: "medium",
-      timeZone: "Asia/Tehran"
-    });
+      <div class="notice">
+        قیمت‌ها به ریال و مربوط به تابلوی معاملاتی هستند؛
+        این اعداد «تاریخچه قیمت تعدیل‌شده» نیستند.
+        زمان دریافت جدید به‌تنهایی به معنی معامله جدید نیست.
+      </div>
 
-    const state = {
-      pageVersion: 0,
-      searchVersion: 0,
-      searchTimer: null,
-      searchController: null,
-      quoteController: null,
-      currentId: null,
-      loadingQuote: false,
-      quote: null
-    };
+      <label>
+        <input type="checkbox" id="autoRefresh" checked
+               style="width:auto;margin-left:7px">
+        به‌روزرسانی هر ۶۰ ثانیه هنگام باز بودن همین بخش
+      </label>
+    </div>
 
-    function escapeHTML(value) {
-      return String(value ?? "").replace(/[&<>"']/g, function(character) {
-        return {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        }[character];
-      });
+    <div class="card">
+      <h3>اصل این نسخه: عدد ساختگی نمایش داده نمی‌شود</h3>
+      <p class="muted">
+        در صورت قطع منبع، نبود قیمت یا نامشخص بودن تاریخ، وضعیت به‌صراحت
+        نمایش داده می‌شود. برای نماد دارای اطلاعات ناکافی، امتیاز یا سیگنال
+        خرید و فروش ساخته نمی‌شود.
+      </p>
+    </div>
+  </section>
+
+  <section id="watch" class="hidden">
+    <div class="card">
+      <h2>دیده‌بان من</h2>
+      <p class="muted">
+        نماد را در بخش بازار انتخاب کنید و به دیده‌بان اضافه کنید.
+        فهرست فقط در همین مرورگر ذخیره می‌شود.
+      </p>
+      <div id="watchList"></div>
+    </div>
+  </section>
+
+  <section id="portfolio" class="hidden">
+    <div class="two">
+      <div class="card">
+        <h2>ثبت دارایی</h2>
+        <p class="muted">
+          برای سهام، ابتدا نماد را در بخش بازار انتخاب کنید.
+          برای دارایی غیربورسی، ارزش کل روز را خودتان وارد کنید.
+        </p>
+        <form id="holdingForm" class="formgrid">
+          <label>نوع دارایی
+            <select id="holdingType">
+              <option value="stock">سهام نماد انتخاب‌شده</option>
+              <option value="other">دارایی غیربورسی / نقد</option>
+            </select>
+          </label>
+          <label>نام دارایی
+            <input id="holdingName" maxlength="100" required>
+          </label>
+          <label>تعداد / مقدار
+            <input id="holdingQty" type="number" min="0.000001"
+                   step="any" value="1" required>
+          </label>
+          <label>بهای خرید هر واحد ـ ریال
+            <input id="holdingCost" type="number" min="0"
+                   step="any" required>
+          </label>
+          <label>ارزش کل روز، فقط غیربورسی ـ ریال
+            <input id="holdingManual" type="number" min="0" step="any">
+          </label>
+          <button class="primary">افزودن به سبد</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <h2>ترکیب دارایی‌ها</h2>
+          <button id="refreshPortfolio">دریافت قیمت سهام سبد</button>
+        </div>
+        <div class="donut" id="donut"></div>
+        <div id="portfolioSummary"></div>
+        <small>
+          نمودار فقط دارایی‌های دارای ارزش قابل محاسبه را نشان می‌دهد.
+          ارزش‌های غیربورسی دستی هستند. کارمزد و مالیات محاسبه نمی‌شود.
+        </small>
+      </div>
+    </div>
+
+    <div class="card tablewrap">
+      <div id="portfolioTable"></div>
+    </div>
+  </section>
+
+  <section id="fundamental" class="hidden">
+    <div class="card">
+      <h2>محاسبه نسبت‌های بنیادی — ورودی دستی</h2>
+      <div class="notice">
+        این بخش هنوز به صورت‌های مالی کدال متصل نیست.
+        اعداد باید از گزارش یک شرکت، با دوره مالی و واحد سازگار وارد شوند.
+        خروجی صرفاً محاسبه ریاضی است، نه امتیاز بنیادی معتبر یا توصیه خرید.
+      </div>
+      <form id="fundForm" class="formgrid">
+        <label>قیمت هر سهم ـ ریال
+          <input id="fPrice" type="number" min="0" step="any">
+        </label>
+        <label>EPS دوازده‌ماهه ـ ریال
+          <input id="fEps" type="number" step="any">
+        </label>
+        <label>درآمد دوره ـ یک واحد پولی مشترک
+          <input id="fRevenue" type="number" min="0" step="any">
+        </label>
+        <label>سود خالص همان دوره
+          <input id="fProfit" type="number" step="any">
+        </label>
+        <label>متوسط حقوق صاحبان سهام دوره
+          <input id="fEquity" type="number" step="any">
+        </label>
+        <label>جریان نقد عملیاتی همان دوره
+          <input id="fCash" type="number" step="any">
+        </label>
+        <label>بدهی‌های پایان دوره
+          <input id="fDebt" type="number" min="0" step="any">
+        </label>
+        <label>دارایی‌های پایان دوره
+          <input id="fAssets" type="number" min="0" step="any">
+        </label>
+        <button class="primary">محاسبه نسبت‌ها</button>
+      </form>
+      <div id="fundResults" class="grid" style="margin-top:20px"></div>
+    </div>
+  </section>
+
+  <section id="sources" class="hidden">
+    <div class="card">
+      <h2>منابع و وضعیت واقعی امکانات</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>بخش</th><th>وضعیت</th></tr></thead>
+          <tbody>
+            <tr><td>جست‌وجو و تابلوی قیمت</td><td>متصل به API بورس؛ مشروط به دسترسی منبع</td></tr>
+            <tr><td>دیده‌بان و سبد شخصی</td><td>فعال؛ ذخیره محلی در مرورگر</td></tr>
+            <tr><td>نسبت‌های بنیادی</td><td>محاسبه با ورودی دستی</td></tr>
+            <tr><td>صورت‌های مالی و نظر حسابرس کدال</td><td>متصل نشده</td></tr>
+            <tr><td>پرتفوی صندوق‌ها و اطلاعات فیپیران</td><td>متصل نشده</td></tr>
+            <tr><td>تاریخچه تعدیل‌شده</td><td>متصل نشده</td></tr>
+            <tr><td>جریان نقد حقیقی و حقوقی و هشدار صندوق‌ها</td><td>متصل نشده</td></tr>
+            <tr><td>اخبار، امتیاز بنیادی و سبد پیشنهادی رشدی</td><td>پیاده‌سازی نشده</td></tr>
+            <tr><td>سیگنال خرید و فروش قطعی</td><td>ارائه نمی‌شود؛ نتیجه سرمایه‌گذاری قطعی نیست</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:20px">
+        <a href="https://www.tsetmc.com/" target="_blank" rel="noopener noreferrer">بورس و تابلو معاملات</a>
+        ·
+        <a href="https://www.codal.ir/" target="_blank" rel="noopener noreferrer">کدال</a>
+        ·
+        <a href="https://www.fipiran.com/" target="_blank" rel="noopener noreferrer">فیپیران</a>
+      </p>
+      <small>این لینک‌ها به معنی اتصال خودکار برنامه به همه داده‌های این منابع نیست.</small>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  مقصودیوم — داده‌های سبد فقط در مرورگر شما نگهداری می‌شود و حساب کاربری یا
+  پشتیبان‌گیری ابری وجود ندارد. پاک کردن داده مرورگر، سبد و دیده‌بان را حذف می‌کند.
+</footer>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+
+const nf = new Intl.NumberFormat("fa-IR", {
+  maximumFractionDigits: 2
+});
+
+const colors = [
+  "#47dbac", "#68b4ff", "#ffd27a", "#c695ff",
+  "#ff818c", "#49ced0", "#f59e65", "#a3cf68"
+];
+
+function fmt(value) {
+  return typeof value === "number" && Number.isFinite(value)
+    ? nf.format(value)
+    : "—";
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[c]));
+}
+
+function readArray(key) {
+  try {
+    const data = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(data) ? data.filter(x => x && typeof x === "object") : [];
+  } catch {
+    return [];
+  }
+}
+
+function persist(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    message("ذخیره‌سازی مرورگر در دسترس نیست؛ تغییرات ممکن است پس از بستن صفحه از بین بروند.", true);
+  }
+}
+
+const state = {
+  tab: "market",
+  selected: null,
+  quote: null,
+  quoteRequest: 0,
+  searchRequest: 0,
+  quoteBusy: false,
+  watch: readArray("maghsudium.watch.v1").filter(x => /^\d{1,20}$/.test(x.id)),
+  holdings: readArray("maghsudium.holdings.v1").filter(x =>
+    typeof x.key === "string" &&
+    ["stock","other"].includes(x.type) &&
+    Number.isFinite(x.qty) && x.qty > 0 &&
+    Number.isFinite(x.cost) && x.cost >= 0 &&
+    (x.type !== "stock" || /^\d{1,20}$/.test(x.id))
+  ),
+  prices: new Map(),
+  priceErrors: new Map()
+};
+
+function message(text, isError = false) {
+  const el = $("globalMessage");
+  el.textContent = text;
+  el.className = isError ? "error" : "notice";
+}
+
+function clearMessage() {
+  $("globalMessage").className = "hidden";
+  $("globalMessage").textContent = "";
+}
+
+function switchTab(name) {
+  state.tab = name;
+  for (const id of ["market","watch","portfolio","fundamental","sources"]) {
+    $(id).classList.toggle("hidden", id !== name);
+  }
+
+  document.querySelectorAll("[data-tab]").forEach(button => {
+    button.classList.toggle("active", button.dataset.tab === name);
+  });
+
+  clearMessage();
+
+  if (name === "watch") renderWatch();
+  if (name === "portfolio") renderPortfolio();
+}
+
+document.querySelectorAll("[data-tab]").forEach(button => {
+  button.addEventListener("click", () => switchTab(button.dataset.tab));
+});
+
+async function api(params) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 25000);
+
+  try {
+    const response = await fetch(
+      "/api/market?" + new URLSearchParams(params),
+      { signal: controller.signal, cache: "no-store" }
+    );
+
+    let data;
+
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("پاسخ API معتبر نیست. مسیر api/market و تنظیمات استقرار را بررسی کنید.");
     }
 
-    function normalize(value) {
-      return String(value || "")
-        .replace(/ي/g, "ی")
-        .replace(/ك/g, "ک")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-
-    function formatNumber(value) {
-      if (
-        value === null ||
-        value === undefined ||
-        value === "" ||
-        !Number.isFinite(Number(value))
-      ) {
-        return "—";
-      }
-
-      return numberFormat.format(Number(value));
-    }
-
-    function formatPercent(value) {
-      if (value === null || value === undefined) return "—";
-
-      const number = Number(value);
-      if (!Number.isFinite(number)) return "—";
-
-      return (number > 0 ? "+" : "") + formatNumber(number) + "٪";
-    }
-
-    function percentClass(value) {
-      if (value === null || value === undefined) return "neutral";
-      if (Number(value) > 0) return "positive";
-      if (Number(value) < 0) return "negative";
-      return "neutral";
-    }
-
-    function formatReceivedTime(value) {
-      if (!value) return "نامشخص";
-
-      const date = new Date(value);
-      if (!Number.isFinite(date.getTime())) return "نامشخص";
-
-      return dateFormat.format(date);
-    }
-
-    function formatSourceDate(value) {
-      const text = String(value ?? "");
-      if (!/^\d{8}$/.test(text)) return "نامشخص";
-
-      return (
-        text.slice(0, 4) + "/" +
-        text.slice(4, 6) + "/" +
-        text.slice(6, 8)
+    if (!response.ok) {
+      throw new Error(
+        (data.error || "دریافت اطلاعات ناموفق بود.") +
+        (data.code ? "\nکد: " + data.code : "") +
+        (data.upstreamStatus ? "\nHTTP منبع: " + data.upstreamStatus : "")
       );
     }
 
-    function formatSourceTime(value) {
-      const raw = String(value ?? "");
+    return data;
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error("پاسخ سرور سایت در مهلت مقرر دریافت نشد.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
-      if (!/^\d{1,6}$/.test(raw) || Number(raw) === 0) {
-        return "نامشخص";
-      }
+function receivedTime(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "نامشخص";
 
-      const text = raw.padStart(6, "0");
-      const hour = Number(text.slice(0, 2));
-      const minute = Number(text.slice(2, 4));
-      const second = Number(text.slice(4, 6));
+  return new Intl.DateTimeFormat("fa-IR", {
+    dateStyle: "short",
+    timeStyle: "medium",
+    timeZone: "Asia/Tehran"
+  }).format(date);
+}
 
-      if (hour > 23 || minute > 59 || second > 59) {
-        return "نامشخص";
-      }
+function sourceDate(raw) {
+  const s = String(raw || "");
+  if (!/^\d{8}$/.test(s)) return "نامشخص";
 
-      return (
-        text.slice(0, 2) + ":" +
-        text.slice(2, 4) + ":" +
-        text.slice(4, 6)
-      );
+  const date = new Date(
+    s.slice(0,4) + "-" + s.slice(4,6) + "-" + s.slice(6,8) + "T12:00:00Z"
+  );
+
+  if (Number.isNaN(date.getTime())) return "نامشخص";
+
+  return new Intl.DateTimeFormat("fa-IR", {
+    dateStyle: "medium",
+    timeZone: "Asia/Tehran"
+  }).format(date);
+}
+
+function sourceTime(raw) {
+  const s = String(raw ?? "");
+  if (!/^\d{1,6}$/.test(s)) return "نامشخص";
+  const t = s.padStart(6, "0");
+  return t.slice(0,2) + ":" + t.slice(2,4) + ":" + t.slice(4,6);
+}
+
+function todayTehran() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone:"Asia/Tehran",
+    year:"numeric", month:"2-digit", day:"2-digit"
+  }).formatToParts(new Date());
+
+  const get = type => parts.find(p => p.type === type)?.value || "";
+  return get("year") + get("month") + get("day");
+}
+
+function metric(title, value, unit = "", className = "") {
+  return `<div class="metric">
+    <small>${escapeHtml(title)}</small>
+    <strong class="${className}">${escapeHtml(fmt(value))}
+      <small>${escapeHtml(unit)}</small>
+    </strong>
+  </div>`;
+}
+
+$("searchForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  clearMessage();
+
+  const q = $("searchInput").value.trim();
+  if (!q) return;
+
+  const request = ++state.searchRequest;
+  $("searchButton").disabled = true;
+  $("results").replaceChildren();
+  $("searchStatus").textContent = "در حال جست‌وجو…";
+
+  try {
+    const data = await api({ op:"search", q });
+    if (request !== state.searchRequest) return;
+
+    if (!Array.isArray(data.items)) throw new Error("قالب نتایج معتبر نیست.");
+
+    $("searchStatus").textContent =
+      data.items.length
+        ? `${fmt(data.items.length)} نتیجه دریافت شد.`
+        : "نتیجه‌ای برنگشت؛ املای دیگر نماد یا بخشی از نام شرکت را امتحان کنید.";
+
+    for (const item of data.items) {
+      const button = document.createElement("button");
+      button.className = "result";
+
+      button.innerHTML =
+        `<b>${escapeHtml(item.symbol)}</b>
+         <small>${escapeHtml(item.name)}</small>
+         <small class="id">شناسه: ${escapeHtml(item.id)}</small>`;
+
+      button.addEventListener("click", () => selectInstrument(item));
+      $("results").append(button);
     }
 
-    function setStatus(message, isError) {
-      mode.textContent = message;
-      mode.className = isError ? "badge error" : "badge";
+    if (data.warnings?.length) {
+      message(data.warnings.join("\n"));
     }
-
-    function showError(message) {
-      errorBox.textContent = message;
-      errorBox.hidden = false;
+  } catch (error) {
+    if (request === state.searchRequest) {
+      $("searchStatus").textContent = "";
+      message(error.message, true);
     }
+  } finally {
+    if (request === state.searchRequest) $("searchButton").disabled = false;
+  }
+});
 
-    function clearError() {
-      errorBox.textContent = "";
-      errorBox.hidden = true;
+function selectInstrument(item) {
+  switchTab("market");
+  state.selected = {
+    id: String(item.id),
+    symbol: String(item.symbol || ""),
+    name: String(item.name || "")
+  };
+  state.quote = null;
+  $("quoteMetrics").replaceChildren();
+  $("quoteNotice").replaceChildren();
+  $("quoteMeta").textContent = "";
+  $("symbolTitle").textContent = state.selected.symbol;
+  $("companyName").textContent = state.selected.name;
+  $("holdingName").value = state.selected.symbol;
+  $("quoteCard").classList.remove("hidden");
+  loadQuote();
+}
+
+async function loadQuote() {
+  if (!state.selected) return;
+
+  const request = ++state.quoteRequest;
+  const selected = { ...state.selected };
+
+  state.quoteBusy = true;
+  $("refreshQuote").disabled = true;
+  $("refreshQuote").textContent = "در حال دریافت…";
+  $("quoteError").classList.add("hidden");
+
+  try {
+    const data = await api({ op:"quote", id:selected.id });
+    if (request !== state.quoteRequest) return;
+
+    state.quote = data;
+    state.prices.set(selected.id, data);
+    state.priceErrors.delete(selected.id);
+
+    renderQuote(data);
+  } catch (error) {
+    if (request !== state.quoteRequest) return;
+
+    $("quoteError").textContent =
+      error.message +
+      (state.quote
+        ? "\nاعداد موجود مربوط به دریافت قبلی‌اند؛ تازه‌سازی موفق نبوده است."
+        : "\nقیمتی نمایش داده نمی‌شود چون داده معتبر دریافت نشده است.");
+
+    $("quoteError").classList.remove("hidden");
+  } finally {
+    if (request === state.quoteRequest) {
+      state.quoteBusy = false;
+      $("refreshQuote").disabled = false;
+      $("refreshQuote").textContent = "تازه‌سازی";
     }
-
-    function setQuoteLoading(value) {
-      state.loadingQuote = value;
-      refreshButton.disabled = value;
-      refreshButton.textContent = value
-        ? "در حال دریافت…"
-        : "⟳ به‌روزرسانی";
-    }
-
-    async function requestAPI(params, controller) {
-      if (location.protocol === "file:") {
-        throw new Error(
-          "فایل را از آدرس منتشرشده سایت باز کنید. دریافت API با بازکردن مستقیم index.html از حافظه دستگاه کار نمی‌کند."
-        );
-      }
-
-      if (!navigator.onLine) {
-        throw new Error("اتصال اینترنت دستگاه قطع است.");
-      }
-
-      let timedOut = false;
-
-      const timeout = setTimeout(function() {
-        timedOut = true;
-        controller.abort();
-      }, 18000);
-
-      try {
-        const response = await fetch(
-          "/api/market?" + new URLSearchParams(params).toString(),
-          {
-            method: "GET",
-            cache: "no-store",
-            signal: controller.signal,
-            headers: {
-              Accept: "application/json"
-            }
-          }
-        );
-
-        const text = await response.text();
-        let data;
-
-        try {
-          data = JSON.parse(text);
-        } catch (error) {
-          throw new Error(
-            "پاسخ سرور JSON نیست. وجود فایل api/market.js و تنظیمات انتشار Vercel را بررسی کنید."
-          );
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            typeof data?.error === "string"
-              ? data.error
-              : "سرور نتوانست اطلاعات را دریافت کند."
-          );
-        }
-
-        if (!data || typeof data !== "object") {
-          throw new Error("ساختار پاسخ سرور معتبر نیست.");
-        }
-
-        return data;
-      } catch (error) {
-        if (timedOut) {
-          throw new Error(
-            "زمان انتظار دریافت اطلاعات تمام شد. دوباره تلاش کنید."
-          );
-        }
-
-        if (error.name === "AbortError") throw error;
-
-        if (error instanceof TypeError) {
-          throw new Error(
-            "ارتباط با سرور پروژه برقرار نشد. اینترنت و وضعیت انتشار سایت را بررسی کنید."
-          );
-        }
-
-        throw error;
-      } finally {
-        clearTimeout(timeout);
-      }
-    }
-
-    function loadingMarkup(message) {
-      return `
-        <div class="card loading" role="status">
-          <div class="spinner" aria-hidden="true"></div>
-          <p>${escapeHTML(message)}</p>
-        </div>
-      `;
-    }
-
-    function statMarkup(title, value, className) {
-      return `
-        <div class="card stat">
-          <b class="${className || "neutral"}">${escapeHTML(value)}</b>
-          <span>${escapeHTML(title)}</span>
-        </div>
-      `;
-    }
-
-    /* ---------- جست‌وجو ---------- */
-
-    function renderHome() {
-      setStatus("آماده جست‌وجو از منبع رسمی");
-      updated.textContent = "";
-
-      app.innerHTML = `
-        <section class="hero">
-          <h1>مقصودیوم پرو</h1>
-
-          <p class="sub">
-            جست‌وجوی نماد و مشاهده آخرین اطلاعات قیمت موجود در منبع
-          </p>
-
-          <div class="searchbox">
-            <form id="searchForm">
-              <div class="searchline">
-                <input
-                  id="searchInput"
-                  type="search"
-                  maxlength="80"
-                  autocomplete="off"
-                  spellcheck="false"
-                  aria-label="نماد یا نام شرکت"
-                  aria-controls="results"
-                  placeholder="نماد یا نام شرکت؛ مثلاً تاپیکو یا فولاد"
-                >
-
-                <button class="btn" type="submit">
-                  جست‌وجو
-                </button>
-              </div>
-            </form>
-
-            <p class="searchhelp">
-              جست‌وجو محدود به ۲۹ نماد نسخه قبلی نیست؛
-              نتایج به پاسخ سرویس منبع وابسته‌اند.
-            </p>
-
-            <div id="results" aria-live="polite" hidden></div>
-          </div>
-        </section>
-
-        <div class="grid">
-          <div class="card">
-            <b>قیمت آخرین معامله و پایانی</b>
-            <p class="sub spaced">
-              دو قیمت جداگانه، همراه با حجم و ارزش معاملات
-              و زمان ثبت‌شده در پاسخ منبع.
-            </p>
-          </div>
-
-          <div class="card">
-            <b>نمایش یکسان به ریال</b>
-            <p class="sub spaced">
-              قیمت و ارزش معاملات با واحد ریال نمایش داده می‌شوند.
-              قیمت از EPS یا اعداد تصادفی ساخته نمی‌شود.
-            </p>
-          </div>
-
-          <div class="card">
-            <b>بدون اطلاعات جایگزین ساختگی</b>
-            <p class="sub spaced">
-              در صورت قطع ارتباط، خطا نمایش داده می‌شود.
-              نبود داده به معنی صفر بودن آن نیست.
-            </p>
-          </div>
-        </div>
-
-        <div class="note warning spaced">
-          این نسخه فقط رابط جست‌وجو و قیمت است.
-          بانک مستقل کل نمادها، نمودار تعدیل‌شده و تحلیل بنیادی
-          هنوز به آن اضافه نشده‌اند.
-        </div>
-      `;
-
-      const form = document.getElementById("searchForm");
-      const input = document.getElementById("searchInput");
-
-      input.addEventListener("input", function() {
-        prepareSearch(false);
-      });
-
-      form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        prepareSearch(true);
-      });
-    }
-
-    function resultMessage(message) {
-      const results = document.getElementById("results");
-      if (!results) return;
-
-      results.hidden = false;
-      results.replaceChildren();
-
-      const paragraph = document.createElement("p");
-      paragraph.className = "message";
-      paragraph.textContent = message;
-      results.appendChild(paragraph);
-    }
-
-    function prepareSearch(immediate) {
-      const input = document.getElementById("searchInput");
-      const results = document.getElementById("results");
-
-      if (!input || !results) return;
-
-      clearTimeout(state.searchTimer);
-
-      if (state.searchController) {
-        state.searchController.abort();
-      }
-
-      const version = ++state.searchVersion;
-      const pageVersion = state.pageVersion;
-      const query = normalize(input.value);
-
-      clearError();
-      results.replaceChildren();
-
-      if (!query) {
-        results.hidden = true;
-        setStatus("آماده جست‌وجو");
-        return;
-      }
-
-      resultMessage("در حال جست‌وجو…");
-      setStatus("در حال دریافت نتایج…");
-
-      if (immediate) {
-        performSearch(query, version, pageVersion);
-      } else {
-        state.searchTimer = setTimeout(function() {
-          performSearch(query, version, pageVersion);
-        }, 500);
-      }
-    }
-
-    async function performSearch(query, version, pageVersion) {
-      const controller = new AbortController();
-      state.searchController = controller;
-
-      try {
-        const data = await requestAPI(
-          { op: "search", q: query },
-          controller
-        );
-
-        if (
-          version !== state.searchVersion ||
-          pageVersion !== state.pageVersion
-        ) return;
-
-        if (!Array.isArray(data.items)) {
-          throw new Error("ساختار نتایج جست‌وجو معتبر نیست.");
-        }
-
-        const results = document.getElementById("results");
-        if (!results) return;
-
-        results.replaceChildren();
-        results.hidden = false;
-
-        const seen = new Set();
-
-        const items = data.items.filter(function(item) {
-          if (!item || typeof item !== "object") return false;
-
-          if (
-            typeof item.id === "number" &&
-            !Number.isSafeInteger(item.id)
-          ) return false;
-
-          const id = String(item.id ?? "");
-
-          if (
-            !/^\d{1,20}$/.test(id) ||
-            typeof item.symbol !== "string" ||
-            !item.symbol.trim() ||
-            seen.has(id)
-          ) return false;
-
-          seen.add(id);
-          return true;
-        });
-
-        if (data.items.length && !items.length) {
-          throw new Error("نتایج دریافتی شناسه معتبر ندارند.");
-        }
-
-        if (!items.length) {
-          resultMessage(
-            "منبع برای این عبارت نتیجه‌ای برنگرداند. نام کوتاه‌تر یا نماد دقیق را امتحان کنید."
-          );
-          setStatus("جست‌وجو انجام شد؛ نتیجه‌ای دریافت نشد");
-          return;
-        }
-
-        const fragment = document.createDocumentFragment();
-
-        items.forEach(function(item) {
-          const link = document.createElement("a");
-          link.className = "result";
-          link.href = "#/s/" + encodeURIComponent(String(item.id));
-
-          const symbol = document.createElement("strong");
-          symbol.textContent = item.symbol;
-
-          const name = document.createElement("span");
-          name.textContent = " — " + String(item.name || "");
-
-          const identifier = document.createElement("small");
-          identifier.textContent = "شناسه ابزار: " + String(item.id);
-
-          link.append(symbol, name, identifier);
-          fragment.appendChild(link);
-        });
-
-        results.appendChild(fragment);
-
-        setStatus(
-          formatNumber(items.length) + " نتیجه از منبع دریافت شد"
-        );
-      } catch (error) {
-        if (
-          version !== state.searchVersion ||
-          pageVersion !== state.pageVersion ||
-          error.name === "AbortError"
-        ) return;
-
-        setStatus("دریافت نتایج ناموفق بود", true);
-        resultMessage(error.message);
-      } finally {
-        if (state.searchController === controller) {
-          state.searchController = null;
-        }
-      }
-    }
-
-    /* ---------- اطلاعات نماد ---------- */
-
-    function validateQuote(data, id) {
-      if (
-        String(data.id ?? "") !== id ||
-        data.currency !== "IRR" ||
-        typeof data.symbol !== "string" ||
-        !data.symbol.trim()
-      ) {
-        throw new Error(
-          "شناسه، نام نماد یا واحد پول پاسخ قابل تأیید نیست."
-        );
-      }
-
-      const fields = [
-        "last",
-        "close",
-        "previousClose",
-        "lastChangePercent",
-        "closeChangePercent",
-        "volume",
-        "tradeCount",
-        "tradeValue"
-      ];
-
-      for (const field of fields) {
-        if (!Object.prototype.hasOwnProperty.call(data, field)) {
-          throw new Error("پاسخ قیمت ناقص است.");
-        }
-
-        if (
-          data[field] !== null &&
-          (
-            typeof data[field] !== "number" ||
-            !Number.isFinite(data[field])
-          )
-        ) {
-          throw new Error("پاسخ قیمت دارای مقدار نامعتبر است.");
-        }
-      }
-
-      const nonnegative = [
-        "last",
-        "close",
-        "previousClose",
-        "volume",
-        "tradeCount",
-        "tradeValue"
-      ];
-
-      for (const field of nonnegative) {
-        if (data[field] !== null && data[field] < 0) {
-          throw new Error("یکی از مقادیر بازار نامعتبر است.");
-        }
-      }
-    }
-
-    function renderQuote(data) {
-      const sourceDate = formatSourceDate(data.sourceDate);
-      const sourceTime = formatSourceTime(data.sourceTime);
-
-      app.innerHTML = `
-        <a href="#/" class="sub">بازگشت به جست‌وجوی نمادها</a>
-
-        <div class="head">
-          <div>
-            <h1>${escapeHTML(data.symbol)}</h1>
-            <p class="sub">${escapeHTML(data.name)}</p>
-          </div>
-
-          <span class="badge">واحد قیمت: ریال</span>
-        </div>
-
-        <div class="stats">
-          ${statMarkup(
-            "آخرین معامله — ریال",
-            formatNumber(data.last)
-          )}
-
-          ${statMarkup(
-            "قیمت پایانی — ریال",
-            formatNumber(data.close)
-          )}
-
-          ${statMarkup(
-            "مبنای قیمت دیروز — ریال",
-            formatNumber(data.previousClose)
-          )}
-
-          ${statMarkup(
-            "تغییر آخرین معامله نسبت به مبنای دیروز",
-            formatPercent(data.lastChangePercent),
-            percentClass(data.lastChangePercent)
-          )}
-
-          ${statMarkup(
-            "تغییر پایانی نسبت به مبنای دیروز",
-            formatPercent(data.closeChangePercent),
-            percentClass(data.closeChangePercent)
-          )}
-
-          ${statMarkup(
-            "حجم معاملات — سهم / واحد / قرارداد",
-            formatNumber(data.volume)
-          )}
-
-          ${statMarkup(
-            "تعداد معاملات",
-            formatNumber(data.tradeCount)
-          )}
-
-          ${statMarkup(
-            "ارزش معاملات — ریال",
-            formatNumber(data.tradeValue)
-          )}
-        </div>
-
-        <h2>منبع و زمان اطلاعات</h2>
-
-        <div class="card">
-          <div class="row">
-            <span>منبع اطلاعات</span>
-            <b>${escapeHTML(data.source || "TSETMC")}</b>
-          </div>
-
-          <div class="row">
-            <span>تاریخ ثبت‌شده در پاسخ منبع — میلادی</span>
-            <b dir="ltr">${escapeHTML(sourceDate)}</b>
-          </div>
-
-          <div class="row">
-            <span>ساعت ثبت‌شده در پاسخ منبع</span>
-            <b dir="ltr">${escapeHTML(sourceTime)}</b>
-          </div>
-
-          <div class="row">
-            <span>زمان دریافت توسط سرور — به وقت تهران</span>
-            <b>${escapeHTML(formatReceivedTime(data.retrievedAt))}</b>
-          </div>
-
-          <div class="row">
-            <span>شناسه ابزار</span>
-            <b dir="ltr">${escapeHTML(data.id)}</b>
-          </div>
-        </div>
-
-        <div class="note warning spaced">
-          دریافت تازه از سرور ممکن است همان داده روز معاملاتی قبلی
-          را برگرداند. بنابراین زمان دریافت، معیار لحظه‌ای‌بودن قیمت نیست.
-          علامت «—» یعنی مقدار قابل استفاده دریافت نشده است.
-        </div>
-
-        <div class="note spaced">
-          تا زمانی که این صفحه باز و مرورگر فعال باشد،
-          هر ۶۰ ثانیه برای دریافت دوباره تلاش می‌شود.
-          این فاصله، تضمین به‌روزرسانی منبع نیست.
-        </div>
-
-        <h2>قیمت تعدیل‌شده و تحلیل بنیادی</h2>
-
-        <div class="grid">
-          <div class="card">
-            <b>نمودار تعدیل‌شده</b>
-            <p class="sub spaced">
-              هنوز متصل نیست. قیمت‌های بالا قیمت تابلو هستند.
-              تاریخچه تعدیل‌شده به رویدادهای تقسیم سود و افزایش سرمایه
-              و روش تعدیل مشخص نیاز دارد.
-            </p>
-          </div>
-
-          <div class="card">
-            <b>صورت‌های مالی و نمره بنیادی</b>
-            <p class="sub spaced">
-              تا دریافت گزارش‌های رسمی، تعیین دوره مالی و کنترل کیفیت،
-              نسبت مالی یا نمره بنیادی نمایش داده نمی‌شود.
-            </p>
-          </div>
-
-          <div class="card">
-            <b>سیگنال و سبد پیشنهادی</b>
-            <p class="sub spaced">
-              این بخش در نسخه حاضر غیرفعال است.
-              قیمت بازار به‌تنهایی مبنای سیگنال معتبر نیست.
-            </p>
-          </div>
-        </div>
-      `;
-    }
-
-    async function loadQuote(id, pageVersion) {
-      if (
-        state.loadingQuote ||
-        pageVersion !== state.pageVersion
-      ) return;
-
-      const controller = new AbortController();
-      state.quoteController = controller;
-
-      setQuoteLoading(true);
-      clearError();
-      setStatus("در حال دریافت اطلاعات نماد…");
-
-      try {
-        const data = await requestAPI(
-          { op: "quote", id: id },
-          controller
-        );
-
-        if (pageVersion !== state.pageVersion) return;
-
-        validateQuote(data, id);
-
-        state.quote = data;
-        renderQuote(data);
-
-        setStatus("دریافت موفق؛ زمان منبع را بررسی کنید");
-
-        updated.textContent =
-          "آخرین دریافت موفق: " +
-          formatReceivedTime(data.retrievedAt);
-      } catch (error) {
-        if (
-          pageVersion !== state.pageVersion ||
-          error.name === "AbortError"
-        ) return;
-
-        setStatus("دریافت تازه ناموفق بود", true);
-
-        if (state.quote) {
-          showError(
-            error.message +
-            " اطلاعات نمایش‌داده‌شده مربوط به آخرین دریافت موفق است و ممکن است قدیمی باشد."
-          );
-        } else {
-          showError(error.message);
-
-          app.innerHTML = `
-            <a href="#/" class="sub">بازگشت به جست‌وجو</a>
-
-            <div class="card spaced">
-              <h1>اطلاعات نماد دریافت نشد</h1>
-
-              <p class="sub spaced">
-                ${escapeHTML(error.message)}
-              </p>
-
-              <button
-                id="retryQuote"
-                type="button"
-                class="btn spaced"
-              >
-                تلاش دوباره
-              </button>
-            </div>
-          `;
-
-          document.getElementById("retryQuote")
-            .addEventListener("click", refreshCurrentPage);
-        }
-      } finally {
-        if (pageVersion === state.pageVersion) {
-          setQuoteLoading(false);
-        }
-
-        if (state.quoteController === controller) {
-          state.quoteController = null;
-        }
-      }
-    }
-
-    /* ---------- بخش‌های متصل‌نشده ---------- */
-
-    const sections = {
-      "#/scores": {
-        title: "نمره بنیادی",
-        description:
-          "محاسبه نمره به صورت‌های مالی معتبر، دوره‌های همسان و مدل متناسب با صنعت نیاز دارد."
-      },
-      "#/signals": {
-        title: "سیگنال‌های سرمایه‌گذاری",
-        description:
-          "تا دریافت داده معتبر و ارزیابی مدل، سیگنال خرید یا فروش و درصد اطمینان نمایش داده نمی‌شود."
-      },
-      "#/basket": {
-        title: "سبد پیشنهادی",
-        description:
-          "ساخت سبد به تحلیل بازده و ریسک، نقدشوندگی و محدودیت تمرکز صنایع نیاز دارد."
-      },
-      "#/ports": {
-        title: "سبد نهادها و صندوق‌ها",
-        description:
-          "ترکیب دارایی‌ها باید از گزارش‌های رسمی هر نهاد، همراه با تاریخ گزارش و واحد ارزش‌گذاری دریافت شود."
-      },
-      "#/liq": {
-        title: "رصد نقدینگی",
-        description:
-          "جریان پول حقیقی و حقوقی به داده معتبر نوع مشتری و پوشش مشخص نمادها نیاز دارد."
-      },
-      "#/alerts": {
-        title: "هشدارها",
-        description:
-          "ذخیره تنظیمات، پایش سروری و سرویس ارسال اعلان هنوز پیاده‌سازی نشده است؛ هشدار فعالی ثبت نمی‌شود."
-      },
-      "#/news": {
-        title: "اخبار شرکت‌ها",
-        description:
-          "اخبار باید همراه با لینک منبع و تاریخ انتشار معتبر نمایش داده شوند."
-      },
-      "#/scen": {
-        title: "سناریوهای بازار",
-        description:
-          "سناریوها به فرض‌های مستند و مدل قابل بررسی نیاز دارند؛ احتمال ساختگی نمایش داده نمی‌شود."
-      },
-      "#/groups": {
-        title: "تحلیل گروه‌ها",
-        description:
-          "مقایسه صنایع به طبقه‌بندی رسمی و داده‌های قابل مقایسه نیاز دارد."
-      }
-    };
-
-    function renderUnavailable(section) {
-      setStatus("این بخش به داده معتبر متصل نشده است");
-      updated.textContent = "";
-
-      app.innerHTML = `
-        <h1>${escapeHTML(section.title)}</h1>
-
-        <div class="note warning spaced">
-          این بخش در نسخه فعلی فعال نیست.
-          اطلاعات نمایشی نسخه قبلی حذف شده‌اند.
-        </div>
-
-        <div class="card spaced">
-          <p>${escapeHTML(section.description)}</p>
-
-          <p class="sub">
-            نمایش این صفحه به معنی فعال‌بودن سرویس یا ذخیره درخواست نیست.
-          </p>
-
-          <a href="#/" class="btn spaced">
-            جست‌وجو و دریافت قیمت
-          </a>
-        </div>
-      `;
-    }
-
-    function renderAbout() {
-      setStatus("وضعیت امکانات این نسخه");
-      updated.textContent = "";
-
-      app.innerHTML = `
-        <h1>وضعیت سامانه</h1>
-
-        <div class="note spaced">
-          این نسخه رابط جست‌وجو و دریافت قیمت است،
-          نه نسخه کامل پلتفرم تحلیل بنیادی.
-        </div>
-
-        <h2>امکانات پیاده‌سازی‌شده در رابط</h2>
-
-        <div class="card">
-          <ul class="list">
-            <li>جست‌وجو با درخواست به سرور پروژه.</li>
-            <li>نمایش جداگانه آخرین معامله و قیمت پایانی به ریال.</li>
-            <li>نمایش حجم، تعداد و ارزش معاملات در صورت دریافت.</li>
-            <li>تفکیک زمان پاسخ منبع از زمان دریافت سرور.</li>
-            <li>تلاش مجدد هر ۶۰ ثانیه در صفحه فعال نماد.</li>
-            <li>نمایش خطا به جای تولید داده تصادفی.</li>
-          </ul>
-        </div>
-
-        <h2>پیش‌نیاز اجرای آنلاین</h2>
-
-        <div class="card">
-          <p>
-            فایل
-            <code>api/market.js</code>
-            باید در پروژه منتشرشده روی Vercel وجود داشته باشد.
-          </p>
-
-          <p class="sub">
-            این فایل HTML به‌تنهایی سرور ایجاد نمی‌کند.
-            دسترسی Vercel به TSETMC و سازگاری پاسخ منبع
-            باید در محیط انتشار آزموده شوند.
-          </p>
-        </div>
-
-        <h2>مواردی که هنوز آماده نیستند</h2>
-
-        <div class="card">
-          <ul class="list">
-            <li>بانک مستقل و پایدار کل نمادها و ابزارهای بازار.</li>
-            <li>تاریخچه قیمت و نمودار تعدیل‌شده.</li>
-            <li>اتصال کدال و استخراج صورت‌های مالی و نظر حسابرس.</li>
-            <li>اتصال فیپیران و مشخصات معتبر صندوق‌ها.</li>
-            <li>نمره بنیادی، ارزش‌گذاری و ارزیابی مدل سیگنال.</li>
-            <li>ترکیب سبد نهادها و ردیابی تغییرات مستند.</li>
-            <li>پایش پس‌زمینه و ارسال هشدار واقعی.</li>
-            <li>اخبار دارای منبع و زمان انتشار.</li>
-          </ul>
-        </div>
-      `;
-    }
-
-    /* ---------- مسیریابی ---------- */
-
-    function renderPage() {
-      clearTimeout(state.searchTimer);
-      state.searchVersion++;
-      state.pageVersion++;
-
-      if (state.searchController) {
-        state.searchController.abort();
-        state.searchController = null;
-      }
-
-      if (state.quoteController) {
-        state.quoteController.abort();
-        state.quoteController = null;
-      }
-
-      state.currentId = null;
-      state.quote = null;
-
-      setQuoteLoading(false);
-      clearError();
-      updated.textContent = "";
-
-      const hash = (location.hash || "#/").split("?")[0];
-      const quoteMatch = /^#\/s\/(\d{1,20})$/.exec(hash);
-
-      document.querySelectorAll("nav a").forEach(function(link) {
-        const active = link.getAttribute("href") === hash;
-        link.classList.toggle("active", active);
-
-        if (active) {
-          link.setAttribute("aria-current", "page");
-        } else {
-          link.removeAttribute("aria-current");
-        }
-      });
-
-      window.scrollTo(0, 0);
-
-      if (quoteMatch) {
-        state.currentId = quoteMatch[1];
-
-        app.innerHTML = loadingMarkup(
-          "در حال دریافت اطلاعات نماد از سرور…"
-        );
-
-        loadQuote(state.currentId, state.pageVersion);
-        return;
-      }
-
-      if (hash === "#/" || hash === "#/watch") {
-        renderHome();
-        return;
-      }
-
-      if (hash === "#/about") {
-        renderAbout();
-        return;
-      }
-
-      if (sections[hash]) {
-        renderUnavailable(sections[hash]);
-        return;
-      }
-
-      setStatus("صفحه پیدا نشد");
-
-      app.innerHTML = `
-        <div class="card">
-          <h1>این صفحه وجود ندارد</h1>
-          <p class="sub spaced">
-            برای مشاهده نمادها از جست‌وجوی صفحه اصلی استفاده کنید.
-          </p>
-          <a href="#/" class="btn spaced">بازگشت به خانه</a>
-        </div>
-      `;
-    }
-
-    function refreshCurrentPage() {
-      if (state.currentId) {
-        if (!state.loadingQuote) {
-          loadQuote(state.currentId, state.pageVersion);
-        }
-        return;
-      }
-
-      const input = document.getElementById("searchInput");
-
-      if (input) {
-        if (normalize(input.value)) {
-          prepareSearch(true);
-        } else {
-          setStatus("ابتدا نماد یا نام شرکت را وارد کنید");
-          input.focus();
-        }
-        return;
-      }
-
-      setStatus("این بخش هنوز سرویس داده فعال ندارد");
-    }
-
-    refreshButton.addEventListener("click", refreshCurrentPage);
-
-    window.addEventListener("hashchange", renderPage);
-
-    window.addEventListener("offline", function() {
-      setStatus("اینترنت دستگاه قطع است", true);
-      showError(
-        "اتصال اینترنت قطع شده است. اطلاعات قبلی ممکن است قدیمی باشند."
-      );
+  }
+}
+
+function renderQuote(data) {
+  $("symbolTitle").textContent = data.symbol || state.selected.symbol;
+  $("companyName").textContent = data.name || state.selected.name;
+
+  $("quoteMeta").textContent =
+    "منبع: TSETMC | تاریخ معامله: " + sourceDate(data.sourceDate) +
+    " | ساعت منبع: " + sourceTime(data.sourceTime) +
+    " | دریافت به وقت تهران: " + receivedTime(data.retrievedAt);
+
+  const warnings = [...(data.warnings || [])];
+
+  if (data.sourceDate && String(data.sourceDate) !== todayTehran()) {
+    warnings.push(
+      "تاریخ معامله امروز نیست؛ این وضعیت ممکن است مربوط به تعطیلی بازار، توقف نماد یا قدیمی بودن پاسخ باشد."
+    );
+  }
+
+  $("quoteNotice").innerHTML = warnings.length
+    ? `<div class="notice">${warnings.map(escapeHtml).join("<br>")}</div>`
+    : "";
+
+  const sign = value => value > 0 ? "positive" : value < 0 ? "negative" : "";
+
+  $("quoteMetrics").innerHTML = [
+    metric("آخرین معامله", data.last, "ریال"),
+    metric("قیمت پایانی", data.close, "ریال"),
+    metric("پایانی روز قبل", data.previousClose, "ریال"),
+    metric("تغییر آخرین معامله", data.lastChangePercent, "٪", sign(data.lastChangePercent)),
+    metric("تغییر قیمت پایانی", data.closeChangePercent, "٪", sign(data.closeChangePercent)),
+    metric("حجم معاملات", data.volume),
+    metric("تعداد معاملات", data.tradeCount),
+    metric("ارزش معاملات", data.tradeValue, "ریال")
+  ].join("");
+}
+
+$("refreshQuote").addEventListener("click", loadQuote);
+
+setInterval(() => {
+  if (
+    !document.hidden &&
+    state.tab === "market" &&
+    state.selected &&
+    !state.quoteBusy &&
+    $("autoRefresh").checked
+  ) {
+    loadQuote();
+  }
+}, 60000);
+
+$("addWatch").addEventListener("click", () => {
+  if (!state.selected) return;
+
+  if (!state.watch.some(x => x.id === state.selected.id)) {
+    state.watch.push({ ...state.selected });
+    persist("maghsudium.watch.v1", state.watch);
+  }
+  message("نماد به دیده‌بان افزوده شد.");
+});
+
+function renderWatch() {
+  const container = $("watchList");
+  container.replaceChildren();
+
+  if (!state.watch.length) {
+    container.textContent = "هنوز نمادی اضافه نشده است.";
+    return;
+  }
+
+  for (const item of state.watch) {
+    const row = document.createElement("div");
+    row.className = "row metric";
+    row.style.marginBottom = "10px";
+
+    const open = document.createElement("button");
+    open.textContent = item.symbol + " — " + (item.name || "");
+    open.addEventListener("click", () => selectInstrument(item));
+
+    const remove = document.createElement("button");
+    remove.textContent = "حذف";
+    remove.addEventListener("click", () => {
+      state.watch = state.watch.filter(x => x.id !== item.id);
+      persist("maghsudium.watch.v1", state.watch);
+      renderWatch();
     });
 
-    window.addEventListener("online", function() {
-      clearError();
+    row.append(open, remove);
+    container.append(row);
+  }
+}
 
-      if (state.currentId && !state.loadingQuote) {
-        loadQuote(state.currentId, state.pageVersion);
-      } else {
-        setStatus("اینترنت وصل شد؛ دریافت از منبع هنوز تأیید نشده است");
-      }
+function numericInput(id) {
+  const raw = $(id).value.trim();
+  if (raw === "") return null;
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : null;
+}
+
+$("holdingType").addEventListener("change", () => {
+  const other = $("holdingType").value === "other";
+  $("holdingManual").required = other;
+  $("holdingManual").disabled = !other;
+  $("holdingName").value = other ? "" : state.selected?.symbol || "";
+});
+
+$("holdingManual").disabled = true;
+
+$("holdingForm").addEventListener("submit", event => {
+  event.preventDefault();
+  clearMessage();
+
+  const type = $("holdingType").value;
+  const qty = numericInput("holdingQty");
+  const cost = numericInput("holdingCost");
+  const manual = numericInput("holdingManual");
+  const name = $("holdingName").value.trim();
+
+  if (!name || qty === null || qty <= 0 || cost === null || cost < 0) {
+    return message("نام، مقدار و بهای خرید را درست وارد کنید.", true);
+  }
+
+  if (type === "stock" && !state.selected) {
+    return message("ابتدا در بخش بازار، نماد را جست‌وجو و انتخاب کنید.", true);
+  }
+
+  if (type === "other" && (manual === null || manual < 0)) {
+    return message("ارزش کل روز دارایی غیربورسی را وارد کنید.", true);
+  }
+
+  if (!Number.isFinite(qty * cost)) {
+    return message("مقادیر واردشده بیش از محدوده محاسبه هستند.", true);
+  }
+
+  state.holdings.push({
+    key: crypto.randomUUID(),
+    type,
+    id: type === "stock" ? state.selected.id : null,
+    name: type === "stock" ? state.selected.symbol : name,
+    qty,
+    cost,
+    manual: type === "other" ? manual : null
+  });
+
+  persist("maghsudium.holdings.v1", state.holdings);
+  renderPortfolio();
+  message("دارایی ثبت شد.");
+});
+
+function holdingValue(holding) {
+  if (holding.type === "other") {
+    return Number.isFinite(holding.manual) ? holding.manual : null;
+  }
+
+  // قیمت دریافت‌شده در تلاش قبلی پس از شکست تازه‌سازی،
+  // برای جمع جدید سبد استفاده نمی‌شود.
+  if (state.priceErrors.has(holding.id)) return null;
+
+  const quote = state.prices.get(holding.id);
+  const price = quote?.last ?? quote?.close;
+  const value = typeof price === "number" ? price * holding.qty : null;
+
+  return Number.isFinite(value) ? value : null;
+}
+
+function renderPortfolio() {
+  const holdings = state.holdings;
+  const rows = holdings.map(h => ({
+    h,
+    value: holdingValue(h),
+    cost: h.qty * h.cost
+  }));
+
+  const known = rows.filter(row => row.value !== null);
+  const total = known.reduce((sum, row) => sum + row.value, 0);
+  const knownCost = known.reduce((sum, row) => sum + row.cost, 0);
+  const missing = rows.length - known.length;
+
+  $("portfolioSummary").innerHTML =
+    `<p>ارزش بخش قابل محاسبه:
+      <b>${escapeHtml(fmt(total))} ریال</b></p>
+     <p>سود/زیان همان بخش:
+      <b class="${total - knownCost >= 0 ? "positive" : "negative"}">
+        ${escapeHtml(fmt(total - knownCost))} ریال
+      </b></p>
+     <p class="${missing ? "warning" : "muted"}">
+       ${missing
+         ? escapeHtml(fmt(missing)) + " دارایی فاقد قیمت قابل استفاده است؛ جمع کل سبد کامل نیست."
+         : "ارزش همه ردیف‌ها قابل محاسبه است؛ تاریخ قیمت هر ردیف را بررسی کنید."}
+     </p>`;
+
+  let angle = 0;
+  const slices = [];
+
+  known.forEach((row, index) => {
+    if (total <= 0 || row.value <= 0) return;
+    const start = angle;
+    angle += row.value / total * 360;
+    slices.push(`${colors[index % colors.length]} ${start}deg ${angle}deg`);
+  });
+
+  $("donut").style.background = slices.length
+    ? `conic-gradient(${slices.join(",")})`
+    : "#283650";
+
+  known.forEach((row, index) => {
+    const line = document.createElement("div");
+    const dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.background = colors[index % colors.length];
+    line.append(
+      dot,
+      document.createTextNode(
+        row.h.name + " — " +
+        (total > 0 ? fmt(row.value / total * 100) + "٪" : "—")
+      )
+    );
+    $("portfolioSummary").append(line);
+  });
+
+  if (!rows.length) {
+    $("portfolioTable").textContent = "سبد شما خالی است.";
+    return;
+  }
+
+  $("portfolioTable").innerHTML =
+    `<table>
+      <thead><tr>
+        <th>دارایی</th><th>مقدار</th><th>بهای کل خرید</th>
+        <th>ارزش روز ـ ریال</th><th>تاریخ / وضعیت داده</th><th>حذف</th>
+      </tr></thead>
+      <tbody>${rows.map(({h,value,cost}) => {
+        const q = state.prices.get(h.id);
+        const error = state.priceErrors.get(h.id);
+
+        const status = h.type === "other"
+          ? "ارزش دستی"
+          : error
+            ? "دریافت ناموفق"
+            : q
+              ? sourceDate(q.sourceDate) + " | دریافت: " + receivedTime(q.retrievedAt)
+              : "هنوز قیمت دریافت نشده";
+
+        return `<tr>
+          <td>${escapeHtml(h.name)}</td>
+          <td>${escapeHtml(fmt(h.qty))}</td>
+          <td>${escapeHtml(fmt(cost))}</td>
+          <td>${escapeHtml(fmt(value))}</td>
+          <td title="${escapeHtml(error || "")}">${escapeHtml(status)}</td>
+          <td><button data-remove="${escapeHtml(h.key)}">حذف</button></td>
+        </tr>`;
+      }).join("")}</tbody>
+    </table>`;
+
+  $("portfolioTable").querySelectorAll("[data-remove]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.holdings = state.holdings.filter(h => h.key !== button.dataset.remove);
+      persist("maghsudium.holdings.v1", state.holdings);
+      renderPortfolio();
     });
+  });
+}
 
-    setInterval(function() {
-      if (
-        !document.hidden &&
-        navigator.onLine &&
-        state.currentId &&
-        !state.loadingQuote
-      ) {
-        loadQuote(state.currentId, state.pageVersion);
+$("refreshPortfolio").addEventListener("click", async () => {
+  const button = $("refreshPortfolio");
+  const ids = [...new Set(
+    state.holdings.filter(h => h.type === "stock").map(h => h.id)
+  )];
+
+  if (!ids.length) return message("سهامی در سبد ثبت نشده است.");
+
+  button.disabled = true;
+  clearMessage();
+
+  let completed = 0;
+  let failures = 0;
+  let firstError = "";
+
+  // حداکثر سه درخواست هم‌زمان، برای کاهش فشار به منبع.
+  for (let start = 0; start < ids.length; start += 3) {
+    await Promise.all(ids.slice(start, start + 3).map(async id => {
+      try {
+        const q = await api({ op:"quote", id });
+        state.prices.set(id, q);
+        state.priceErrors.delete(id);
+      } catch (error) {
+        failures++;
+        if (!firstError) firstError = error.message;
+        state.priceErrors.set(id, error.message);
+      } finally {
+        completed++;
+        button.textContent = `${fmt(completed)} از ${fmt(ids.length)}`;
       }
-    }, 60000);
+    }));
+    renderPortfolio();
+  }
 
-    renderPage();
-  </script>
+  button.disabled = false;
+  button.textContent = "دریافت قیمت سهام سبد";
+
+  if (failures) {
+    message(
+      `${fmt(failures)} نماد دریافت نشد.\n${firstError}`,
+      true
+    );
+  } else {
+    message("درخواست قیمت همه نمادهای سبد پاسخ گرفت؛ تاریخ معامله هر ردیف را بررسی کنید.");
+  }
+});
+
+$("fundForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const price = numericInput("fPrice");
+  const eps = numericInput("fEps");
+  const revenue = numericInput("fRevenue");
+  const profit = numericInput("fProfit");
+  const equity = numericInput("fEquity");
+  const cash = numericInput("fCash");
+  const debt = numericInput("fDebt");
+  const assets = numericInput("fAssets");
+
+  function ratio(a, b, scale = 1) {
+    if (a === null || b === null || b <= 0) return null;
+    const value = a / b * scale;
+    return Number.isFinite(value) ? value : null;
+  }
+
+  $("fundResults").innerHTML = [
+    metric("P/E؛ فقط برای EPS مثبت", price > 0 ? ratio(price, eps) : null),
+    metric("حاشیه سود خالص", ratio(profit, revenue, 100), "٪"),
+    metric("بازده حقوق صاحبان سهامِ دوره", ratio(profit, equity, 100), "٪"),
+    metric("نسبت بدهی به دارایی", ratio(debt, assets, 100), "٪"),
+    metric("جریان نقد عملیاتی به سود مثبت", ratio(cash, profit))
+  ].join("");
+});
+
+api({ op:"health" }).then(() => {
+  $("serverStatus").textContent = "API سایت فعال است";
+  $("serverStatus").classList.add("positive");
+}).catch(() => {
+  $("serverStatus").textContent = "API سایت در دسترس نیست";
+  $("serverStatus").classList.add("negative");
+});
+
+renderWatch();
+renderPortfolio();
+</script>
 </body>
 </html>
